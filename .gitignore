@@ -206,3 +206,5 @@ blazor.boot.json
 *.DocumentLayout.json
 
 /PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/v17/DocumentLayout.json
+*.BuildWithSkipAnalyzers
+/PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/DesignTimeBuild/.dtbcache.v2
