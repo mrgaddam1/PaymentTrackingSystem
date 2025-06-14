@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Web.Client", "PaymentTrackingSystem.Web.Client\PaymentTrackingSystem.Web.Client.csproj", "{F812C63D-4A5C-4CD7-A80A-59F76E0A1904}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Core", "PaymentTrackingSystem.Core\PaymentTrackingSystem.Core.csproj", "{1AC724B3-3C47-4719-A877-EFBEF5510737}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F812C63D-4A5C-4CD7-A80A-59F76E0A1904}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F812C63D-4A5C-4CD7-A80A-59F76E0A1904}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F812C63D-4A5C-4CD7-A80A-59F76E0A1904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

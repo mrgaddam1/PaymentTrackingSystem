@@ -1,0 +1,15 @@
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\bin\Debug\net8.0\PaymentTrackingSystem.Core.deps.json
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\bin\Debug\net8.0\PaymentTrackingSystem.Core.runtimeconfig.json
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\bin\Debug\net8.0\PaymentTrackingSystem.Core.dll
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\bin\Debug\net8.0\PaymentTrackingSystem.Core.pdb
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.csproj.AssemblyReference.cache
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.AssemblyInfoInputs.cache
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.AssemblyInfo.cs
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.csproj.CoreCompileInputs.cache
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.sourcelink.json
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.dll
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\refint\PaymentTrackingSystem.Core.dll
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.pdb
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\PaymentTrackingSystem.Core.genruntimeconfig.cache
+D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\obj\Debug\net8.0\ref\PaymentTrackingSystem.Core.dll
