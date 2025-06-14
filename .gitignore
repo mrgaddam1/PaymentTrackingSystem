@@ -208,3 +208,11 @@ blazor.boot.json
 /PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/v17/DocumentLayout.json
 *.BuildWithSkipAnalyzers
 /PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/DesignTimeBuild/.dtbcache.v2
+/PaymentTrackingSystem.Client.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Client.Infrastructure.AssemblyInfo.cs
+/PaymentTrackingSystem.Client.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Client.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Common/obj/Debug/net8.0/PaymentTrackingSystem.Common.AssemblyInfo.cs
+/PaymentTrackingSystem.Common/obj/Debug/net8.0/PaymentTrackingSystem.Common.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Shared/obj/Debug/net8.0/PaymentTrackingSystem.Shared.AssemblyInfo.cs
+/PaymentTrackingSystem.Shared/obj/Debug/net8.0/PaymentTrackingSystem.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Web.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Web.Infrastructure.AssemblyInfo.cs
+/PaymentTrackingSystem.Web.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Web.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig

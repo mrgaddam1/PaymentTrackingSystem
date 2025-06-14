@@ -9,6 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Web.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Core", "PaymentTrackingSystem.Core\PaymentTrackingSystem.Core.csproj", "{1AC724B3-3C47-4719-A877-EFBEF5510737}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Common", "..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj", "{27956EE6-FFAE-42E7-9E86-7BCE593B90E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Client.Infrastructure", "..\PaymentTrackingSystem.Client.Infrastructure\PaymentTrackingSystem.Client.Infrastructure.csproj", "{217ECB0F-9B83-4E13-806E-0B3FDCA9D882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Web.Infrastructure", "..\PaymentTrackingSystem.Web.Infrastructure\PaymentTrackingSystem.Web.Infrastructure.csproj", "{85384B76-AF7C-4FD3-AB83-C87372C93413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Shared", "..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj", "{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +35,22 @@ Global
 		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC724B3-3C47-4719-A877-EFBEF5510737}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27956EE6-FFAE-42E7-9E86-7BCE593B90E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27956EE6-FFAE-42E7-9E86-7BCE593B90E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27956EE6-FFAE-42E7-9E86-7BCE593B90E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27956EE6-FFAE-42E7-9E86-7BCE593B90E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{217ECB0F-9B83-4E13-806E-0B3FDCA9D882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217ECB0F-9B83-4E13-806E-0B3FDCA9D882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217ECB0F-9B83-4E13-806E-0B3FDCA9D882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217ECB0F-9B83-4E13-806E-0B3FDCA9D882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85384B76-AF7C-4FD3-AB83-C87372C93413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85384B76-AF7C-4FD3-AB83-C87372C93413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85384B76-AF7C-4FD3-AB83-C87372C93413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85384B76-AF7C-4FD3-AB83-C87372C93413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
