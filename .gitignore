@@ -1,0 +1,22 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/PaymentTrackingSystem.Web.AssemblyInfoInputs.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/PaymentTrackingSystem.Web.assets.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/PaymentTrackingSystem.Web.csproj.AssemblyReference.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/PaymentTrackingSystem.Web.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/rpswa.dswa.cache.json
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/staticwebassets.removed.txt
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/PaymentTrackingSystem.Web.csproj.nuget.dgspec.json
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/PaymentTrackingSystem.Web.csproj.nuget.g.props
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/PaymentTrackingSystem.Web.csproj.nuget.g.targets
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/project.nuget.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/Debug/net8.0/PaymentTrackingSystem.Web.Client.AssemblyInfoInputs.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/Debug/net8.0/PaymentTrackingSystem.Web.Client.assets.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/Debug/net8.0/PaymentTrackingSystem.Web.Client.csproj.AssemblyReference.cache
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/Debug/net8.0/PaymentTrackingSystem.Web.Client.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/PaymentTrackingSystem.Web.Client.csproj.nuget.dgspec.json
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/PaymentTrackingSystem.Web.Client.csproj.nuget.g.props
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/PaymentTrackingSystem.Web.Client.csproj.nuget.g.targets
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/project.nuget.cache
