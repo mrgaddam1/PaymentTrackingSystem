@@ -1,5 +1,14 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    font-feature-settings: "kern", "liga", "dlig", "c2cs";
+    background-size: cover;
+    background-color: white;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: dodgerblue;
 }
 
 a, .btn-link {
@@ -48,4 +57,90 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+/* Menus and Submenus */
+.nav-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    top: 100%;
+    left: 0;
+    display: flex;
+    background-color: #F6F6F6;
+    color: white;
+    height: 35px;
+    font-size: 13.5px;
+    width: 100%;
+    z-index: 1000;
+    text-align: left;
+}
+
+    .nav-menu li {
+        position: relative;
+        width: 100%;
+        margin: 0;
+    }
+
+        .nav-menu li a {
+            display: block;
+            color: dimgray;
+            padding: 10px 10px;
+            text-decoration: none;
+            font-size: 13.5px;
+            transition: background-color 0.3s ease;
+            height: 40px;
+            text-decoration: none;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+            .nav-menu li a:hover {
+                background-color: #007bff;
+                color: white;
+                height: 35px;
+            }
+
+            .nav-menu li a.active {
+                background-color: #007bff;
+                color: white;
+                height: 35px;
+            }
+
+        .nav-menu li:focus-within .nav-menu {
+            display: block; /* Keep sub-menu visible */
+        }
+
+.active-tab {
+    background-color: #007bff;
+    color: white;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    color: blue;
+}
+/* Show submenu when hovering over parent */
+nav-menu li:hover > ul,
+nav-menu li:focus-within > ul {
+    display: block;
+}
+
+/* Ensure submenu stays when clicked */
+nav-menu li ul li {
+    display: block;
+}
+
+.radgen-grid-font {
+    font-size: 13px;
+}
+
+.rowMargin {
+    margin-bottom: 10px;
+}
+
+.rowMargin {
+    margin-bottom: 10px;
 }
