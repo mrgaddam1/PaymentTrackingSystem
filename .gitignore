@@ -195,3 +195,14 @@ blazor.boot.json
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/Debug/net8.0/PaymentTrackingSystem.Web.AssemblyInfo.cs
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/obj/Debug/net8.0/PaymentTrackingSystem.Web.Client.AssemblyInfo.cs
 *.config
+*.cache
+*.AssemblyAttributes.cs
+*.g.cs
+*.g.props
+*.targets
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Core/obj/Debug/net8.0/PaymentTrackingSystem.Core.AssemblyInfo.cs
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Core/obj/Debug/net8.0/PaymentTrackingSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+
+*.DocumentLayout.json
+
+/PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/v17/DocumentLayout.json
