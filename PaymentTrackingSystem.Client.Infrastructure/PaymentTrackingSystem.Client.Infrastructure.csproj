@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
+    <ProjectReference Include="..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

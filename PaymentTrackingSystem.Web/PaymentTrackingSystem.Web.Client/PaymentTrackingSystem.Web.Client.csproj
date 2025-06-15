@@ -10,6 +10,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Radzen.Blazor" Version="7.1.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Client.Infrastructure\PaymentTrackingSystem.Client.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
   </ItemGroup>
 
 </Project>
