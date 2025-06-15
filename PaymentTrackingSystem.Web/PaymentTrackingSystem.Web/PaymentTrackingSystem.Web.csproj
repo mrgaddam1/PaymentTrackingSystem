@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Client.Infrastructure\PaymentTrackingSystem.Client.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
+    <ProjectReference Include="..\..\PaymentTrackingSystem.Web.Infrastructure\PaymentTrackingSystem.Web.Infrastructure.csproj" />
+    <ProjectReference Include="..\PaymentTrackingSystem.Core\PaymentTrackingSystem.Core.csproj" />
     <ProjectReference Include="..\PaymentTrackingSystem.Web.Client\PaymentTrackingSystem.Web.Client.csproj" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.16" />
   </ItemGroup>
 

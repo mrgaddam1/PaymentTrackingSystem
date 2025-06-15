@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
+    <ProjectReference Include="..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
+    <ProjectReference Include="..\PaymentTrackingSystem.Web\PaymentTrackingSystem.Core\PaymentTrackingSystem.Core.csproj" />
+  </ItemGroup>
+
 </Project>
