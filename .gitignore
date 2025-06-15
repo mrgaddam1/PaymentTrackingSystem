@@ -181,7 +181,7 @@
 *.scp.css
 wwwroot/_framework/
 *.wasm
-*.js
+
 *.br
 *.gz
 blazor.boot.json
@@ -216,3 +216,11 @@ blazor.boot.json
 /PaymentTrackingSystem.Shared/obj/Debug/net8.0/PaymentTrackingSystem.Shared.GeneratedMSBuildEditorConfig.editorconfig
 /PaymentTrackingSystem.Web.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Web.Infrastructure.AssemblyInfo.cs
 /PaymentTrackingSystem.Web.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Web.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/PaymentTrackingSystem.Client.Infrastructure/obj/Debug/net8.0/PaymentT.5ED3117E.Up2Date
+/PaymentTrackingSystem.Client.Infrastructure/obj/Debug/net8.0/PaymentTrackingSystem.Client.Infrastructure.csproj.FileListAbsolute.txt
+*.txt
+*.db
+*.db-shm
+*.db-wal
+*.bin
+*.v2
