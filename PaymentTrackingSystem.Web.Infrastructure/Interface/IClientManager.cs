@@ -10,9 +10,9 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Interface
     public interface IClientManager
     {
         Task<List<ClientViewModel>> GetAllClients();
-        Task<ClientViewModel> GetClientDetailsById();
-        Task<bool> Add();
-        Task<bool> Update();
-        Task<bool> Delete();
+        Task<ClientViewModel> GetClientDetailsById(int clientId);
+        Task<bool> Add(ClientViewModel clientViewModel);
+        Task<bool> Update(ClientViewModel clientViewModel);
+        Task<bool> Delete(int clientId);
     }
 }

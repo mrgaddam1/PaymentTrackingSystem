@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Shared;
@@ -14,18 +15,57 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
     public class ClientManager : IClientManager
     {
         private readonly ILogger<ClientManager> logger;
+        private readonly IMapper mapper;
         private PTSContext DbContext { get; set; }
 
-        public ClientManager(PTSContext _DbContext) 
+        public ClientManager(PTSContext _DbContext, IMapper _mapper) 
         {
             DbContext = _DbContext;
+            mapper = _mapper;
         }
-        public async Task<bool> Add()
+        public async Task<bool> Add(ClientViewModel clientViewModel)
         {
-            throw new NotImplementedException();
+            using var transaction = await DbContext.Database.BeginTransactionAsync();
+            //var client = mapper.Map<Client>(clientViewModel);
+            try
+            {
+                var client = new Client
+                {
+                    FirstName = clientViewModel.FirstName,
+                    LastName = clientViewModel.LastName,
+                    EmailId=clientViewModel.Email,
+                    MobileNumber = clientViewModel.MobileNumber,
+                    UserId = 1,
+                    CreatedDate = DateTime.Now,
+                };
+               
+                DbContext.Clients.Add(client);
+                await DbContext.SaveChangesAsync();
+
+                var clientAddress = new ClientAddress
+                {
+                    ClientId = client.ClientId,
+                    AddressLine1 = clientViewModel.AddressLine1,
+                    AddressLine2 = clientViewModel.AddressLine2,
+                    City = clientViewModel.City,
+                    Postcode = clientViewModel.Postcode,
+                };                
+                DbContext.ClientAddresses.Add(clientAddress);
+                await DbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                logger.LogError(ex.Message, "An error occured while processing the request.");
+                return false;
+            }
         }
 
-        public async Task<bool> Delete()
+            
+        public async Task<bool> Delete(int clientId)
         {
             throw new NotImplementedException();
         }
@@ -59,12 +99,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             return clientData;
         }
 
-        public async Task<ClientViewModel> GetClientDetailsById()
+        public async Task<ClientViewModel> GetClientDetailsById(int clientId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> Update()
+        public async Task<bool> Update(ClientViewModel clientViewModel)
         {
             throw new NotImplementedException();
         }
