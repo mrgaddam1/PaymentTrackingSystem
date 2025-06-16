@@ -1,0 +1,223 @@
+﻿@page "/client/addClient"
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Common.Utils.ClientMessages
+@using PaymentTrackingSystem.Shared
+
+@inject IClientService ClientService
+@inject NavigationManager NavigationManager
+@inject ILogger<AddClient> Logger
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Add Customer
+                </div>
+                <div class="card-body">
+                    <div class="col-lg-12">
+                        <EditForm Model="@client" OnValidSubmit="HandleValidSubmit">
+                            @if (errorMessages != null)
+                            {
+                                @foreach (var message in errorMessages)
+                                {
+                                    if (!string.IsNullOrEmpty(message))
+                                    {
+                                        <ul class="alert alert-danger mt-3 text-left">
+                                            <li>@message</li>
+                                        </ul>
+                                    }
+                                }                                                             
+                            }
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    First Name
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.FirstName"  maxLength="150" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Last Name
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.LastName"  maxLength="150" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Mobile Number
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.MobileNumber" maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Email Id
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.Email" maxLength="150" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Address Line1
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.AddressLine1"  maxLength="150" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Address Line2
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.AddressLine2"  maxLength="150" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    City
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.City"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Postcode
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="client.Postcode"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary fw-bold">
+                                    <i class="fas fa-plus" aria-hidden="true"></i>
+                                    &nbsp;&nbsp;Add Customer
+                                </button>
+                                <button type="button" class="btn btn-warning fw-bold" @onclick="GoBack">
+                                    <i class="fas fa-times"></i>&nbsp;&nbsp;Cancel
+                                </button>
+                            </div>
+                            @if (!string.IsNullOrEmpty(successMessage))
+                            {
+                                <div class="alert alert-success mt-3 text-center">@successMessage</div>
+                            }
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ClientViewModel client = new();
+    private string[] errorMessages;
+    private string successMessage = string.Empty;
+
+    private async void HandleValidSubmit()
+    {
+        errorMessages = Validations(client);
+        string validations = string.Join(" ", errorMessages);
+        if ((validations == null) || (validations == ""))
+        {
+            var response = await ClientService.Add(client);
+            if (response)
+            {
+                Logger.LogInformation("Client details are added successfully.");
+                successMessage = "Client details submitted successfully!";
+                Reset();
+            }
+            else
+            {
+                Logger.LogInformation("Unable to add Client.");
+                successMessage = "Unable to create new Client.";
+            }
+        }
+        else
+        {
+            validations = "";
+        }
+    }
+    private async void Reset()
+    {
+        client = new ClientViewModel();
+        errorMessages = [];
+        StateHasChanged();
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/client/clientList");
+    }
+
+
+    private string[] Validations(ClientViewModel client)
+    {
+        string[] result;
+        string validationMessage = "";
+        if (client.FirstName == null)
+        {
+            validationMessage = ClientValidationMessages.FirstName;
+        }
+        if (client.LastName == null)
+        {
+            validationMessage = validationMessage != null ? validationMessage +
+                                ", " + Environment.NewLine + ClientValidationMessages.FirstName
+                                : ClientValidationMessages.FirstName;
+        }
+        if (client.MobileNumber == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.MobileNumber
+                                : ClientValidationMessages.MobileNumber;
+        }
+        if (client.Email == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.EmailId
+                                : ClientValidationMessages.EmailId;
+        }
+
+        if (client.AddressLine1 == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.AddressLine1
+                                : ClientValidationMessages.AddressLine1;
+        }
+
+        if (client.AddressLine2 == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.AddressLine2
+                                : ClientValidationMessages.AddressLine2;
+        }
+
+        if (client.City == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.City
+                                : ClientValidationMessages.City;
+        }
+        if (client.Postcode == null)
+        {
+            validationMessage = validationMessage != null
+                                ? validationMessage + ", " + Environment.NewLine + ClientValidationMessages.Postcode
+                                : ClientValidationMessages.Postcode;
+        }
+        return result = validationMessage.Split(',').Select(s => s.Trim()).ToArray();
+    }
+
+
+ }

@@ -13,7 +13,8 @@ namespace PaymentTrackingSystem.Web.Infrastructure.AutoMapperProfileSettings
     {
         public MappingProfile() 
         {
-        
+            CreateMap<Client, ClientViewModel>();
+            CreateMap<ClientAddress, ClientViewModel>();
         }
     }
 }

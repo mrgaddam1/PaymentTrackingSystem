@@ -1,11 +1,12 @@
 ﻿using PaymentTrackingSystem.Client.Infrastructure.Interface;
+using PaymentTrackingSystem.Common.ApplicationStatusCodeHandler;
 using PaymentTrackingSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using PaymentTrackingSystem.Common.ApplicationStatusCodeHandler;
 namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
 {
     public class ClientService : IClientService
@@ -16,12 +17,33 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
         {
             httpClient = _httpClient;
         }
-        public Task<bool> Add()
+        public async Task<bool> Add(ClientViewModel clientViewModel)
         {
-            throw new NotImplementedException();
+            bool isSuccess = false;
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync("api/Client/Add", clientViewModel);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+                    isSuccess = false;
+                }
+                else
+                {
+                    isSuccess = true;
+                }
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.Message;
+                return isSuccess;
+            }
         }
 
-        public Task<bool> Delete()
+
+        public Task<bool> Delete(int clientId)
         {
             throw new NotImplementedException();
         }
@@ -32,12 +54,12 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             return await ApiStatusCodeHandler.HandleResponse<T>(response);
         }
 
-        public Task<ClientViewModel> GetClientDetailsById()
+        public Task<ClientViewModel> GetClientDetailsById(int clientId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update()
+        public Task<bool> Update(ClientViewModel clientViewModel)
         {
             throw new NotImplementedException();
         }

@@ -224,3 +224,9 @@ blazor.boot.json
 *.db-wal
 *.bin
 *.v2
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/dotnet.js
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/dotnet.native.js
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/dotnet.runtime.js
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.js
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.native.js
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.runtime.js
