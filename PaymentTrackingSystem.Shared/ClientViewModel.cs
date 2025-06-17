@@ -21,6 +21,9 @@ namespace PaymentTrackingSystem.Shared
         public string? State { get; set; }
         public int StateId { get; set; }
         public string? Postcode { get; set; }
-
+        public DateTime? CreatedDate{ get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public DateTime? DeletedDate { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

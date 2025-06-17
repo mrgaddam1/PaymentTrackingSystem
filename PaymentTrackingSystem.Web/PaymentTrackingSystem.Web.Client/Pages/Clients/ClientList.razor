@@ -41,7 +41,7 @@
             <RadzenDataGridColumn Property="ClientId" Title="Id" Width="100" Visible="false" />
             <RadzenDataGridColumn Property="FirstName" Title="First Name" />
             <RadzenDataGridColumn Property="LastName" Title="Last Name" />
-            <RadzenDataGridColumn Property="EmailId" Title="Email Id" />
+            <RadzenDataGridColumn Property="Email" Title="Email Id" />
             <RadzenDataGridColumn Property="MobileNumber" Title="Mobile Number">
                 <Template Context="data">
                     <span style="color:blue;font-weight:600;">
@@ -93,12 +93,11 @@
         catch(Exception ex)
         {
             Logger.LogError(ex, "Error loading data.");
-        }
-        
+        }        
     }
     void EditRow(ClientViewModel clientViewModel)
     {
-        NavigationManager.NavigateTo("/customers/updateCustomer" + "/" + Convert.ToString(clientViewModel.ClientId));
+        NavigationManager.NavigateTo("/client/updateClient" + "/" + Convert.ToString(clientViewModel.ClientId));
     }
     private void AddClient()
     {

@@ -59,9 +59,29 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(ClientViewModel clientViewModel)
+        public async Task<bool> Update(ClientViewModel clientViewModel)
         {
-            throw new NotImplementedException();
+            bool isSuccess = false;
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync("api/Client/Update", clientViewModel);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+                    isSuccess = false;
+                }
+                else
+                {
+                    isSuccess = true;
+                }
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.Message;
+                return isSuccess;
+            }
         }
     }
 }

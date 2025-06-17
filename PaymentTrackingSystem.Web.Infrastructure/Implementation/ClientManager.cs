@@ -106,7 +106,70 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 
         public async Task<bool> Update(ClientViewModel clientViewModel)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+            var clientData = (from c in DbContext.Clients
+                        join ca in DbContext.ClientAddresses on c.ClientId equals ca.ClientId
+                        where c.ClientId == clientViewModel.ClientId
+                        select new ClientViewModel
+                        {
+                            ClientId = c.ClientId,
+                            FirstName = c.FirstName,
+                            LastName = c.LastName,
+                            Email = c.EmailId,
+                            MobileNumber = c.MobileNumber,
+                            AddressLine1 = ca.AddressLine1,
+                            AddressLine2 = ca.AddressLine2,
+                            City = ca.City,
+                            Postcode = ca.Postcode,
+                            CreatedDate = c.CreatedDate,
+                            ModifiedDate = c.ModifiedDate,
+                            DeletedDate = c.DeletedDate,
+                            IsDeleted = c.IsDeleted,
+                        }).SingleOrDefault();
+            if (clientData != null)
+            {
+                using var transaction = await DbContext.Database.BeginTransactionAsync();
+
+                try
+                {
+                    var client = new Client
+                    {
+                        FirstName = clientData.FirstName,
+                        LastName = clientData.LastName,
+                        EmailId = clientData.Email,
+                        MobileNumber = clientData.MobileNumber,
+                        UserId = 1,
+                        CreatedDate = clientData.CreatedDate,
+                        ModifiedDate = System.DateTime.UtcNow,
+                    };
+
+                    DbContext.Clients.Update(client);
+                    await DbContext.SaveChangesAsync();
+
+                    var clientAddress = new ClientAddress
+                    {
+                        ClientId = client.ClientId,
+                        AddressLine1 = clientViewModel.AddressLine1,
+                        AddressLine2 = clientViewModel.AddressLine2,
+                        City = clientViewModel.City,
+                        Postcode = clientViewModel.Postcode,
+                    };
+                    DbContext.ClientAddresses.Update(clientAddress);
+                    await DbContext.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                    return isUpdated = true;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    logger.LogError(ex.Message, "An error occured while processing the request.");
+                    return isUpdated;
+                }
+            }
+            return isUpdated;
         }
+
+
     }
 }

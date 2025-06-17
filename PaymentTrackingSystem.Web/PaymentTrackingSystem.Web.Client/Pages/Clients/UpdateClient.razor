@@ -1,11 +1,11 @@
-﻿@page "/client/addClient"
+﻿@page "/client/updateClient/{clientId:int}"
 @using PaymentTrackingSystem.Client.Infrastructure.Interface
 @using PaymentTrackingSystem.Common.Utils.ClientMessages
 @using PaymentTrackingSystem.Shared
 
 @inject IClientService ClientService
 @inject NavigationManager NavigationManager
-@inject ILogger<AddClient> Logger
+@inject ILogger<UpdateClient> Logger
 @rendermode @(new InteractiveAutoRenderMode(prerender:false))
 
 <div class="container">
@@ -13,7 +13,7 @@
         <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    Add Customer
+                    Update Customer
                 </div>
                 <div class="card-body">
                     <div class="col-lg-12">
@@ -28,14 +28,14 @@
                                             <li>@message</li>
                                         </ul>
                                     }
-                                }                                                             
+                                }
                             }
                             <div class="row rowMargin">
                                 <div class="col-sm-3">
                                     First Name
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.FirstName"  maxLength="150" class="form-control" />
+                                    <InputText @bind-Value="client.FirstName" maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
@@ -44,7 +44,7 @@
                                     Last Name
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.LastName"  maxLength="150" class="form-control" />
+                                    <InputText @bind-Value="client.LastName" maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
@@ -70,7 +70,7 @@
                                     Address Line1
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.AddressLine1"  maxLength="150" class="form-control" />
+                                    <InputText @bind-Value="client.AddressLine1" maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
@@ -79,7 +79,7 @@
                                     Address Line2
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.AddressLine2"  maxLength="150" class="form-control" />
+                                    <InputText @bind-Value="client.AddressLine2" maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
@@ -88,7 +88,7 @@
                                     City
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.City"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
+                                    <InputText @bind-Value="client.City" maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
                                 </div>
                             </div>
                             <div class="row rowMargin">
@@ -96,14 +96,14 @@
                                     Postcode
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="client.Postcode"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
+                                    <InputText @bind-Value="client.Postcode" maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
                                 </div>
                             </div>
 
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary fw-bold">
                                     <i class="fas fa-plus" aria-hidden="true"></i>
-                                    &nbsp;&nbsp;Add Client
+                                    &nbsp;&nbsp;Update Client
                                 </button>
                                 <button type="button" class="btn btn-warning fw-bold" @onclick="GoBack">
                                     <i class="fas fa-times"></i>&nbsp;&nbsp;Cancel
@@ -122,9 +122,26 @@
 </div>
 
 @code {
+    [Parameter]
+    public int clientId { get; set; }
+
     private ClientViewModel client = new();
     private string[] errorMessages;
     private string successMessage = string.Empty;
+    public List<ClientViewModel> ClientData = new List<ClientViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var clientData = await ClientService.GetAllClients<List<ClientViewModel>>();
+            client = clientData.SingleOrDefault(x => x.ClientId == Convert.ToInt32(clientId));
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading data.");
+        }
+    }
 
     private async void HandleValidSubmit()
     {
@@ -132,17 +149,17 @@
         string validations = string.Join(" ", errorMessages);
         if ((validations == null) || (validations == ""))
         {
-            var response = await ClientService.Add(client);
+            var response = await ClientService.Update(client);
             if (response)
             {
-                Logger.LogInformation("Client details are added successfully.");
-                successMessage = "Client details submitted successfully!";
+                Logger.LogInformation("Client Details are updated successfully.");
+                successMessage = "Client Details updated successfully!";
                 Reset();
             }
             else
             {
-                Logger.LogInformation("Unable to add Client.");
-                successMessage = "Unable to create new Client.";
+                Logger.LogInformation("Unable to updated Client.");
+                successMessage = "Unable to updated Client.";
             }
         }
         else
@@ -220,4 +237,5 @@
     }
 
 
- }
+}
+
