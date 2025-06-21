@@ -13,7 +13,7 @@ public partial class ClientPayment
 
     public decimal? Amount { get; set; }
 
-    public DateTime? AmountReceivedDate { get; set; }
+    public DateTime? AmountTransferedDate { get; set; }
 
     public decimal? InterestRate { get; set; }
 
