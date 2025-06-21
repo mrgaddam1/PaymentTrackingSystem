@@ -10,7 +10,7 @@ namespace PaymentTrackingSystem.Web.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.Services.AddScoped<IClientService, ClientService>();
-
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
 
             builder.Services.AddHttpClient("httpClient", client =>
             {

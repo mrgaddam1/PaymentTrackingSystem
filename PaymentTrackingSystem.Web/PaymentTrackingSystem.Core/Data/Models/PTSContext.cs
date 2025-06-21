@@ -77,7 +77,7 @@ public partial class PTSContext : DbContext
             entity.ToTable("ClientPayment");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.AmountReceivedDate).HasColumnType("datetime");
+            entity.Property(e => e.AmountTransferedDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.InterestRate).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");

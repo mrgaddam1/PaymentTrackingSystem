@@ -9,9 +9,11 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
     {
         public static void ServiceDependency(WebApplicationBuilder builder)
         {
-           builder.Services.AddScoped<IClientManager, ClientManager>();
+            builder.Services.AddScoped<IClientManager, ClientManager>();
+            builder.Services.AddScoped<IPaymentManager, PaymentManager>();
 
-           builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
         }
     }
 }

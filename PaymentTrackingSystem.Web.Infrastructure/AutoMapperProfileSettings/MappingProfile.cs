@@ -15,6 +15,9 @@ namespace PaymentTrackingSystem.Web.Infrastructure.AutoMapperProfileSettings
         {
             CreateMap<Client, ClientViewModel>();
             CreateMap<ClientAddress, ClientViewModel>();
+
+            CreateMap<ClientPayment, ClientPaymentViewModel>();
+            CreateMap<ClientPaymentViewModel, ClientPayment>();
         }
     }
 }

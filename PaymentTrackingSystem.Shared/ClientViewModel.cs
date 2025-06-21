@@ -19,7 +19,7 @@ namespace PaymentTrackingSystem.Shared
         public string? AddressLine2 { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
-        public int StateId { get; set; }
+        public int? StateId { get; set; }
         public string? Postcode { get; set; }
         public DateTime? CreatedDate{ get; set; }
         public DateTime? ModifiedDate { get; set; }
