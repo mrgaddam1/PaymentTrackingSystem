@@ -23,16 +23,22 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             DbContext = _DbContext;
             mapper = _mapper;
         }
-
-
         public async Task<List<ClientPaymentViewModel>> GetAllClientPayments()
         {
             var clientPaymentdata = new List<ClientPaymentViewModel>();
             try
             {
-                var PaymentData = (DbContext.ClientPayments.ToListAsync());
-                clientPaymentdata = mapper.Map<List<ClientPaymentViewModel>>(PaymentData);
-
+                clientPaymentdata = await(from p in DbContext.ClientPayments
+                                   join c in DbContext.Clients on p.ClientId equals c.ClientId
+                                   select new ClientPaymentViewModel
+                                   {
+                                      PaymentId = p.PaymentId,
+                                      FirstName = c.FirstName,
+                                      LastName = c.LastName,
+                                      Amount = p.Amount,
+                                      AmountTransferedDate = p.AmountTransferedDate,
+                                      InterestRate = p.InterestRate,
+                                   }).ToListAsync();  
             }
             catch (Exception ex)
             {

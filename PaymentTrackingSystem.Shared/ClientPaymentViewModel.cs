@@ -16,6 +16,9 @@ namespace PaymentTrackingSystem.Shared
         public decimal? InterestRate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get;set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+
 
     }
 }

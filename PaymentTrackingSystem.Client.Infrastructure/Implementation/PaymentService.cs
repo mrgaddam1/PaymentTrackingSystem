@@ -21,7 +21,7 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
 
         public async Task<T?> GetAllClientPayments<T>()
         {
-            var response = await httpClient.GetAsync("api/ClientPayments/GetAllClients");             
+            var response = await httpClient.GetAsync("api/ClientPayments/GetAllClientPayments");             
             return await ApiStatusCodeHandler.HandleResponse<T>(response);           
              
         }
