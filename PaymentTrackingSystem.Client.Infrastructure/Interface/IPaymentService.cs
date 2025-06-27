@@ -13,6 +13,6 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Interface
         Task<T?> GetAllClientPaymentsDetailsByPaymentId<T>(int paymentId);
         Task<bool> Add(ClientPaymentViewModel clientPayment);
         Task<bool> Update(ClientPaymentViewModel clientPaymentViewModel);
-        Task<bool> Delete(ClientPaymentViewModel clientPaymentViewModel);
+        Task<bool> Delete(int paymentId);
     }
 }

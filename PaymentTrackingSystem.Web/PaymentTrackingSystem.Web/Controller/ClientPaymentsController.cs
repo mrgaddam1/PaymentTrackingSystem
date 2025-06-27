@@ -43,7 +43,7 @@ namespace PaymentTrackingSystem.Web.Controller
         }
 
         [HttpGet]
-        [Route("GetAllClientPaymentsDetailsByPaymentId")]
+        [Route("GetAllClientPaymentsDetailsByPaymentId/{PaymentId}")]
         public async Task<IActionResult> GetAllClientPaymentsDetailsByPaymentId(int PaymentId)
         {
             try
@@ -134,6 +134,41 @@ namespace PaymentTrackingSystem.Web.Controller
             }
         }
 
+
+
+        [HttpDelete]
+        [Route("Delete/{paymentId}")]
+        public async Task<IActionResult> Delete(int paymentId)
+        {
+            try
+            {
+                if (paymentId == null)
+                {
+                    return BadRequest("Client Payment data is required.");
+                }
+                var response = await PaymentManager.Delete(paymentId);
+                if (response)
+                {
+                    var status = (new { message = "Client Payment details are deleted successfully" });
+                    return Ok(status);
+                }
+                else
+                {
+                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to delete Client Payment details");
+                    return BadRequest(status);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occured while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
 
 
 
