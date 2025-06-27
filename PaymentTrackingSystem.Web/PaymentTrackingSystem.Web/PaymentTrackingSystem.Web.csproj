@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\PaymentTrackingSystem.Web.Client\Pages\ClientPayments\Component.razor" Link="Component.razor" />
-    <None Include="..\PaymentTrackingSystem.Web.Client\Pages\ClientPayments\Component1.razor" Link="Component1.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\PaymentTrackingSystem.Client.Infrastructure\PaymentTrackingSystem.Client.Infrastructure.csproj" />
     <ProjectReference Include="..\..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
     <ProjectReference Include="..\..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
