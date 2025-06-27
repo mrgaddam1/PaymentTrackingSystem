@@ -1,5 +1,138 @@
 ﻿@page  "/clientPayments/updateClientPayment/{paymentId:int}"
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+
+@inject ILogger<Add> Logger
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Update Client Payments
+                </div>
+                <div class="card-body">
+                    <div class="col-lg-12">
+                        <EditForm Model="@clientPayment" OnValidSubmit="UpdateClientPayment">
+                            @if (errorMessages != null)
+                            {
+                                @foreach (var message in errorMessages)
+                                {
+                                    if (!string.IsNullOrEmpty(message))
+                                    {
+                                        @if (message != "")
+                                        {
+                                            <ul class="alert-danger mt-2 text-left">
+                                                <li>@message</li>
+                                            </ul>
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Amount
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputNumber @bind-Value="clientPayment.Amount" 
+                                                 maxLength="150" 
+                                                 @onblur="onAmountChangeEvent"
+                                                 class="form-control text-primary" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Client
+                                </div>
+                                <div class="col-sm-6">
+                                    <RadzenStack Orientation="Orientation.Horizontal"
+                                                 AlignItems="AlignItems.Center"
+                                                 JustifyContent="JustifyContent.Center"
+                                                 Gap="0.1rem">
+                                        <RadzenLabel Component="DropDownClear" />
+
+                                        <RadzenDropDown @bind-Value="@value"
+                                                        Data=@ClientData
+                                                        TextProperty="@nameof(ClientViewModel.FirstName)"
+                                                        ValueProperty="ClientId"
+                                                        AllowClear=true
+                                                        Placeholder="Select Client"
+                                                        Style="width:500px;"
+                                                        Change="onFirstNameChangeEvent"
+                                                        Name="DropDownClear" />
+                                    </RadzenStack>
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Amount Transfered Date
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputDate @bind-Value="clientPayment.AmountTransferedDate"
+                                                @onblur="OnAmountTransferredDateChangeEvent"
+                                               class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Amount Interest
+                                </div>
+                                <div class="col-sm-6">
+                                    <RadzenStack Orientation="Orientation.Horizontal"
+                                                 AlignItems="AlignItems.Center"
+                                                 JustifyContent="JustifyContent.Center"
+                                                 Gap="0.1rem">
+                                        <RadzenLabel Component="DropDownClear" />
+
+                                        <RadzenDropDown @bind-Value="@interestRatevalue"
+                                                        Data=@InterestRatesViewModelData
+                                                        TextProperty="@nameof(InterestRatesViewModel.AmountInterestRate)"
+                                                        ValueProperty="InterestId"
+                                                        AllowClear=true
+                                                        Placeholder="Select Interest Rate"
+                                                        Style="width:500px;color:red;"
+                                                        Change="InterestRatesViewModelDropDownChange"
+                                                        Name="PaymentInterestDropDownClear" />
+                                    </RadzenStack>
+
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Mothly Interest Amount
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputNumber @bind-Value="@monthlyInterestAmount" readonly class="form-control text-danger" />
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary  fw-bold">
+                                    <i class="fas fa-save" aria-hidden="true"></i>
+                                    &nbsp;&nbsp;Update Payment
+                                </button>
+                                <button type="button" class="btn btn-warning fw-bold" @onclick="GoBack">
+                                    <i class="fas fa-times"></i>&nbsp;&nbsp;Cancel
+                                </button>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(successMessage))
+                            {
+                                <div class="alert alert-success mt-3 text-center">@successMessage</div>
+                            }
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-
+    
 }

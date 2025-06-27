@@ -28,17 +28,19 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             var clientPaymentdata = new List<ClientPaymentViewModel>();
             try
             {
-                clientPaymentdata = await(from p in DbContext.ClientPayments
-                                   join c in DbContext.Clients on p.ClientId equals c.ClientId
-                                   select new ClientPaymentViewModel
-                                   {
-                                      PaymentId = p.PaymentId,
-                                      FirstName = c.FirstName,
-                                      LastName = c.LastName,
-                                      Amount = p.Amount,
-                                      AmountTransferedDate = p.AmountTransferedDate,
-                                      InterestRate = p.InterestRate,
-                                   }).ToListAsync();  
+                clientPaymentdata = await (from p in DbContext.ClientPayments
+                                           join c in DbContext.Clients on p.ClientId equals c.ClientId
+                                           where p.IsDeleted == false
+                                           select new ClientPaymentViewModel
+                                           {
+                                               PaymentId = p.PaymentId,
+                                               FirstName = c.FirstName,
+                                               LastName = c.LastName,
+                                               Amount = p.Amount,
+                                               AmountTransferedDate = p.AmountTransferedDate,
+                                               InterestRate = p.InterestRate,
+                                           }).ToListAsync();
+
             }
             catch (Exception ex)
             {
@@ -53,9 +55,21 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             var clientPaymentdata = new ClientPaymentViewModel();
             try
             {
-                var PaymentData = (DbContext.ClientPayments.FindAsync(paymentId));
-                clientPaymentdata = mapper.Map<ClientPaymentViewModel>(PaymentData);
 
+                clientPaymentdata = await (from p in DbContext.ClientPayments
+                                 join c in DbContext.Clients on p.ClientId equals c.ClientId
+                                 where p.PaymentId == paymentId &&  p.IsDeleted == false
+                                 select new ClientPaymentViewModel
+                                 {
+                                    ClientId = c.ClientId,
+                                    PaymentId = p.PaymentId,
+                                    FirstName = c.FirstName,
+                                    LastName = c.LastName,
+                                    Amount = p.Amount,
+                                    AmountTransferedDate = p.AmountTransferedDate,
+                                    InterestRate = p.InterestRate,
+                                 }).SingleOrDefaultAsync();
+          
             }
             catch (Exception ex)
             {
@@ -70,6 +84,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             try
             {
                 var clientPaymentData = mapper.Map<ClientPayment>(clientPayment);
+                clientPaymentData.IsDeleted = false;
                 clientPaymentData.CreatedDate = DateTime.UtcNow;
                 clientPaymentData.UserId = 1;
 
@@ -92,11 +107,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                 {
                     return false;
                 }
+                clientPaymentData.Amount = clientPaymentViewModel.Amount;
+                clientPaymentData.InterestRate = clientPaymentViewModel.InterestRate;
                 clientPaymentData.ModifiedDate = DateTime.Now;
-                clientPaymentData.UserId = 1;
-
+                clientPaymentData.UserId = 1;               
                 DbContext.ClientPayments.Update(clientPaymentData);
-                DbContext.SaveChangesAsync();
+                await DbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -105,17 +121,20 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                 return false;
             }
         }
-        public async Task<bool> Delete(ClientPaymentViewModel clientPaymentViewModel)
+        public async Task<bool> Delete(int paymentId)
         {
             try
             {
-                var clientPaymentData = await (DbContext.ClientPayments.FindAsync(clientPaymentViewModel.PaymentId));
+                var clientPaymentData = await (DbContext.ClientPayments.FindAsync(paymentId));
                 if (clientPaymentData == null)
                 {
                     return false;
-                }                           
-                DbContext.ClientPayments.Remove(clientPaymentData);
-                DbContext.SaveChangesAsync();
+                }
+                clientPaymentData.DeletedDate = DateTime.Now;
+                clientPaymentData.UserId = 1;
+                clientPaymentData.IsDeleted = true;
+                DbContext.ClientPayments.Update(clientPaymentData);
+                await DbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

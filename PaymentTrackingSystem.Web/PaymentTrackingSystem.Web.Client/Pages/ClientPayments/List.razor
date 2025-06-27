@@ -1,12 +1,12 @@
 ﻿@page "/clientPayments/clientPaymentList"
 @using PaymentTrackingSystem.Client.Infrastructure.Interface
 @using PaymentTrackingSystem.Shared
+@using Radzen
 @using Radzen.Blazor
 
 @inject ILogger<List> Logger
-@inject IPaymentService PaymentService
-@inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
+
 <div class="row">
     <div class="col-lg-6" align="left">
         <h2>Clients</h2>
@@ -28,7 +28,7 @@
     <div class="col-lg-12">
         @if (clientPaymentData != null)
         {
-            <RadzenDataGrid class="radzen-grid radgen-grid-font"
+            <RadzenDataGrid @ref="clientPaymentGrid" class="radzen-grid radgen-grid-font"
                             Data="@clientPaymentData"
                             TItem="ClientPaymentViewModel"
                             EditMode="Radzen.DataGridEditMode.Single"
@@ -43,7 +43,7 @@
                     <RadzenDataGridColumn Property="LastName" Title="Last Name" />
 
                     <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn Property="AmountTransferedDate" Title="Transfered Date" />
+                    <RadzenDataGridColumn Property="AmountTransferedDate" Title="Transferred Date" />
                     <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate" />
 
                     <RadzenDataGridColumn TItem="ClientPaymentViewModel">
@@ -54,36 +54,18 @@
                                           Click="@(() => EditRow(data))" />
                         </Template>
                     </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ClientPaymentViewModel">
+                        <Template Context="data">
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"
+                                          Size="Radzen.ButtonSize.Small"
+                                          Style="margin-left:5px;"
+                                          Click="@(() => DeleteRow(data))" />
+                        </Template>
+                    </RadzenDataGridColumn>
                 </Columns>
             </RadzenDataGrid>
         }
     </div>
 </div>
-
-@code {
-    private string? errorMessage;
-    public List<ClientPaymentViewModel> clientPaymentData = new List<ClientPaymentViewModel>();
-    Radzen.DataGridGridLines GridLines = Radzen.DataGridGridLines.Both;    
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            clientPaymentData = await PaymentService.GetAllClientPayments<List<ClientPaymentViewModel>>();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error loading data.");
-        }
-    }
-    void EditRow(ClientPaymentViewModel clientPaymentViewModel)
-    {
-        NavigationManager.NavigateTo("/clientPayments/updateClientPayment" + "/" + Convert.ToString(clientPaymentViewModel.PaymentId));
-    }
-    private void AddClient()
-    {
-        NavigationManager.NavigateTo("/clientPayments/addClientPayment");
-    }
-}
 
  

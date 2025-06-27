@@ -14,6 +14,7 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
     public class PaymentService : IPaymentService
     {
         public HttpClient httpClient { get; set; }
+        public string clientPaymentApiPath = "api/ClientPayments/";
         public PaymentService(HttpClient _httpClient)
         {
             httpClient = _httpClient;
@@ -21,13 +22,13 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
 
         public async Task<T?> GetAllClientPayments<T>()
         {
-            var response = await httpClient.GetAsync("api/ClientPayments/GetAllClientPayments");             
+            var response = await httpClient.GetAsync(clientPaymentApiPath + "GetAllClientPayments");             
             return await ApiStatusCodeHandler.HandleResponse<T>(response);           
              
         }
         public async Task<T?> GetAllClientPaymentsDetailsByPaymentId<T>(int paymentId)
         {
-            var response = await httpClient.GetAsync("api/ClientPayments/GetAllClientPaymentsDetailsByPaymentId/" + paymentId);
+            var response = await httpClient.GetAsync(clientPaymentApiPath + "GetAllClientPaymentsDetailsByPaymentId/" + paymentId);
             return await ApiStatusCodeHandler.HandleResponse<T>(response);
         }
         public async Task<bool> Add(ClientPaymentViewModel clientPayment)
@@ -35,7 +36,7 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             bool isSuccess = false;
             try
             {
-                var response = await httpClient.PostAsJsonAsync("api/ClientPayments/Add", clientPayment);
+                var response = await httpClient.PostAsJsonAsync(clientPaymentApiPath + "Add", clientPayment);
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
@@ -55,12 +56,12 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             }
         }
 
-        public async Task<bool> Delete(ClientPaymentViewModel clientPaymentViewModel)
+        public async Task<bool> Delete(int paymentId)
         {
             bool isSuccess = false;
             try
             {
-                var response = await httpClient.DeleteAsync("api/ClientPayments/Delete/"+ clientPaymentViewModel.PaymentId);
+                var response = await httpClient.DeleteAsync(clientPaymentApiPath + "Delete/" + paymentId);
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
@@ -87,7 +88,7 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             bool isSuccess = false;
             try
             {
-                var response = await httpClient.PostAsJsonAsync("api/ClientPayments/Update", clientPaymentViewModel);
+                var response = await httpClient.PostAsJsonAsync(clientPaymentApiPath + "Update", clientPaymentViewModel);
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();

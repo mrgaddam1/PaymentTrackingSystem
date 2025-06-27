@@ -14,6 +14,8 @@ namespace PaymentTrackingSystem.Common.Utils.ClientPaymentMessages
         public static string InterestRate = "Interest Rate: Please enter Amount Interest Rate.";
 
         public static string ClientAddPaymentSuccessMessage = "Client Payment details are added successfully.";
+        public static string ClientUpdatePaymentSuccessMessage = "Client Payment details are Updated successfully.";
         public static string ClientAddPaymentErrorMessage = "Unable to add Client Payment details.";
+        public static string ClientUpdatePaymentErrorMessage = "Unable to Update Client Payment details.";
     }
 }

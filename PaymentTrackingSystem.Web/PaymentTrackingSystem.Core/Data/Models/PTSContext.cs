@@ -65,6 +65,7 @@ public partial class PTSContext : DbContext
             entity.ToTable("ClientInterestPayment");
 
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.InterestAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.InterestPaidDate).HasColumnType("datetime");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
@@ -79,6 +80,7 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.AmountTransferedDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.InterestRate).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });

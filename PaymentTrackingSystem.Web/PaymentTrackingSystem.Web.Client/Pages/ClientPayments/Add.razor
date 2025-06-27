@@ -3,11 +3,7 @@
 @using PaymentTrackingSystem.Shared
 @using Radzen
 @using Radzen.Blazor
-@using PaymentTrackingSystem.Common.Utils.ClientPaymentMessages
 
-@inject IClientService ClientService
-@inject IPaymentService PaymentService
-@inject NavigationManager NavigationManager
 @inject ILogger<Add> Logger
 @rendermode @(new InteractiveAutoRenderMode(prerender:false))
 
@@ -27,9 +23,13 @@
                                 {
                                     if (!string.IsNullOrEmpty(message))
                                     {
-                                        <ul class="alert alert-danger mt-3 text-left">
-                                            <li>@message</li>
-                                        </ul>
+                                        @if(message !="")
+                                        {
+                                            <ul class="alert-danger mt-2 text-left">
+                                                <li>@message</li>
+                                            </ul>
+                                        }
+                                      
                                     }
                                 }
                             }
@@ -38,7 +38,10 @@
                                     Amount
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputNumber @bind-Value="clientPayment.Amount" maxLength="150" class="form-control text-primary" />
+                                    <InputNumber @bind-Value="clientPayment.Amount" 
+                                                 maxLength="150"
+                                                 @onblur="onAmountChangeEvent"
+                                                 class="form-control text-primary" />
                                 </div>
                             </div>
 
@@ -60,18 +63,19 @@
                                                         AllowClear=true 
                                                         Placeholder="Select Client"
                                                         Style="width:500px;"
-                                                        Change="HandleDropDownChange"
+                                                        Change="onFirstNameChangeEvent"
                                                         Name="DropDownClear" />
                                     </RadzenStack>
                                 </div>
                             </div>
                             <div class="row rowMargin">
                                 <div class="col-sm-3">
-                                    Amount Transfered Date
+                                    Amount Transferred Date
                                 </div>
                                 <div class="col-sm-6">
                                     <InputDate 
-                                        @bind-Value="clientPayment.AmountTransferedDate" 
+                                        @bind-Value="clientPayment.AmountTransferedDate"
+                                               Change="onFirstNameChangeEvent"
                                         class="form-control" />
                                 </div>
                             </div>
@@ -88,12 +92,12 @@
 
                                         <RadzenDropDown @bind-Value=@interestRatevalue
                                                         Data=@interestRatesData
-                                                        TextProperty="@nameof(InterestRates.AmountInterestRate)"
+                                                        TextProperty="@nameof(InterestRatesViewModel.AmountInterestRate)"
                                                         ValueProperty="InterestId"
                                                         AllowClear=true
                                                         Placeholder="Select Interest Rate"
                                                         Style="width:500px;color:red;"
-                                                        Change="InterestRatesDropDownChange"
+                                                        Change="OnInterestRatesChangeEvent"
                                                         Name="DropDownClear" />
                                     </RadzenStack>
 
@@ -106,7 +110,8 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <InputNumber  
-                                        @bind-Value="@monthlyInterestAmount" readonly class="form-control text-danger" />
+                                        @bind-Value="@monthlyInterestAmount" 
+                                        readonly class="form-control text-danger" />
                                 </div>
                             </div>
                             <div class="text-center">
@@ -130,157 +135,4 @@
         </div>
     </div>
 </div>
-
-@code {
-    private ClientPaymentViewModel clientPayment = new();
-    public List<ClientViewModel> ClientData = new List<ClientViewModel>();
-    private string[] errorMessages;
-    private string successMessage = string.Empty;
-    public List<ClientViewModel> Clients = new List<ClientViewModel>();
-    private int myNumber;
-    decimal monthlyInterestAmount = 0;
-    string? selectedInterestValue;
-    int? value;
-    int? interestRatevalue;
-    private List<InterestRates> interestRatesData = new List<InterestRates>();
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            ClientData = await ClientService.GetAllClients<List<ClientViewModel>>();
-            interestRatesData =  GetAllInterestRates();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error loading data.");
-        }
-    }
-
-    private void HandleDropDownChange(object selectedValue)
-    {
-        if (selectedValue != null)
-        {
-            clientPayment.ClientId = Convert.ToInt32(selectedValue.ToString());
-            // Log the selected value to the console
-            Console.WriteLine("Selected Value: " + clientPayment.ClientId);
-        }
-    }
-    private void InterestRatesDropDownChange(object selectedValue)
-    {
-        if (selectedValue != null)
-        {
-            clientPayment.InterestRate = Convert.ToDecimal(selectedValue);
-            monthlyInterestAmount = (Convert.ToDecimal(clientPayment.Amount) * Convert.ToDecimal(selectedValue) / 100);
-        }
-    } 
-
-    private void HandleInterestRateChange(ChangeEventArgs e)
-    {
-        // e.Value will be an object, so cast appropriately
-        if (decimal.TryParse(e.Value?.ToString(), out var newRate))
-        {
-            clientPayment.InterestRate = newRate;
-            // Do something else with newRate
-        }
-    }
-
-    private async void HandleValidSubmit()
-    {
-        errorMessages = Validations(clientPayment);
-        string validations = string.Join(" ", errorMessages);
-        if ((validations == null) || (validations == ""))
-        {
-            var response = await PaymentService.Add(clientPayment);
-            if (response)
-            {
-                Logger.LogInformation(ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage);
-                successMessage = ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage;              
-                Reset();
-            }
-            else
-            {
-                Logger.LogInformation(ClientPaymentValidationMessages.ClientAddPaymentErrorMessage);
-                successMessage = ClientPaymentValidationMessages.ClientAddPaymentErrorMessage;
-            }
-        }
-        else
-        {
-            validations = "";
-        }
-    }
-    private async void Reset()
-    {
-        clientPayment = new ClientPaymentViewModel();
-        errorMessages = [];
-        StateHasChanged();
-    }
-
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo("/client/clientList");
-    }
-
-    private string[] Validations(ClientPaymentViewModel client)
-    {
-        string[] result;
-        string validationMessage = "";
-        if (client.Amount == null)
-        {
-            validationMessage = ClientPaymentValidationMessages.Amount;
-        }
-        if (client.ClientId == null)
-        {
-            validationMessage = validationMessage != null ? validationMessage +
-                                ", " + Environment.NewLine + ClientPaymentValidationMessages.ClientId
-                                : ClientPaymentValidationMessages.ClientId;
-        }
-        if (client.AmountTransferedDate == null)
-        {
-            validationMessage = validationMessage != null
-                                ? validationMessage + ", " + Environment.NewLine + ClientPaymentValidationMessages.AmountTransferedDate
-                                : ClientPaymentValidationMessages.AmountTransferedDate;
-        }
-        if (client.InterestRate == null)
-        {
-            validationMessage = validationMessage != null
-                                ? validationMessage + ", " + Environment.NewLine + ClientPaymentValidationMessages.InterestRate
-                                : ClientPaymentValidationMessages.InterestRate;
-        }      
-        return result = validationMessage.Split(',').Select(s => s.Trim()).ToArray();
-    }
-
-    public List<InterestRates>GetAllInterestRates()
-    {
-        var Rates = new List<InterestRates>
-        {
-            new InterestRates
-            {
-                InterestId = 1,
-                AmountInterestRate = "1"
-            },
-            new InterestRates
-            {
-                InterestId = 2,
-                AmountInterestRate = "2"
-            },
-             new InterestRates
-            {
-                InterestId = 3,
-                AmountInterestRate = "3"
-            },
-             new InterestRates
-            {
-                InterestId = 4,
-                AmountInterestRate = "4"
-            },
-        };
-        return Rates;
-    }
-
-    public class InterestRates
-    {
-        public int InterestId { get; set; }
-        public string AmountInterestRate { get; set; }
-    } 
-
-}
+ 
