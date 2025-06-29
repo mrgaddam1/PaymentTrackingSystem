@@ -9,6 +9,8 @@ public partial class ClientInterestPayment
 
     public int? ClientId { get; set; }
 
+    public int? PaymentId { get; set; }
+
     public int? UserId { get; set; }
 
     public decimal? InterestAmount { get; set; }

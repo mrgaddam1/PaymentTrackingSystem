@@ -33,6 +33,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                            where p.IsDeleted == false
                                            select new ClientPaymentViewModel
                                            {
+                                               ClientId = p.ClientId,
                                                PaymentId = p.PaymentId,
                                                FirstName = c.FirstName,
                                                LastName = c.LastName,
