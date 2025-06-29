@@ -9,8 +9,7 @@ namespace PaymentTrackingSystem.Web.Client
         static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.Services.AddScoped<IClientService, ClientService>();
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            RegisterClientDependency(builder);
 
             builder.Services.AddHttpClient("httpClient", client =>
             {
@@ -20,6 +19,13 @@ namespace PaymentTrackingSystem.Web.Client
 
 
             await builder.Build().RunAsync();
+        }
+
+        private static void RegisterClientDependency(WebAssemblyHostBuilder builder)
+        {
+            builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IPaymentInterestService, PaymentInterestService>();
         }
     }
 }

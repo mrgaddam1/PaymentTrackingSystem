@@ -1,30 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentTrackingSystem.Client.Infrastructure.Interface;
 using PaymentTrackingSystem.Shared;
-using PaymentTrackingSystem.Web.Infrastructure.Implementation;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
 
 namespace PaymentTrackingSystem.Web.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientPaymentsController : ControllerBase
+    public class ClientPaymentInterestsController : ControllerBase
     {
-        private readonly ILogger<ClientPaymentsController> logger;
-        private IPaymentManager PaymentManager { get; set; }
-        public ClientPaymentsController(IPaymentManager _PaymentManager, ILogger<ClientPaymentsController> _logger)
+        private readonly ILogger<ClientPaymentInterestsController> logger;
+        private IPaymentInterestManager PaymentInterestManager { get; set; }
+        public ClientPaymentInterestsController(IPaymentInterestManager _PaymentInterestManager, 
+                                                ILogger<ClientPaymentInterestsController> _logger)
         {
-            PaymentManager = _PaymentManager;
+            PaymentInterestManager = _PaymentInterestManager;
             logger = _logger;
         }
 
         [HttpGet]
-        [Route("GetAllClientPayments")]
-        public async Task<IActionResult> GetAllClientPayments()
+        [Route("GetAllClientPaymentInterests")]
+        public async Task<IActionResult> GetAllClientPaymentInterests()
         {
             try
             {
-                var clientPayments = await PaymentManager.GetAllClientPayments();
+                var clientPayments = await PaymentInterestManager.GetAll();
                 if (clientPayments.Count == 0)
                 {
                     return NoContent();
@@ -43,17 +44,17 @@ namespace PaymentTrackingSystem.Web.Controller
         }
 
         [HttpGet]
-        [Route("GetAllClientPaymentsDetailsByPaymentId/{PaymentId}")]
-        public async Task<IActionResult> GetAllClientPaymentsDetailsByPaymentId(int PaymentId)
+        [Route("GetAllClientPaymentInterestDetailsByInterestId/{InterestId}")]
+        public async Task<IActionResult> GetAllClientPaymentInterestDetailsByInterestId(int InterestId)
         {
             try
             {
-                var clientPayments = await PaymentManager.GetClientPaymentDetailsById(PaymentId);
-                if (clientPayments == null)
+                var clientPaymentInterests = await PaymentInterestManager.GetAllDetailsById(InterestId);
+                if (clientPaymentInterests == null)
                 {
                     return NoContent();
                 }
-                return Ok(clientPayments);
+                return Ok(clientPaymentInterests);
             }
             catch (Exception ex)
             {
@@ -68,23 +69,23 @@ namespace PaymentTrackingSystem.Web.Controller
 
         [HttpPost]
         [Route("Add")]
-        public async Task<IActionResult> Add([FromBody] ClientPaymentViewModel clientPaymentViewModel)
+        public async Task<IActionResult> Add([FromBody] ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
             try
             {
-                if (clientPaymentViewModel == null)
+                if (clientPaymentInterestViewModel == null)
                 {
-                    return BadRequest("Client Payment data is required.");
+                    return BadRequest("Client Payment Interest data is required.");
                 }
-                var response = await PaymentManager.Add(clientPaymentViewModel);
+                var response = await PaymentInterestManager.Add(clientPaymentInterestViewModel);
                 if (response)
                 {
-                    var status = CreatedAtAction(nameof(Add), new { id = clientPaymentViewModel.PaymentId }, clientPaymentViewModel);
+                    var status = CreatedAtAction(nameof(Add), new { id = clientPaymentInterestViewModel.InterestId }, clientPaymentInterestViewModel);
                     return Ok(status);
                 }
                 else
                 {
-                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to add Client Payments");
+                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to add Client Payment Interests");
                     return BadRequest(status);
                 }
 
@@ -102,23 +103,23 @@ namespace PaymentTrackingSystem.Web.Controller
 
         [HttpPost]
         [Route("Update")]
-        public async Task<IActionResult> Update([FromBody] ClientPaymentViewModel clientPaymentViewModel)
+        public async Task<IActionResult> Update([FromBody] ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
             try
             {
-                if (clientPaymentViewModel == null)
+                if (clientPaymentInterestViewModel == null)
                 {
                     return BadRequest("Client Payment data is required.");
                 }
-                var response = await PaymentManager.Update(clientPaymentViewModel);
+                var response = await PaymentInterestManager.Update(clientPaymentInterestViewModel);
                 if (response)
                 {
-                    var status = (new { message = "Client Payment details are updated successfully", clientPaymentViewModel });
+                    var status = (new { message = "Client Payment Interest details are updated successfully", clientPaymentInterestViewModel });
                     return Ok(status);
                 }
                 else
                 {
-                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to update Client Payment");
+                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to update Client Payment Interest");
                     return BadRequest(status);
                 }
 
@@ -138,18 +139,18 @@ namespace PaymentTrackingSystem.Web.Controller
 
         [HttpDelete]
         [Route("Delete/{paymentId}")]
-        public async Task<IActionResult> Delete(int paymentId)
+        public async Task<IActionResult> Delete(int interestId)
         {
             try
             {
-                if (paymentId == null)
+                if (interestId == null)
                 {
-                    return BadRequest("Client Payment data is required.");
+                    return BadRequest("Client Payment Interest data is required.");
                 }
-                var response = await PaymentManager.Delete(paymentId);
+                var response = await PaymentInterestManager.Delete(interestId);
                 if (response)
                 {
-                    var status = (new { message = "Client Payment details are deleted successfully" });
+                    var status = (new { message = "Client Payment Interest details are deleted successfully" });
                     return Ok(status);
                 }
                 else
@@ -171,3 +172,4 @@ namespace PaymentTrackingSystem.Web.Controller
         }
     }
 }
+

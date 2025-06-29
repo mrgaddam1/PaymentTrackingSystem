@@ -11,9 +11,12 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
         {
             builder.Services.AddScoped<IClientManager, ClientManager>();
             builder.Services.AddScoped<IPaymentManager, PaymentManager>();
+            builder.Services.AddScoped<IPaymentInterestManager, PaymentInterestManager>();
 
             builder.Services.AddScoped<IClientService, ClientService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IPaymentInterestService, PaymentInterestService>();
+
         }
     }
 }
