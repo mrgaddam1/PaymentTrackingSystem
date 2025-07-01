@@ -27,12 +27,23 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         {
             try
             {
-                var interestPayment = (DbContext
-                                      .ClientInterestPayments
-                                      .AsNoTracking()
-                                      .OrderBy(x => x.CreatedDate)
-                                      .ToListAsync());
-                return mapper.Map<List<ClientPaymentInterestViewModel>>(interestPayment) ?? new List<ClientPaymentInterestViewModel>();
+                var interestPaymentData =await (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
+                            join cp in DbContext.ClientPayments.AsNoTracking()
+                            on cpi.PaymentId equals cp.PaymentId
+                            join c in DbContext.Clients.AsNoTracking()
+                            on cpi.ClientId equals c.ClientId
+                            select new ClientPaymentInterestViewModel
+                            {
+                                InterestId = cpi.InterestId,
+                                ClientName = c.FirstName + " " + c.LastName,
+                                PaymentId = cp.PaymentId,
+                                Amount = cp.Amount,
+                                InterestAmount = cpi.InterestAmount,
+                                InterestPaidDate = cpi.InterestPaidDate,
+
+                            }).OrderBy(x=>x.InterestId).ToListAsync();
+
+                return interestPaymentData;
             }
             catch (Exception ex)
             {
@@ -44,13 +55,24 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         {
             try
             {
-                var interestPayment = (DbContext
-                                      .ClientInterestPayments
-                                      .AsNoTracking()
-                                      .Where(x=>x.InterestId == interestId)
-                                      .OrderBy(x => x.CreatedDate)
-                                      .FirstOrDefaultAsync());
-                return mapper.Map<ClientPaymentInterestViewModel>(interestPayment) ?? new ClientPaymentInterestViewModel();
+                var interestPaymentData = (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
+                                           join cp in DbContext.ClientPayments.AsNoTracking()
+                                           on cpi.PaymentId equals cp.PaymentId
+                                           join c in DbContext.Clients.AsNoTracking()
+                                           on cpi.ClientId equals c.ClientId
+                                           where (cpi.InterestId == interestId)
+                                           select new ClientPaymentInterestViewModel
+                                           {
+                                               InterestId = cpi.InterestId,
+                                               ClientName = c.FirstName + " " + c.LastName,
+                                               PaymentId = cp.PaymentId,
+                                               Amount = cp.Amount,
+                                               InterestAmount = cpi.InterestAmount,
+                                               InterestPaidDate = cpi.InterestPaidDate,
+
+                                           }).OrderBy(x => x.InterestId).FirstOrDefaultAsync();
+              
+                return mapper.Map<ClientPaymentInterestViewModel>(interestPaymentData) ?? new ClientPaymentInterestViewModel();
             }
             catch (Exception ex)
             {
