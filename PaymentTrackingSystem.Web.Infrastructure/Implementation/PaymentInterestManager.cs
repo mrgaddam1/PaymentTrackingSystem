@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PaymentTrackingSystem.Core.Data.Models;
@@ -6,6 +7,7 @@ using PaymentTrackingSystem.Shared;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,21 +29,26 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         {
             try
             {
-                var interestPaymentData =await (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
-                            join cp in DbContext.ClientPayments.AsNoTracking()
-                            on cpi.PaymentId equals cp.PaymentId
-                            join c in DbContext.Clients.AsNoTracking()
-                            on cpi.ClientId equals c.ClientId
-                            select new ClientPaymentInterestViewModel
-                            {
-                                InterestId = cpi.InterestId,
-                                ClientName = c.FirstName + " " + c.LastName,
-                                PaymentId = cp.PaymentId,
-                                Amount = cp.Amount,
-                                InterestAmount = cpi.InterestAmount,
-                                InterestPaidDate = cpi.InterestPaidDate,
+                var interestPaymentData = await (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
+                                                 join cp in DbContext.ClientPayments.AsNoTracking()
+                                                 on cpi.PaymentId equals cp.PaymentId
+                                                 join c in DbContext.Clients.AsNoTracking()
+                                                 on cpi.ClientId equals c.ClientId
+                                                 where cpi.IsDeleted == false
+                                                 select new ClientPaymentInterestViewModel
+                                                 {
+                                                     InterestId = cpi.InterestId,
+                                                     ClientId = cpi.ClientId,
+                                                     ClientName = c.FirstName + " " + c.LastName,
+                                                     PaymentId = cp.PaymentId,
+                                                     Amount = cp.Amount,
+                                                     InterestRate = cp.InterestRate,
+                                                     InterestAmount = cpi.InterestAmount,
+                                                     InterestPaidDate = cpi.InterestPaidDate,
+                                                     IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
+                                                     IsitDeleted = cpi.IsDeleted,
 
-                            }).OrderBy(x=>x.InterestId).ToListAsync();
+                                                 }).OrderBy(x => x.InterestId).ToListAsync();
 
                 return interestPaymentData;
             }
@@ -53,26 +60,36 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         }
         public async Task<ClientPaymentInterestViewModel> GetAllDetailsById(int interestId)
         {
+            var interestPaymentData = new ClientPaymentInterestViewModel();
             try
             {
-                var interestPaymentData = (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
-                                           join cp in DbContext.ClientPayments.AsNoTracking()
-                                           on cpi.PaymentId equals cp.PaymentId
-                                           join c in DbContext.Clients.AsNoTracking()
-                                           on cpi.ClientId equals c.ClientId
-                                           where (cpi.InterestId == interestId)
-                                           select new ClientPaymentInterestViewModel
-                                           {
-                                               InterestId = cpi.InterestId,
-                                               ClientName = c.FirstName + " " + c.LastName,
-                                               PaymentId = cp.PaymentId,
-                                               Amount = cp.Amount,
-                                               InterestAmount = cpi.InterestAmount,
-                                               InterestPaidDate = cpi.InterestPaidDate,
 
-                                           }).OrderBy(x => x.InterestId).FirstOrDefaultAsync();
-              
-                return mapper.Map<ClientPaymentInterestViewModel>(interestPaymentData) ?? new ClientPaymentInterestViewModel();
+
+                interestPaymentData = await (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
+                                             join cp in DbContext.ClientPayments.AsNoTracking()
+                                             on cpi.PaymentId equals cp.PaymentId
+                                             join c in DbContext.Clients.AsNoTracking()
+                                             on cpi.ClientId equals c.ClientId
+                                             where cpi.InterestId == interestId
+                                             select new ClientPaymentInterestViewModel
+                                             {
+                                                 InterestId = cpi.InterestId,
+                                                 ClientId = cpi.ClientId,
+                                                 ClientName = c.FirstName + " " + c.LastName,
+                                                 PaymentId = cp.PaymentId,
+                                                 Amount = cp.Amount,
+                                                 InterestRate = cp.InterestRate,
+                                                 InterestAmount = cpi.InterestAmount,
+                                                 InterestPaidDate = cpi.InterestPaidDate,
+                                                 IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
+                                                 IsitDeleted = cpi.IsDeleted,
+
+                                             }).OrderBy(x => x.InterestId).FirstOrDefaultAsync();
+
+
+                return null;
+
+
             }
             catch (Exception ex)
             {
@@ -82,7 +99,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         }
         public async Task<bool> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
-            bool isSuccess= false;
+            bool isSuccess = false;
             try
             {
                 var interestData = mapper.Map<ClientInterestPayment>(clientPaymentInterestViewModel);
@@ -93,7 +110,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                     interestData.CreatedDate = DateTime.UtcNow;
                     DbContext.ClientInterestPayments.Add(interestData);
                     await DbContext.SaveChangesAsync();
-                    isSuccess =  true;
+                    isSuccess = true;
                 }
             }
             catch (Exception ex)
@@ -107,16 +124,17 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             bool isSuccess = false;
             try
             {
-                var interestPaymentData = await(DbContext
+                var interestPaymentData = await (DbContext
                                           .ClientInterestPayments
                                           .AsNoTracking()
                                           .Where(x => x.InterestId == clientPaymentInterestViewModel.InterestId)
                                           .OrderBy(x => x.CreatedDate)
                                           .SingleOrDefaultAsync());
-               
+
                 if (interestPaymentData != null)
                 {
-                    interestPaymentData.UserId = 1;                    
+                    interestPaymentData.InterestPaidDate = clientPaymentInterestViewModel.InterestPaidDate;
+                    interestPaymentData.UserId = 1;
                     interestPaymentData.ModifiedDate = DateTime.UtcNow;
                     DbContext.ClientInterestPayments.Update(interestPaymentData);
                     await DbContext.SaveChangesAsync();
@@ -132,7 +150,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 
         public async Task<bool> Delete(int interestId)
         {
-            bool isDeleted= false;
+            bool isDeleted = false;
             try
             {
                 var interestPaymentData = await (DbContext

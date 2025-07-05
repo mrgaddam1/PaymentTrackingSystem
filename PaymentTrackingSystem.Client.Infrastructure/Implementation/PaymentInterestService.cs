@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
@@ -43,12 +44,12 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             }
         }
 
-        public async Task<bool> Delete(int paymentId)
+        public async Task<bool> Delete(int interestId)
         {
             bool isSuccess = false;
             try
             {
-                var response = await httpClient.DeleteAsync(clientPaymentApiPath + "Delete/" + paymentId);
+                var response = await httpClient.DeleteAsync(clientPaymentApiPath + "Delete/" + interestId);
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
@@ -76,8 +77,37 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
 
         public async Task<T?> GetClientPaymentInterestsDetailsById<T>(int interestId)
         {
-            var response = await httpClient.GetAsync(clientPaymentApiPath + "GetAllClientPaymentInterestDetailsByInterestId/" + interestId);
-            return await ApiStatusCodeHandler.HandleResponse<T>(response);
+            try
+            {
+               
+                var response = await httpClient.GetAsync(clientPaymentApiPath + "GetAllClientPaymentInterestDetailsByInterestId/" + interestId);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+                    return default;
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(content))
+                {
+                    return default;
+                }
+
+                var result = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return default;
+            }
         }
 
         public async Task<bool> Update(ClientPaymentInterestViewModel clientPaymentInterestViewModel)

@@ -138,12 +138,12 @@ namespace PaymentTrackingSystem.Web.Controller
 
 
         [HttpDelete]
-        [Route("Delete/{paymentId}")]
+        [Route("Delete/{interestId}")]
         public async Task<IActionResult> Delete(int interestId)
         {
             try
             {
-                if (interestId == null)
+                if (interestId == 0)
                 {
                     return BadRequest("Client Payment Interest data is required.");
                 }

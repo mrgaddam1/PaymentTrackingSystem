@@ -10,9 +10,9 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Interface
     public interface IPaymentInterestService
     {
         Task<T?> GetAllClientPaymentInterests<T>();
-        Task<T?> GetClientPaymentInterestsDetailsById<T>(int paymentId);
+        Task<T?> GetClientPaymentInterestsDetailsById<T>(int interestId);
         Task<bool> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel);
         Task<bool> Update(ClientPaymentInterestViewModel clientPaymentInterestViewModel);
-        Task<bool> Delete(int paymentId);
+        Task<bool> Delete(int interestId);
     }
 }

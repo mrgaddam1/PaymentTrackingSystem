@@ -1,6 +1,121 @@
-﻿@page "/paymentInterest/update"
-<h3>Update</h3>
+﻿@page "/paymentInterest/update/{InterestId:int}"
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
 
-@code {
+@inject ILogger<Update> Logger
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
 
-}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Add Client Payment Interest
+                </div>
+                <div class="card-body">
+                    <div class="col-lg-12">
+                        @if (errorMessages != null)
+                        {
+                            @foreach (var message in errorMessages)
+                            {
+                                if (!string.IsNullOrEmpty(message))
+                                {
+                                    @if (message != "")
+                                    {
+                                        <ul class="alert-danger mt-2 text-left">
+                                            <li>@message</li>
+                                        </ul>
+                                    }
+                                }
+                            }
+                        }
+                        <EditForm Model="@ClientPaymentInterest" OnValidSubmit="UpdateClientPaymentInterestData">
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Client Name
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="clientPaymentInterestData.ClientName"
+                                               maxLength="150"
+                                               readonly
+                                               class="form-control text-danger text-bold fw-bold" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Borrowed Amount
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputNumber @bind-Value="clientPaymentInterestData.Amount"
+                                                 maxLength="150"
+                                                 readonly
+                                                 class="form-control text-danger text-bold fw-bold" />
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Interest Rate
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputNumber @bind-Value="clientPaymentInterestData.InterestRate"
+                                                 maxLength="150"
+                                                 class="form-control text-danger fw-bold"
+                                                 readonly
+                                                 @oninput="OnInterestRateChangeEvent" />
+                                </div>
+                            </div>
+
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Interest Amount
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputNumber @bind-Value="clientPaymentInterestData.InterestAmount"
+                                                 readonly
+                                                 class="form-control text-danger fw-bold" />
+                                </div>
+                            </div>
+                            <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Interest Paid Date
+                                </div>
+                                <div class="col-sm-6">
+                                    <InputDate @bind-Value="clientPaymentInterestData.InterestPaidDate"
+                                               @onchange="onPaymentInterestPaidDateChangeEvent"
+                                               class="form-control" />
+
+                                </div>
+                            </div>
+                       @*      <div class="row rowMargin">
+                                <div class="col-sm-3">
+                                    Is it paid for Current Month?
+                                </div>
+                                <div class="col-sm-6">
+                                    <RadzenCheckBox @bind-Value=@currentMonthCheckBoxValue ReadOnly Name="CheckBox1" @onclick="OnCheckPaidforCurrentMonth" />
+                                    <RadzenLabel Text="@isItCurrentMonth" Component="CheckBox1" class="rz-ms-2" />
+                                </div>
+                            </div> *@
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary  fw-bold">
+                                    <i class="fas fa-plus" aria-hidden="true"></i>
+                                    &nbsp;&nbsp;Update Payment Interest
+                                </button>
+                                <button type="button" class="btn btn-warning fw-bold" @onclick="GoBack">
+                                    <i class="fas fa-times"></i>&nbsp;&nbsp;Cancel
+                                </button>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(successMessage))
+                            {
+                                <div class="alert alert-success mt-3 text-center">@successMessage</div>
+                            }
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

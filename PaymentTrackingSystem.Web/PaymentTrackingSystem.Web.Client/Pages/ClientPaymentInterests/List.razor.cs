@@ -35,19 +35,25 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         }
         void EditRow(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
-            NavigationManager.NavigateTo("/clientPayments/updateClientPayment" + "/" + Convert.ToString(clientPaymentInterestViewModel.InterestId));
+            NavigationManager.NavigateTo("/paymentInterest/update" + "/" + Convert.ToString(clientPaymentInterestViewModel.InterestId));
         }
         private async Task DeleteRow(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
-            if (clientPaymentInterestViewModel.PaymentId != null)
+            if (clientPaymentInterestViewModel.InterestId != null)
             {
                 bool confirmed = await jSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete?");
                 if (confirmed)
                 {
-                    var id = clientPaymentInterestViewModel.InterestId;
                     bool status = await PaymentInterestService.Delete(clientPaymentInterestViewModel.InterestId);
-                    var data = GetAllClientPaymentInterest();
-                    clientPaymentInterestGrid.Reload(); // Refresh the grid
+                    if (status)
+                    {
+                        await jSRuntime.InvokeVoidAsync("alert", "Record deleted successfully.");  
+                    }
+                    else
+                    {
+                        await jSRuntime.InvokeVoidAsync("alert", "We are sorry...!Unable to process your request. Please try again some time.");
+                    }
+                    clientPaymentInterestData = await GetAllClientPaymentInterest();
                 }
             }
 

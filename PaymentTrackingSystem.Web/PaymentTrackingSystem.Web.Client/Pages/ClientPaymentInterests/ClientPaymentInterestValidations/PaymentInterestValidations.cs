@@ -22,5 +22,15 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests.ClientPa
             } 
             return result = validationMessage.Split(',').Select(s => s.Trim()).ToArray();
         }
+        public static string[] UpdateValidations(ClientPaymentInterestViewModel client)
+        {
+            string[] result;
+            string validationMessage = "";           
+            if (client.InterestPaidDate == null)
+            {
+                validationMessage = ClientPaymentInterestValidationMessages.InterestPaidDate;
+            }
+            return result = validationMessage.Split(',').Select(s => s.Trim()).ToArray();
+        }
     }
 }
