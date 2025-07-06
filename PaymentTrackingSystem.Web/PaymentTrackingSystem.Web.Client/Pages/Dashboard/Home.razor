@@ -1,0 +1,299 @@
+﻿ @page "/dashboard/home"
+
+@page "/dashboard"
+
+<div class="container py-4">
+    <h1 class="mb-4 text-primary">Dashboard</h1>
+
+    <div class="row g-4">
+        <!-- Clients -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+                    <div class="icon bg-primary text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Clients</h5>
+                        <h2 class="mb-0">125</h2>
+                        <small class="text-muted">Total registered clients</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+                    <div class="icon bg-success text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Payments</h5>
+                        <h2 class="mb-0">$78,940</h2>
+                        <small class="text-muted">Total payments received</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Interests -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+                    <div class="icon bg-warning text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Payment Interests</h5>
+                        <h2 class="mb-0">45</h2>
+                        <small class="text-muted">Active interests accrued</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Payment Interests -->
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+                    <div class="icon bg-danger text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Pending Payment Interests</h5>
+                        <h2 class="mb-0">12</h2>
+                        <small class="text-muted">Interests pending approval</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Properties -->
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+                    <div class="icon bg-info text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Properties</h5>
+                        <h2 class="mb-0">33</h2>
+                        <small class="text-muted">Available properties</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .icon {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }</style>
+
+
+@*@using System.Threading.Tasks
+
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center align-items-center vh-50">
+        <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container py-4 page-fade-in">
+        <h2 class="mb-4">Dashboard</h2>
+
+        <div class="row g-4">
+         
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card dashboard-card bg-primary text-white shadow-sm h-50">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-people-fill display-5 me-3"></i>
+                            <h5 class="card-title mb-0">Clients</h5>
+                        </div>
+                        <p class="fs-3 flex-grow-1">@ClientsCount</p>
+                        <a href="/clients" class="btn btn-outline-light mt-auto">View Details</a>
+                    </div>
+                </div>
+                <div class="card mt-2 shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="card-subtitle mb-2 text-muted">Recent Clients</h6>
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @foreach (var client in RecentClients)
+                                {
+                                    <tr>
+                                        <td>@client</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+          
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card dashboard-card bg-success text-white shadow-sm h-50">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-cash-coin display-5 me-3"></i>
+                            <h5 class="card-title mb-0">Payments</h5>
+                        </div>
+                        <p class="fs-3 flex-grow-1">$@PaymentsAmount</p>
+                        <a href="/payments" class="btn btn-outline-light mt-auto">View Details</a>
+                    </div>
+                </div>
+                <div class="card mt-2 shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="card-subtitle mb-2 text-muted">Recent Payments</h6>
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @foreach (var payment in RecentPayments)
+                                {
+                                    <tr>
+                                        <td>@payment</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+          
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card dashboard-card bg-info text-white shadow-sm h-50">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-percent display-5 me-3"></i>
+                            <h5 class="card-title mb-0">Payment Interests</h5>
+                        </div>
+                        <p class="fs-3 flex-grow-1">$@PaymentInterestsAmount</p>
+                        <a href="/payment-interests" class="btn btn-outline-light mt-auto">View Details</a>
+                    </div>
+                </div>
+                <div class="card mt-2 shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="card-subtitle mb-2 text-muted">Recent Interests</h6>
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @foreach (var interest in RecentInterests)
+                                {
+                                    <tr>
+                                        <td>@interest</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+ 
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card dashboard-card bg-warning text-dark shadow-sm h-50">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-hourglass-split display-5 me-3"></i>
+                            <h5 class="card-title mb-0">Pending Payment Interests</h5>
+                        </div>
+                        <p class="fs-3 flex-grow-1">$@PendingPaymentInterestsAmount</p>
+                        <a href="/pending-payment-interests" class="btn btn-outline-dark mt-auto">View Details</a>
+                    </div>
+                </div>
+                <div class="card mt-2 shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="card-subtitle mb-2 text-muted">Pending Items</h6>
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @foreach (var pending in RecentPendingInterests)
+                                {
+                                    <tr>
+                                        <td>@pending</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+             
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card dashboard-card bg-dark text-white shadow-sm h-50">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-house-fill display-5 me-3"></i>
+                            <h5 class="card-title mb-0">Properties</h5>
+                        </div>
+                        <p class="fs-3 flex-grow-1">@PropertiesCount</p>
+                        <a href="/properties" class="btn btn-outline-light mt-auto">View Details</a>
+                    </div>
+                </div>
+                <div class="card mt-2 shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="card-subtitle mb-2 text-muted">Recent Properties</h6>
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @foreach (var property in RecentProperties)
+                                {
+                                    <tr>
+                                        <td>@property</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool IsLoading = true;
+
+    private int ClientsCount = 120;
+    private decimal PaymentsAmount = 45000;
+    private decimal PaymentInterestsAmount = 5500;
+    private decimal PendingPaymentInterestsAmount = 2000;
+    private int PropertiesCount = 30;
+
+    private List<string> RecentClients = new() { "Alice Johnson", "Bob Smith", "Charlie Lee" };
+    private List<string> RecentPayments = new() { "$1,200 - John", "$900 - Sarah", "$500 - Mark" };
+    private List<string> RecentInterests = new() { "$150 - Interest A", "$200 - Interest B", "$180 - Interest C" };
+    private List<string> RecentPendingInterests = new() { "$100 - Pending A", "$120 - Pending B" };
+    private List<string> RecentProperties = new() { "Property 101", "Property 202", "Property 303" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1500); // simulate API loading
+        IsLoading = false;
+    }
+}
+<style type="text/css">
+    .dashboard-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+    }
+
+    .page-fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+ 
+}
+</style> *@
