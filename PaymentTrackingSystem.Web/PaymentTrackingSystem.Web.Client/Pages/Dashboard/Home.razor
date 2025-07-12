@@ -1,106 +1,14 @@
-﻿ @page "/dashboard/home"
+﻿@page "/dashboard/home/{PTSToken}"
+@* @using Microsoft.AspNetCore.Authorization *@
+@* @using PaymentTrackingSystem.Web.Components.Layout
+@layout MainLayout *@
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@rendermode InteractiveServer
 
-@page "/dashboard"
-
-<div class="container py-4">
-    <h1 class="mb-4 text-primary">Dashboard</h1>
-
-    <div class="row g-4">
-        <!-- Clients -->
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon bg-primary text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-1">Clients</h5>
-                        <h2 class="mb-0">125</h2>
-                        <small class="text-muted">Total registered clients</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payments -->
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon bg-success text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
-                        <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-1">Payments</h5>
-                        <h2 class="mb-0">$78,940</h2>
-                        <small class="text-muted">Total payments received</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payment Interests -->
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon bg-warning text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
-                        <i class="bi bi-clock-history"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-1">Payment Interests</h5>
-                        <h2 class="mb-0">45</h2>
-                        <small class="text-muted">Active interests accrued</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pending Payment Interests -->
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon bg-danger text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
-                        <i class="bi bi-hourglass-split"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-1">Pending Payment Interests</h5>
-                        <h2 class="mb-0">12</h2>
-                        <small class="text-muted">Interests pending approval</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Properties -->
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon bg-info text-white rounded-circle p-3 me-3" style="font-size: 1.8rem;">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-1">Properties</h5>
-                        <h2 class="mb-0">33</h2>
-                        <small class="text-muted">Available properties</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<style type="text/css">
-    .icon {
-        width: 56px;
-        height: 56px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }</style>
-
-
-@*@using System.Threading.Tasks
-
+ 
 @if (IsLoading)
 {
+
     <div class="d-flex justify-content-center align-items-center vh-50">
         <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -109,6 +17,7 @@
 }
 else
 {
+  
     <div class="container py-4 page-fade-in">
         <h2 class="mb-4">Dashboard</h2>
 
@@ -260,7 +169,11 @@ else
     </div>
 }
 
+     
+
 @code {
+    [Parameter] public string PTSToken { get; set; }
+
     private bool IsLoading = true;
 
     private int ClientsCount = 120;
@@ -278,7 +191,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(1500); // simulate API loading
-        IsLoading = false;
+        IsLoading = false;    
+        await localStorage.SetItemAsync("authToken", PTSToken);
     }
 }
 <style type="text/css">
@@ -296,4 +210,4 @@ else
     }
  
 }
-</style> *@
+</style>  

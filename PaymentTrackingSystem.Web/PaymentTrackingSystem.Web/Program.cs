@@ -1,4 +1,7 @@
 using AutoMapper;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
+using PaymentTrackingSystem.Client.Infrastructure.Services;
 using PaymentTrackingSystem.Common.GlobalError;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Web.ApplicationSettings.AutoMapper;
@@ -8,6 +11,8 @@ using PaymentTrackingSystem.Web.ApplicationSettings.Http;
 using PaymentTrackingSystem.Web.Client.Pages;
 using PaymentTrackingSystem.Web.Components;
 using PaymentTrackingSystem.Web.Infrastructure.AutoMapperProfileSettings;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
 namespace PaymentTrackingSystem.Web
 {
     public class Program
@@ -15,6 +20,9 @@ namespace PaymentTrackingSystem.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddBlazoredLocalStorage();         
+
 
             ApplicationCORSSettings.RegisterCORS(builder);
 
@@ -25,6 +33,15 @@ namespace PaymentTrackingSystem.Web
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
+            builder.Services.AddAuthentication("MyCookieAuth")
+            .AddCookie("MyCookieAuth", options =>
+            {
+                options.LoginPath = "/login";
+            });
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
@@ -33,6 +50,11 @@ namespace PaymentTrackingSystem.Web
             ApplicationHttpSettings.RegisterHttpClient(builder);
 
             ApplicationServiceDependencySettings.ServiceDependency(builder);
+
+            //builder.Services.AddScoped<CustomAuthStateProvider>();
+            //builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthStateProvider>());
+            //builder.Services.AddAuthorizationCore();
+
 
             var app = builder.Build();
 
@@ -54,8 +76,8 @@ namespace PaymentTrackingSystem.Web
 
             app.UseHttpsRedirection();
 
-            //app.UseAuthentication();
-           // app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 
@@ -64,21 +86,11 @@ namespace PaymentTrackingSystem.Web
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
-                .AddInteractiveWebAssemblyRenderMode()
+                .AddInteractiveWebAssemblyRenderMode()                
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
             app.Run();
         }
-
-       
-
-
-
-
-
-
-
     }
-
 }
 

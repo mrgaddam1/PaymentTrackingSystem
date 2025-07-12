@@ -1,21 +1,31 @@
-﻿@page "/users/login"
- 
+﻿@page "/userLogin"
+@layout EmptyLayout
 @using System.ComponentModel.DataAnnotations
-@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using PaymentTrackingSystem.Client.Infrastructure.Interface
-@using PaymentTrackingSystem.Client.Infrastructure.Services
 @using PaymentTrackingSystem.Shared
- 
-@inject ITokenService TokenService
+@using PaymentTrackingSystem.Web.Components.Layout
+@using System.Security.Claims
+
 @inject NavigationManager Navigation
 @inject IAuthService iAuthService
-@inject CustomAuthStateProvider AuthStateProvider
 @inject AuthenticationStateProvider authStateProvider
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
-@rendermode @(new InteractiveServerRenderMode(prerender:false))
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ProtectedLocalStorage protectedLocalStorage
+@rendermode InteractiveServer
 
 
-<div class="login-container">
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="spinner-grow text-success" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>}
+else
+{
+    <div class="login-container">
     <h2>Login</h2>
     <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="LoginForm">
         <div class="input-group">
@@ -45,26 +55,41 @@
         </div>
         <button type="submit" class="login-btn">Login</button>
         <a href="#" class="forgot-password">Forgot Password?</a>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger mt-3 text-center">@errorMessage</div>
+        }
     </EditForm>
 </div>
+}
 
 @code {
+    private bool IsLoading = false;
     private LoginViewModel loginModel = new LoginViewModel();
     private UserViewModel userData = new UserViewModel();
-    private string ErrorMessage = "";
+    private string errorMessage = "";
     private System.Security.Claims.ClaimsPrincipal _user;
 
     protected async Task HandleLogin()
-    {          
-        var response = await iAuthService.UserLogin<UserViewModel>(loginModel);
-        if(response!=null)        
+    {
+        IsLoading = true;
+        var user = await iAuthService.UserLogin<UserViewModel>(loginModel);
+        if (user != null)
         {
-            await AuthStateProvider.MarkUserAsAuthenticated(response.UserName);
-            Navigation.NavigateTo("/dashboard/home");
-
-        }    
+            await protectedLocalStorage.SetAsync("PTSToken", user.Token);
+            await protectedLocalStorage.SetAsync("UserName", user.UserName);
+            await protectedLocalStorage.SetAsync("RoleName", "SuperAdmin");        
+            Navigation.NavigateTo("/dashboard/home" + "/" + Convert.ToString(user.Token));
+        }
+        else
+        {
+            errorMessage = "EmailId or Password wrong.";
+            loginModel.Username = "";
+            loginModel.Password = "";
+        }
+        IsLoading = false;
     }
-    
+
 }
 <style type="text/css">
     * {
@@ -74,13 +99,14 @@
         font-family: 'Poppins', sans-serif;
     }
 
-     body {
+    body {
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: #fff;
+        /* linear-gradient(135deg, #667eea, #764ba2); */
         background-size: 400% 400%;
-        animation: gradientBG 6s infinite alternate ease-in-out;      
+        animation: gradientBG 6s infinite alternate ease-in-out;
     }
 
     .login-container {
@@ -90,12 +116,14 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         width: 500px;
         text-align: center;
+        margin-left:30%;
+        margin-top:10%;
     }
 
-    .login-container h2 {
-        margin-bottom: 1.5rem;
-        font-weight: 600;
-    }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
 
     .input-group {
         margin-bottom: 1rem;
@@ -103,24 +131,24 @@
         width: 500px;
     }
 
-    .input-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
 
-    .input-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        outline: none;
-        transition: 0.3s;
-    }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
 
-    .input-group input:focus {
-        border-color: #667eea;
-    }
+            .input-group input:focus {
+                border-color: #667eea;
+            }
 
     .login-btn {
         width: 100%;
@@ -134,9 +162,9 @@
         transition: 0.3s;
     }
 
-    .login-btn:hover {
-        background: #5a67d8;
-    }
+        .login-btn:hover {
+            background: #5a67d8;
+        }
 
     .forgot-password {
         display: block;
@@ -146,7 +174,7 @@
         text-decoration: none;
     }
 
-    .forgot-password:hover {
-        text-decoration: underline;
-    }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
 </style>

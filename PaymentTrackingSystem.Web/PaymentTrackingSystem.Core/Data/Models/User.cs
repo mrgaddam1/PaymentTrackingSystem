@@ -13,9 +13,7 @@ public partial class User
 
     public string? EmailId { get; set; }
 
-    public string? Password { get; set; }
-
-    public string? Salt { get; set; }
+    public string? Password { get; set; }   
 
     public long? MobileNumber { get; set; }
 

@@ -1,1 +1,0 @@
-D:\Projects\PTS\PaymentTrackingSystem\PaymentTrackingSystem.Web\PaymentTrackingSystem.Web.Client\wwwroot\js\chartsInterop.js

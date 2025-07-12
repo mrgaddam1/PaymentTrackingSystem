@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.16" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.JSInterop" Version="8.0.17" />
@@ -20,6 +22,10 @@
     <ProjectReference Include="..\..\PaymentTrackingSystem.Client.Infrastructure\PaymentTrackingSystem.Client.Infrastructure.csproj" />
     <ProjectReference Include="..\..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
     <ProjectReference Include="..\..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Security\" />
   </ItemGroup>
 
 </Project>
