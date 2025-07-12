@@ -102,7 +102,6 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.LastName).HasMaxLength(150);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.Salt).HasMaxLength(255);
         });
 
         OnModelCreatingPartial(modelBuilder);

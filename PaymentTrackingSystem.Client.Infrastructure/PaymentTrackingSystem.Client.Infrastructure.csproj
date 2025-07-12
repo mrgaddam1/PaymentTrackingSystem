@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PaymentTrackingSystem.Common\PaymentTrackingSystem.Common.csproj" />
     <ProjectReference Include="..\PaymentTrackingSystem.Shared\PaymentTrackingSystem.Shared.csproj" />
   </ItemGroup>
