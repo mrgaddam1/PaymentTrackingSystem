@@ -1,18 +1,23 @@
 ﻿@page "/userLogin"
 @layout EmptyLayout
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Common.Helpers
+@using PaymentTrackingSystem.Common.Helpers.Implmentation
+@using PaymentTrackingSystem.Common.Helpers.Interface
 @using PaymentTrackingSystem.Shared
 @using PaymentTrackingSystem.Web.Components.Layout
-@using System.Security.Claims
 
+@inject IEncryptionHelper EncryptionHelper
 @inject NavigationManager Navigation
 @inject IAuthService iAuthService
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor HttpContextAccessor
 @inject ProtectedLocalStorage protectedLocalStorage
+@inject IConfiguration Configuration
 @rendermode InteractiveServer
 
 
@@ -68,7 +73,7 @@ else
     private LoginViewModel loginModel = new LoginViewModel();
     private UserViewModel userData = new UserViewModel();
     private string errorMessage = "";
-    private System.Security.Claims.ClaimsPrincipal _user;
+ 
 
     protected async Task HandleLogin()
     {
@@ -78,8 +83,13 @@ else
         {
             await protectedLocalStorage.SetAsync("PTSToken", user.Token);
             await protectedLocalStorage.SetAsync("UserName", user.UserName);
-            await protectedLocalStorage.SetAsync("RoleName", "SuperAdmin");        
-            Navigation.NavigateTo("/dashboard/home" + "/" + Convert.ToString(user.Token));
+            await protectedLocalStorage.SetAsync("RoleName", "SuperAdmin");
+          
+            var Token = Uri.EscapeDataString(EncryptionHelper.Encrypt(user.Token));
+            var UserName = Uri.EscapeDataString(EncryptionHelper.Encrypt(user.UserName));
+ 
+            Navigation.NavigateTo("/navigationMenu/menu" + "/" + Token + "/" + UserName);
+           
         }
         else
         {
