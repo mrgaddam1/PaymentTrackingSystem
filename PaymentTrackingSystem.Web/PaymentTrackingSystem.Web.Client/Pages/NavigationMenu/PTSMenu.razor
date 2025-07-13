@@ -1,0 +1,80 @@
+﻿@page "/navigationMenu/menu/{token}/{userName}"
+@using PaymentTrackingSystem.Common.Helpers.Implmentation
+@using PaymentTrackingSystem.Common.Helpers.Interface
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+
+@inject IEncryptionHelper EncryptionHelper
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
+
+<header style="margin-left:-15px;">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1A237E;width:100%;height:100px;">
+        <div class="col-md-6">
+            <div class="navbar-header" style="padding-left:0em;">
+            </div>
+        </div>
+        <div class="col-md-6" align="right" style="padding-right:1em;">
+            <div class="navbar-header">
+                <b style="color:white;font-size:25px;">Payment Tracking System </b>
+                &nbsp;
+                <b style="color:white;font-size:xx-small;">Version:20250707.1</b>
+            </div>
+            <div class="navbar-header">
+                <b style="color:white;font-size:13px;">
+                    Hello, @LoginUserName 
+                </b>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="/logout" class="forgot-password">Log out</a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="row" style="margin-left:-20px;">
+    <div class="100%;">
+        <ul class="nav-menu">
+            <li>
+                <NavLink href="/dashboard/home" activeClass="active">Dashboard</NavLink>
+            </li>
+            <li>
+                <NavLink href="/client/clientList" activeClass="active">Clients</NavLink>
+            </li>
+            <li>
+                <NavLink href="/clientPayments/clientPaymentList" activeClass="active">Payments</NavLink>
+            </li>
+            <li>
+                <NavLink href="/paymentInterest/list" activeClass="active">Payment Interest</NavLink>
+            </li>
+            <li>
+                <NavLink href="/property/list" activeClass="active">Property</NavLink>
+            </li>
+            <li>
+                <NavLink href="/reports/index" activeClass="active">Reports</NavLink>
+            </li>
+            <li>
+                <NavLink href="/settings/index" activeClass="active">Settings</NavLink>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Token { get; set; }
+    [Parameter] public string UserName { get; set; }
+
+    public string LoginUserName { get; set; }
+  
+    protected override async Task OnInitializedAsync()
+    {
+        var PTSToken = EncryptionHelper.Decrypt(Token);
+        LoginUserName = EncryptionHelper.Decrypt(UserName);
+     
+        await localStorage.SetItemAsync("authToken", PTSToken);
+        await localStorage.SetItemAsync("UserName", LoginUserName);
+
+        //var token = await localStorage.GetItemAsync<string>("authToken");
+        //LoginUserName = await localStorage.GetItemAsync<string>("UserName");
+        StateHasChanged();
+    }
+
+}

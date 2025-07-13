@@ -1,8 +1,9 @@
 ﻿@page "/paymentInterest/update/{InterestId:int}"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
 @using PaymentTrackingSystem.Shared
 @using Radzen
 @using Radzen.Blazor
-
 @inject ILogger<Update> Logger
 @rendermode @(new InteractiveAutoRenderMode(prerender:false))
 

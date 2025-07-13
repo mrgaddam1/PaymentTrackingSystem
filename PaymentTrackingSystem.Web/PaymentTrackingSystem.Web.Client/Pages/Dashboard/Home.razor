@@ -1,9 +1,8 @@
-﻿@page "/dashboard/home/{PTSToken}"
-@* @using Microsoft.AspNetCore.Authorization *@
-@* @using PaymentTrackingSystem.Web.Components.Layout
-@layout MainLayout *@
+﻿@page "/dashboard/home"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
 
  
 @if (IsLoading)
@@ -172,8 +171,7 @@ else
      
 
 @code {
-    [Parameter] public string PTSToken { get; set; }
-
+  
     private bool IsLoading = true;
 
     private int ClientsCount = 120;
@@ -192,8 +190,8 @@ else
     {
         await Task.Delay(1500); // simulate API loading
         IsLoading = false;    
-        await localStorage.SetItemAsync("authToken", PTSToken);
-    }
+      
+    }  
 }
 <style type="text/css">
     .dashboard-card {

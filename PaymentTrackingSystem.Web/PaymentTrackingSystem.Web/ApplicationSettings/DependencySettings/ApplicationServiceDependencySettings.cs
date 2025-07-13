@@ -1,5 +1,7 @@
 ﻿using PaymentTrackingSystem.Client.Infrastructure.Implementation;
 using PaymentTrackingSystem.Client.Infrastructure.Interface;
+using PaymentTrackingSystem.Common.Helpers.Implmentation;
+using PaymentTrackingSystem.Common.Helpers.Interface;
 using PaymentTrackingSystem.Web.Infrastructure.Implementation;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
 
@@ -19,6 +21,9 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
             builder.Services.AddScoped<IPaymentInterestService, PaymentInterestService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+
+
+            builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
 
         }
     }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using PaymentTrackingSystem.Client.Infrastructure.Implementation;
 using PaymentTrackingSystem.Client.Infrastructure.Interface;
 using PaymentTrackingSystem.Client.Infrastructure.Services;
+using PaymentTrackingSystem.Common.Helpers.Implmentation;
+using PaymentTrackingSystem.Common.Helpers.Interface;
 using System.Net.Http;
 namespace PaymentTrackingSystem.Web.Client
 {
@@ -38,6 +40,8 @@ namespace PaymentTrackingSystem.Web.Client
             builder.Services.AddScoped<IPaymentInterestService, PaymentInterestService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+
+            builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
         }
     }
 }

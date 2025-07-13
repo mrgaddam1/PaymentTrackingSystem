@@ -1622,6 +1622,7 @@
         "dependencies": {
           "Blazored.LocalStorage": "4.5.0",
           "Microsoft.AspNetCore.Components.Authorization": "8.0.17",
+          "Microsoft.Extensions.Configuration": "8.0.0",
           "PaymentTrackingSystem.Common": "1.0.0",
           "PaymentTrackingSystem.Shared": "1.0.0"
         },
@@ -1638,6 +1639,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Diagnostics": "2.3.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.0",
+          "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.Extensions.Logging": "8.0.1"
         },
         "compile": {
@@ -3273,6 +3275,7 @@
         "dependencies": {
           "Blazored.LocalStorage": "4.5.0",
           "Microsoft.AspNetCore.Components.Authorization": "8.0.17",
+          "Microsoft.Extensions.Configuration": "8.0.0",
           "PaymentTrackingSystem.Common": "1.0.0",
           "PaymentTrackingSystem.Shared": "1.0.0"
         },
@@ -3289,6 +3292,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Diagnostics": "2.3.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.0",
+          "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.Extensions.Logging": "8.0.1"
         },
         "compile": {
