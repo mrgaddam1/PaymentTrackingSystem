@@ -1,3 +1,16 @@
+/* /Pages/Dashboard/Home.razor.rz.scp.css */
+.dashboard-card[b-88tzrz6ts5] {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover[b-88tzrz6ts5] {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+}
+
+.page-fade-in[b-88tzrz6ts5] {
+    animation: fadeIn 0.8s ease-in-out;
+}
 /* /Pages/Layout/PTSMainLayout.razor.rz.scp.css */
 .page[b-t9vpv5m6pl] {
     position: relative;

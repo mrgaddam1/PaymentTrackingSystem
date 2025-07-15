@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PaymentTrackingSystem.Common.Helpers.Extensions;
 using PaymentTrackingSystem.Core.Data.Models;
+using PaymentTrackingSystem.Core.Helpers;
 using PaymentTrackingSystem.Shared;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
 using System;
@@ -177,6 +179,23 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             return isDeleted;
         }
 
+
+        public async Task<List<ClientPaymentInterestPending>> GetAllClientsPaymentInterestsPendingDetais()
+        {
+            var paymentInterestPending = new List<ClientPaymentInterestPending>();
+
+            try
+            {
+                var data = DataHelper.GetData(DbContext.Database.GetDbConnection(), "Up_Payments_GetAllClients_Payments_Interest_Pending", null);
+                paymentInterestPending = ConvertDataTableToGenericList.ConvertDataTable<ClientPaymentInterestPending>(data).
+                                   OrderByDescending(x => x.ClientName).ToList();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return paymentInterestPending;
+        }
 
     }
 }

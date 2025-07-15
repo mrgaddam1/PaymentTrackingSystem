@@ -170,6 +170,33 @@ namespace PaymentTrackingSystem.Web.Controller
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("GetAllClientsPaymentInterestsPendingDetais")]
+        public async Task<IActionResult> GetAllClientsPaymentInterestsPendingDetais()
+        {
+            try
+            {
+                var clientPaymentPendingList = await PaymentInterestManager.GetAllClientsPaymentInterestsPendingDetais();
+                if (clientPaymentPendingList.Count == 0)
+                {
+                    return NoContent();
+                }
+                return Ok(clientPaymentPendingList);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occured while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+
+
     }
 }
 
