@@ -14,5 +14,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Interface
         Task<bool> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel);
         Task<bool> Update(ClientPaymentInterestViewModel clientPaymentInterestViewModel);
         Task<bool> Delete(int interestId);
+        Task<List<ClientPaymentInterestPending>> GetAllClientsPaymentInterestsPendingDetais();
+
     }
 }

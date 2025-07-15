@@ -134,5 +134,11 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
                 return isSuccess;
             }
         }
+
+        public async Task<T?> GetAllClientsPaymentInterestsPendingDetais<T>()
+        {
+            var response = await httpClient.GetAsync(clientPaymentApiPath + "GetAllClientsPaymentInterestsPendingDetais");
+            return await ApiStatusCodeHandler.HandleResponse<T>(response);
+        }
     }
 }

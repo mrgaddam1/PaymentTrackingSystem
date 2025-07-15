@@ -63,18 +63,25 @@
     [Parameter] public string UserName { get; set; }
 
     public string LoginUserName { get; set; }
-  
+
     protected override async Task OnInitializedAsync()
     {
-        var PTSToken = EncryptionHelper.Decrypt(Token);
-        LoginUserName = EncryptionHelper.Decrypt(UserName);
-     
-        await localStorage.SetItemAsync("authToken", PTSToken);
-        await localStorage.SetItemAsync("UserName", LoginUserName);
+        if (Token !=null && UserName != null)
+        {
+            var PTSToken = EncryptionHelper.Decrypt(Token);
+            LoginUserName = EncryptionHelper.Decrypt(UserName);
 
-        //var token = await localStorage.GetItemAsync<string>("authToken");
-        //LoginUserName = await localStorage.GetItemAsync<string>("UserName");
+            await localStorage.SetItemAsync("authToken", PTSToken);
+            await localStorage.SetItemAsync("UserName", LoginUserName);
+            
+        }
+        else
+        {
+            Token = await localStorage.GetItemAsync<string>("authToken");
+            LoginUserName = await localStorage.GetItemAsync<string>("UserName"); 
+        }
         StateHasChanged();
+       
     }
 
 }
