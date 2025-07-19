@@ -25,6 +25,10 @@ public partial class PTSContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<PaymentDueDate> PaymentDueDates { get; set; }
+
+    public virtual DbSet<PaymentMonth> PaymentMonths { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -90,6 +94,30 @@ public partial class PTSContext : DbContext
             entity.ToTable("Country");
 
             entity.Property(e => e.CountryName).HasMaxLength(150);
+        });
+
+        modelBuilder.Entity<PaymentDueDate>(entity =>
+        {
+            entity.HasKey(e => e.DueId);
+
+            entity.ToTable("PaymentDueDate");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.MonthEndDate).HasColumnType("datetime");
+            entity.Property(e => e.MonthName).HasMaxLength(150);
+            entity.Property(e => e.MonthStartDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<PaymentMonth>(entity =>
+        {
+            entity.HasKey(e => e.MonthId);
+
+            entity.ToTable("PaymentMonth");
+
+            entity.Property(e => e.MonthId).ValueGeneratedNever();
+            entity.Property(e => e.MonthName).HasMaxLength(150);
         });
 
         modelBuilder.Entity<User>(entity =>

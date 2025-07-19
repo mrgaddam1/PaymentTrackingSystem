@@ -82,20 +82,49 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 
         public async Task<bool> Add(ClientPaymentViewModel clientPayment)
         {
-            try
-            {
-                var clientPaymentData = mapper.Map<ClientPayment>(clientPayment);
-                clientPaymentData.IsDeleted = false;
-                clientPaymentData.CreatedDate = DateTime.UtcNow;
-                clientPaymentData.UserId = 1;
+            DateTime today = DateTime.Today;
 
-                DbContext.ClientPayments.Add(clientPaymentData);
-                await DbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
+            var clientExists = await (DbContext.ClientPayments.AnyAsync(x => x.ClientId == clientPayment.ClientId));
+            if (!clientExists)
             {
-                logger.LogError(ex.Message, "An error occured while processing Add request.");
+                using var transaction = await DbContext.Database.BeginTransactionAsync();
+                try
+                {
+
+                    var clientPaymentData = mapper.Map<ClientPayment>(clientPayment);
+                    clientPaymentData.IsDeleted = false;
+                    clientPaymentData.CreatedDate = DateTime.UtcNow;
+                    clientPaymentData.UserId = 1;
+
+                    DbContext.ClientPayments.Add(clientPaymentData);
+                    DbContext.SaveChanges();
+
+                    var clientPaymentDueDate = new PaymentDueDate
+                    {
+                        PaymentId = clientPaymentData.PaymentId,
+                        ClientId = clientPayment.ClientId,
+                        InterestId = null,
+                        DueDate = clientPaymentData.AmountTransferedDate.Value.AddDays(10),
+                        MonthStartDate = new DateTime(today.Year, today.Month, 1),
+                        MonthEndDate = today.AddMonths(1).AddDays(-1),
+                        CreatedDate = DateTime.UtcNow,
+                        IsPaid = false,
+                    };
+
+                    DbContext.PaymentDueDates.Add(clientPaymentDueDate);
+                    await DbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.Message, "An error occured while processing Add request.");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+            }
+            else
+            {
                 return false;
             }
         }        

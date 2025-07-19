@@ -13,7 +13,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
         [Inject] public NavigationManager Navigate { get; set; }
 
         private ClientPaymentViewModel clientPayment = new();
-        public List<ClientViewModel> ClientData = new List<ClientViewModel>();
+        public List<ClientViewModel> ClientData = new();
         private string[] errorMessages;
         private string successMessage = string.Empty;
         public List<ClientViewModel> Clients = new List<ClientViewModel>();
@@ -22,8 +22,14 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
         string? selectedInterestValue;
         int? value;
         int? interestRatevalue;
-        private List<InterestRatesViewModel> interestRatesData = new List<InterestRatesViewModel>();
+        private List<InterestRatesViewModel> interestRatesData = new();
+        private bool? isbuttonClickedForValidation = false;
         protected override async Task OnInitializedAsync()
+        {
+            await BindData();
+        }
+
+        private async Task BindData()
         {
             try
             {
@@ -41,17 +47,19 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
             if (selectedValue != null)
             {
                 clientPayment.ClientId = Convert.ToInt32(selectedValue.ToString());
-                errorMessages = PaymentValidations.Validations(clientPayment);
+                if (isbuttonClickedForValidation == true)
+                    errorMessages = PaymentValidations.Validations(clientPayment);
             }
         }
         private void OnInterestRatesChangeEvent(object selectedValue)
         {
-           
+
             if (selectedValue != null)
             {
                 clientPayment.InterestRate = Convert.ToDecimal(selectedValue);
                 monthlyInterestAmount = (Convert.ToDecimal(clientPayment.Amount) * Convert.ToDecimal(selectedValue) / 100);
-                errorMessages = PaymentValidations.Validations(clientPayment);
+                if (isbuttonClickedForValidation == true)
+                    errorMessages = PaymentValidations.Validations(clientPayment);
             }
         }
         private void HandleInterestRateChange(ChangeEventArgs e)
@@ -63,11 +71,13 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
         }
         private void OnAmountTransferredDateChangeEvent(object selectedValue)
         {
-            errorMessages = PaymentValidations.Validations(clientPayment);
+            if (isbuttonClickedForValidation == true)
+                errorMessages = PaymentValidations.Validations(clientPayment);
         }
 
         private async void HandleValidSubmit()
         {
+            isbuttonClickedForValidation = true;
             errorMessages = PaymentValidations.Validations(clientPayment);
             string validations = string.Join(" ", errorMessages);
             if ((validations == null) || (validations == ""))
@@ -78,6 +88,8 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
                     Logger.LogInformation(ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage);
                     successMessage = ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage;
                     Reset();
+                    await BindData();
+                    StateHasChanged();
                 }
                 else
                 {
@@ -95,49 +107,81 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
             clientPayment = new ClientPaymentViewModel();
             ClientData = new List<ClientViewModel>();
             interestRatesData = new List<InterestRatesViewModel>();
+            value = null;
+            interestRatevalue = null;
             monthlyInterestAmount = null;
             errorMessages = [];
-            StateHasChanged();
-
+            isbuttonClickedForValidation = null;
         }
 
         private void GoBack()
         {
             Navigate.NavigateTo("/clientPayments/clientPaymentList");
-        }     
+        }
 
         private void onAmountChangeEvent()
         {
-            errorMessages = PaymentValidations.Validations(clientPayment);
+            if (isbuttonClickedForValidation == true)
+                errorMessages = PaymentValidations.Validations(clientPayment);
         }
 
         public List<InterestRatesViewModel> GetAllInterestRates()
         {
             var Rates = new List<InterestRatesViewModel>
-        {
-            new InterestRatesViewModel
             {
-                InterestId = 1,
-                AmountInterestRate = "1"
-            },
-            new InterestRatesViewModel
-            {
-                InterestId = 2,
-                AmountInterestRate = "2"
-            },
-             new InterestRatesViewModel
-            {
-                InterestId = 3,
-                AmountInterestRate = "3"
-            },
-             new InterestRatesViewModel
-            {
-                InterestId = 4,
-                AmountInterestRate = "4"
-            },
-        };
+                new InterestRatesViewModel
+                {
+                    InterestId = 1,
+                    AmountInterestRate = "1"
+                },
+                new InterestRatesViewModel
+                {
+                    InterestId = 2,
+                    AmountInterestRate = "1.5"
+                },
+                 new InterestRatesViewModel
+                {
+                    InterestId = 3,
+                    AmountInterestRate = "2"
+                },
+                 new InterestRatesViewModel
+                {
+                    InterestId = 4,
+                    AmountInterestRate = "2.5"
+                },
+                  new InterestRatesViewModel
+                {
+                    InterestId = 5,
+                    AmountInterestRate = "3"
+                },
+                 new InterestRatesViewModel
+                {
+                    InterestId = 6,
+                    AmountInterestRate = "3.5"
+                },
+               new InterestRatesViewModel
+                {
+                    InterestId = 7,
+                    AmountInterestRate = "4"
+                },
+                new InterestRatesViewModel
+                {
+                    InterestId = 8,
+                    AmountInterestRate = "5"
+                },
+                new InterestRatesViewModel
+                {
+                    InterestId = 9,
+                    AmountInterestRate = "7"
+                },
+               new InterestRatesViewModel
+                {
+                    InterestId = 10,
+                    AmountInterestRate = "10"
+                },
+            };
             return Rates;
         }
- 
+
     }
 }
