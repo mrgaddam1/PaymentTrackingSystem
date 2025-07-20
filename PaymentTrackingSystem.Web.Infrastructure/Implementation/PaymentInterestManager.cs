@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using PaymentTrackingSystem.Common.Helpers.Extensions;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Core.Helpers;
@@ -10,6 +11,7 @@ using PaymentTrackingSystem.Web.Infrastructure.Interface;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +49,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                                      InterestRate = cp.InterestRate,
                                                      InterestAmount = cpi.InterestAmount,
                                                      InterestPaidDate = cpi.InterestPaidDate,
+                                                     AmountTransferedDate = cp.AmountTransferedDate,
                                                      IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
                                                      IsitDeleted = cpi.IsDeleted,
 
@@ -102,6 +105,8 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         public async Task<bool> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
             bool isSuccess = false;
+            using var transaction = await DbContext.Database.BeginTransactionAsync();
+          
             try
             {
                 var interestData = mapper.Map<ClientInterestPayment>(clientPaymentInterestViewModel);
@@ -112,12 +117,30 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                     interestData.CreatedDate = DateTime.UtcNow;
                     DbContext.ClientInterestPayments.Add(interestData);
                     await DbContext.SaveChangesAsync();
+                   
+                }
+                DateTime today = DateTime.Today;
+                var paymentDueData = await DbContext.PaymentDueDates.Where(x => x.PaymentId == interestData.PaymentId
+                                                           && x.ClientId == interestData.ClientId)
+                                                            .SingleOrDefaultAsync();
+                if (paymentDueData != null)
+                {
+                   
+                    paymentDueData.DueDate = paymentDueData.DueDate.Value.AddDays(30);
+                    paymentDueData.MonthName = paymentDueData.DueDate.Value.ToString("MMMM", new CultureInfo("en-GB"));
+                    paymentDueData.CreatedDate = DateTime.Now;
+
+                    DbContext.PaymentDueDates.Update(paymentDueData);
+                    await DbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
                     isSuccess = true;
                 }
+                
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message, "An error occured while processing details...");
+                await transaction.RollbackAsync();
             }
             return isSuccess;
         }
