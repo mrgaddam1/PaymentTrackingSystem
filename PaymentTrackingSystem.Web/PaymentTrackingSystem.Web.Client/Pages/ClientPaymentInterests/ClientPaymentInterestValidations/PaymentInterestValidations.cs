@@ -6,7 +6,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests.ClientPa
 {
     public static class PaymentInterestValidations
     {
-        public static string[] Validations(ClientPaymentInterestViewModel client)
+        public static string[] AddFormValidations(ClientPaymentInterestViewModel client)
         {
             string[] result;
             string validationMessage = "";

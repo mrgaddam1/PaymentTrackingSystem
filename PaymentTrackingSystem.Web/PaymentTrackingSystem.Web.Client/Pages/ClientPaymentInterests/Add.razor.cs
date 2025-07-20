@@ -11,16 +11,16 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         [Inject] public IPaymentInterestService PaymentInterestService { get; set; }
         [Inject] public NavigationManager Navigate { get; set; }
 
-
         private ClientPaymentInterestViewModel ClientPaymentInterest = new();
         private List<ClientPaymentViewModel> ClientPayment= new List<ClientPaymentViewModel>();
         private ClientPaymentViewModel ClientPaymentData = new();
         private string[] errorMessages;
         private string successMessage = string.Empty;
-        int? value;
+        int? clientValue;
         decimal? borrowedAmount,interestRate;
-        bool currentMonthCheckBoxValue;
+        bool? currentMonthCheckBoxValue;
         string isItCurrentMonth = "No";
+        private bool isbuttonClickedForValidation=false;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -38,8 +38,8 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         }
         private async void Save()
         {
-
-            errorMessages = PaymentInterestValidations.Validations(ClientPaymentInterest);
+            isbuttonClickedForValidation = true;
+            errorMessages = PaymentInterestValidations.AddFormValidations(ClientPaymentInterest);
             string validations = string.Join(" ", errorMessages);
             if ((validations == null) || (validations == ""))
             {
@@ -50,6 +50,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
                     Logger.LogInformation(ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage);
                     successMessage = ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage;
                     Reset();
+                    await BindData();
                 }
                 else
                 {
@@ -65,8 +66,12 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         private async void Reset()
         {
             ClientPaymentInterest = new ClientPaymentInterestViewModel();
+            clientValue = null;
+            borrowedAmount = null;
+            interestRate = null;
             borrowedAmount = 0;
             interestRate = 0;
+            currentMonthCheckBoxValue = null;
             BindData();
             errorMessages = [];
             StateHasChanged();
@@ -79,18 +84,27 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         {
             if (selectedValue != null)
             {
-                ClientPaymentData = (ClientPayment.Find(x=>x.PaymentId == Convert.ToInt32(selectedValue)));
-                ClientPaymentInterest.ClientId = ClientPaymentData.ClientId;
-                ClientPaymentInterest.PaymentId = ClientPaymentData.PaymentId;
-                borrowedAmount = ClientPaymentData.Amount;
-                interestRate = ClientPaymentData.InterestRate;
-                ClientPaymentInterest.InterestAmount = (borrowedAmount * interestRate / 100);
-                errorMessages = PaymentInterestValidations.Validations(ClientPaymentInterest);
+                ClientPaymentData = (ClientPayment.Find(x => x.ClientId == Convert.ToInt32(selectedValue)));
+                if(ClientPaymentData!=null)
+                {
+                    ClientPaymentInterest.ClientId = ClientPaymentData.ClientId;
+                    ClientPaymentInterest.PaymentId = ClientPaymentData.PaymentId;
+                    ClientPaymentInterest.AmountTransferedDate = ClientPaymentData.AmountTransferedDate;
+
+                    borrowedAmount = ClientPaymentData.Amount;
+                    interestRate = ClientPaymentData.InterestRate;
+                    ClientPaymentInterest.InterestAmount = (borrowedAmount * interestRate / 100);
+
+                    if (isbuttonClickedForValidation)
+                        errorMessages = PaymentInterestValidations.AddFormValidations(ClientPaymentInterest);
+                }
+               
             }
         }
         private void onPaymentInterestPaidDateChangeEvent()
         {
-            errorMessages = PaymentInterestValidations.Validations(ClientPaymentInterest);
+            if(isbuttonClickedForValidation) 
+                errorMessages = PaymentInterestValidations.AddFormValidations(ClientPaymentInterest);
         }
         private void OnCheckPaidforCurrentMonth()
         {

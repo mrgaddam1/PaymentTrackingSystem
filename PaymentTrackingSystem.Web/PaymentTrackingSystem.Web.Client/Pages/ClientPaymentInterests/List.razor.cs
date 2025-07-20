@@ -61,7 +61,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
 
         private void AddClient()
         {
-            NavigationManager.NavigateTo("/clientPayments/addClientPayment");
+            NavigationManager.NavigateTo("/paymentInterest/add");
         }
     }
 }
