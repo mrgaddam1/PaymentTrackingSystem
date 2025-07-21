@@ -17,7 +17,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         private string[] errorMessages;
         private string successMessage = string.Empty;
         int? clientValue;
-        decimal? borrowedAmount,interestRate;
+        decimal borrowedAmount,interestRate;
         bool? currentMonthCheckBoxValue;
         string isItCurrentMonth = "No";
         private bool isbuttonClickedForValidation=false;
@@ -81,8 +81,8 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         {
             ClientPaymentInterest = new ClientPaymentInterestViewModel();
             clientValue = null;
-            borrowedAmount = null;
-            interestRate = null;
+            borrowedAmount = 0;
+            interestRate = 0;
             borrowedAmount = 0;
             interestRate = 0;
             currentMonthCheckBoxValue = null;

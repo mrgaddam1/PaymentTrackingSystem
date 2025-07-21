@@ -37,9 +37,9 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                                PaymentId = p.PaymentId,
                                                FirstName = c.FirstName,
                                                LastName = c.LastName,
-                                               Amount = p.Amount,
+                                               Amount = p.Amount.Value,
                                                AmountTransferedDate = p.AmountTransferedDate,
-                                               InterestRate = p.InterestRate,
+                                               InterestRate = p.InterestRate.Value,
                                            }).ToListAsync();
 
             }
@@ -66,9 +66,9 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                     PaymentId = p.PaymentId,
                                     FirstName = c.FirstName,
                                     LastName = c.LastName,
-                                    Amount = p.Amount,
+                                    Amount = p.Amount.Value,
                                     AmountTransferedDate = p.AmountTransferedDate,
-                                    InterestRate = p.InterestRate,
+                                    InterestRate = p.InterestRate.Value,
                                  }).SingleOrDefaultAsync();
           
             }

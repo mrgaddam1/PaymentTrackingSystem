@@ -30,7 +30,7 @@
     </div>}
 else
 {
-    <div class="login-container">
+    <div class="login-container" style="background-color:whitesmoke;">
     <h2>Login</h2>
     <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="LoginForm">
         <div class="input-group">
@@ -156,9 +156,9 @@ else
             transition: 0.3s;
         }
 
-            .input-group input:focus {
-                border-color: #667eea;
-            }
+        .input-group input:focus {
+            border-color: #667eea;
+        }
 
     .login-btn {
         width: 100%;
@@ -184,7 +184,7 @@ else
         text-decoration: none;
     }
 
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
 </style>
