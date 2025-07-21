@@ -5,6 +5,7 @@
 @using PaymentTrackingSystem.Shared
 @using Radzen
 @using Radzen.Blazor
+@using System.Globalization
 
 @inject ILogger<List> Logger
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
@@ -44,9 +45,32 @@
                     <RadzenDataGridColumn Property="FirstName" Title="First Name" />
                     <RadzenDataGridColumn Property="LastName" Title="Last Name" />
 
-                    <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn Property="AmountTransferedDate" Title="Transferred Date" />
-                    <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate" />
+                    <RadzenDataGridColumn Property="Amount" Title="Amount" >
+                     <Template Context="data">
+                        <span style="color:red;font-weight:bold;">
+                            @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
+                        </span>
+                     </Template>
+                        <FooterTemplate>
+                            <span style="color:red;font-weight:600;">
+                                <b>Total: @clientPaymentData.Sum(t => t.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</b>
+                            </span>
+                        </FooterTemplate>
+                   
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Property="AmountTransferedDate" Title="Transferred Date" >
+                        <Template Context="data">
+                            @data.AmountTransferedDate.Value.ToString("dd/MM/yyyy")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate" >
+                         <Template Context="data">
+                            <span style="color:red;font-weight:500;">
+                                @data.InterestRate.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
+                            </span>
+                         </Template>
+                    </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="ClientPaymentViewModel">
                         <Template Context="data">

@@ -5,6 +5,7 @@
 @using PaymentTrackingSystem.Shared
 @using Radzen
 @using Radzen.Blazor
+@using System.Globalization
 
 @inject ILogger<List> Logger
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
@@ -42,9 +43,25 @@
                 <Columns>
                     <RadzenDataGridColumn Property="InterestId" Title="Id" Width="100" Visible="false" />
                     <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
-                     <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount" />
-                    <RadzenDataGridColumn Property="InterestPaidDate" Title="Interest Paid Date" />
+                     <RadzenDataGridColumn Property="Amount" Title="Amount" >
+                        <Template Context="data">
+                            <span style="color:red;font-weight:bold;">
+                                @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
+                            </span>
+                        </Template>
+                     </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount"  >
+                        <Template Context="data">
+                            <span style="color:orange;font-weight:500;">
+                                @data.InterestAmount.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
+                            </span>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="InterestPaidDate" Title="Interest Paid Date"  >
+                        <Template Context="data">
+                            @data.InterestPaidDate.Value.ToString("dd/MM/yyyy")
+                        </Template>
+                    </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="ClientPaymentInterestViewModel">
                         <Template Context="data">

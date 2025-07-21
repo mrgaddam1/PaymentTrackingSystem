@@ -1,4 +1,5 @@
-﻿<div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1A237E;width:100%;height:100px;">
+﻿ <div id="page-background">
+<div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1A237E;width:100%;height:100px;">
     <div class="col-md-6">
         <div class="navbar-header" style="padding-left:1em;"> 
         </div>
@@ -7,14 +8,56 @@
         <div class="navbar-header">
             <b style="color:white;font-size:25px;">Payment Tracking System </b>
             &nbsp;
-            <b style="color:white;font-size:xx-small;">Version:1</b>
+            <b style="color:white;font-size:xx-small;">Version: 1</b>
         </div>
         <div class="navbar-header">
-            <b style="color:white;font-size:13px;">
-                Hello,Chandrakanth (CEO)
-            </b>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <a href="/userLogin" class="btn btn-link text-white">Log In</a>
         </div>
     </div>
 </div>
+</div>  
+<style type="text/css">
+    .style1 {
+        height: 24px;
+    }
+
+    #page-background {
+        font-family: 'Segoe UI', tahoma, arial, helvetica, sans-serif;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        background-image: url('Images/PTSHomeScreen.JPG');
+        background-repeat: no-repeat;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    #content {
+        font-family: 'Segoe UI', tahoma, arial, helvetica, sans-serif;
+        position: relative;
+        z-index: 1;
+        padding: 10px;
+    }
+
+    .Back {
+        font-family: 'Segoe UI', tahoma, arial, helvetica, sans-serif;
+        text-align: center;
+        vertical-align: top;
+        width: 100%;
+        height: 30%;
+        -ms-fileter: "progid:DXImageTransgform.Microsoft.Alpha(opacity=0)";
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(startColorstr=#99000000, endColorstr=#99000000)";
+        filter: alpha(opacity=50);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -moz-opacity: 0.5;
+        border: 1px;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.6);
+    }
+</style>

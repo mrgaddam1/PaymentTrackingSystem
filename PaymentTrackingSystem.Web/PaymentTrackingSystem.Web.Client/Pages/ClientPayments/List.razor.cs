@@ -15,13 +15,16 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPayments
 
         [Inject] public IJSRuntime jSRuntime { get; set; }
         private string? errorMessage;
-        public List<ClientPaymentViewModel> clientPaymentData = new List<ClientPaymentViewModel>();
+        //public List<ClientPaymentViewModel> clientPaymentData = new List<ClientPaymentViewModel>();
+        public List<ClientPaymentViewModel> clientPaymentData { get; set; }
+
         Radzen.DataGridGridLines GridLines = Radzen.DataGridGridLines.Both;
         private RadzenDataGrid<ClientPaymentViewModel> clientPaymentGrid;
         protected override async Task OnInitializedAsync()
         {
             try
             {
+                clientPaymentData = new List<ClientPaymentViewModel>();
                 clientPaymentData = await GetAllClientPayments();
             }
             catch (Exception ex)

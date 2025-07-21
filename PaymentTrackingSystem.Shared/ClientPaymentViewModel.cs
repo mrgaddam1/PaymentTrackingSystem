@@ -11,14 +11,14 @@ namespace PaymentTrackingSystem.Shared
         public int PaymentId { get; set; }
         public int UserId{ get; set; }
         public int? ClientId { get; set; }
-        public decimal? Amount{ get; set; }
+        public decimal Amount{ get; set; }
         public DateTime? AmountTransferedDate { get; set; }
-        public decimal? InterestRate { get; set; }
+        public decimal InterestRate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get;set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-
+       
 
     }
 }

@@ -13,9 +13,9 @@ namespace PaymentTrackingSystem.Shared
         public int UserId { get; set; }
         public int? ClientId { get; set; }
         public string? ClientName { get; set; }
-        public decimal? Amount { get; set; }
-        public decimal? InterestRate { get; set; }
-        public decimal? InterestAmount { get; set; }
+        public decimal Amount { get; set; }
+        public decimal InterestRate { get; set; }
+        public decimal InterestAmount { get; set; }
         public DateTime? InterestPaidDate { get; set; }
         public bool? IsitPaidForTheCurrentMonth { get; set; }
         public bool? IsitDeleted { get; set; }
