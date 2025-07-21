@@ -19,9 +19,9 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
         {
             httpClient = _httpClient;
         }
-        public async Task<bool> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
+        public async Task<string> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
-            bool isSuccess = false;
+            string isSuccess;
             try
             {
                 var response = await httpClient.PostAsJsonAsync(clientPaymentApiPath + "Add", clientPaymentInterestViewModel);
@@ -29,18 +29,19 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
-                    isSuccess = false;
+                    isSuccess = errorContent;
                 }
                 else
                 {
-                    isSuccess = true;
+                    var status = response.Content.ReadAsStringAsync();
+                    isSuccess = status.Result.ToString();
                 }
                 return isSuccess;
             }
             catch (Exception ex)
             {
                 var error = ex.Message;
-                return isSuccess;
+                return isSuccess = "An error occured while processing details...";
             }
         }
 

@@ -45,10 +45,24 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
             {
                 ClientPaymentInterest.IsitPaidForTheCurrentMonth = currentMonthCheckBoxValue;
                 var response = await PaymentInterestService.Add(ClientPaymentInterest);
-                if (response)
+                if (response == "Success")
                 {
                     Logger.LogInformation(ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage);
                     successMessage = ClientPaymentValidationMessages.ClientAddPaymentSuccessMessage;
+                    Reset();
+                    await BindData();
+                }
+                else if (response == "We are sorry...! Payment is missing from last 2 months onwards.")
+                {
+                    Logger.LogInformation(response);
+                    successMessage = response;
+                    Reset();
+                    await BindData();
+                }
+                else if (response == "We are sorry...! Record already exists.")
+                {
+                    Logger.LogInformation(response);
+                    successMessage = response;
                     Reset();
                     await BindData();
                 }
@@ -72,7 +86,7 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
             borrowedAmount = 0;
             interestRate = 0;
             currentMonthCheckBoxValue = null;
-            BindData();
+            await BindData();
             errorMessages = [];
             StateHasChanged();
         }

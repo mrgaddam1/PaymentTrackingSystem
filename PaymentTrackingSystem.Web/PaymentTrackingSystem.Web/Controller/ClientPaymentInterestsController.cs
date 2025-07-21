@@ -78,15 +78,14 @@ namespace PaymentTrackingSystem.Web.Controller
                     return BadRequest("Client Payment Interest data is required.");
                 }
                 var response = await PaymentInterestManager.Add(clientPaymentInterestViewModel);
-                if (response)
+                if (response == "Success")
                 {
-                    var status = CreatedAtAction(nameof(Add), new { id = clientPaymentInterestViewModel.InterestId }, clientPaymentInterestViewModel);
-                    return Ok(status);
+                    return Ok(response);
                 }
                 else
                 {
-                    var status = StatusCode(StatusCodes.Status400BadRequest, "Failed to add Client Payment Interests");
-                    return BadRequest(status);
+                    var status = StatusCode(StatusCodes.Status400BadRequest, response);
+                    return BadRequest(response);
                 }
 
             }

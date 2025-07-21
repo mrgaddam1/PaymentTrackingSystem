@@ -16,5 +16,11 @@ namespace PaymentTrackingSystem.Common.Utils.ClientPaymentInterestMessages
         public static string ClientUpdatePaymentInterestSuccessMessage = "Client Payment Interest details are Updated successfully.";
         public static string ClientAddPaymentInterestErrorMessage = "Unable to add Client Payment Interest details.";
         public static string ClientUpdatePaymentInterestErrorMessage = "Unable to Update Client Payment Interest details.";
+
+
+        public static string ClientPaymentInterestMissingTwoMonthsErrorMessage = "We are sorry...! Payment is missing from last 2 months onwards.";
+        public static string ClientPaymentInterestRecordAlreadyExistsErrorMessage = "We are sorry...! Record already exists.";
+        public static string ClientPaymentInterestCommonErrorMessage = "An error occured while processing details";
+
     }
 }

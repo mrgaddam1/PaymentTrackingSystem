@@ -19,6 +19,8 @@ public partial class ClientInterestPayment
 
     public bool? IsitPaidForTheCurrentMonth { get; set; }
 
+    public bool? IsItMissedPayment { get; set; }
+
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }

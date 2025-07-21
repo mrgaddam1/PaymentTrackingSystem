@@ -104,7 +104,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                         PaymentId = clientPaymentData.PaymentId,
                         ClientId = clientPayment.ClientId,
                         InterestId = null,
-                        DueDate = clientPaymentData.AmountTransferedDate.Value.AddDays(10),
+                        DueDate = clientPaymentData.AmountTransferedDate.Value.AddDays(40),
                         MonthStartDate = new DateTime(today.Year, today.Month, 1),
                         MonthEndDate = today.AddMonths(1).AddDays(-1),
                         CreatedDate = DateTime.UtcNow,
