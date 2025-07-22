@@ -4,6 +4,7 @@ using PaymentTrackingSystem.Common.Helpers.Implmentation;
 using PaymentTrackingSystem.Common.Helpers.Interface;
 using PaymentTrackingSystem.Web.Infrastructure.Implementation;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
+using Radzen;
 
 namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
 {
@@ -24,6 +25,8 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
 
 
             builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
+            builder.Services.AddScoped<TooltipService>();
+
 
         }
     }

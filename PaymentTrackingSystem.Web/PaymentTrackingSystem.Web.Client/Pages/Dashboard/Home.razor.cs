@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Components.Web;
 using PaymentTrackingSystem.Client.Infrastructure.Interface;
 using PaymentTrackingSystem.Shared;
+using Radzen.Blazor;
+using System.Globalization;
+using System.Reflection.Metadata;
 
 namespace PaymentTrackingSystem.Web.Client.Pages.Dashboard
 {
@@ -22,26 +25,88 @@ namespace PaymentTrackingSystem.Web.Client.Pages.Dashboard
         Radzen.DataGridGridLines GridLines = Radzen.DataGridGridLines.Both;
 
         //private int ClientsCount = 120;
-        private decimal PaymentsAmount = 45000;
-        private decimal PaymentInterestsAmount = 5500;
-        private decimal PendingPaymentInterestsAmount = 20;
-        private decimal CompletedPaymentInterestsAmount = 2000;
+        private decimal TotalPaymentsAmount = 0;
+        private decimal TotalPaymentInterestsAmount = 0;
+        private decimal TotalPendingPaymentInterestsAmount = 0;
+        private decimal TotalCompletedPaymentInterestsAmount = 0;
         private int PropertiesCount = 30;
-        //private List<string> RecentPayments = new() { "$1,200 - John", "$900 - Sarah", "$500 - Mark" };
-        //private List<string> RecentInterests = new() { "$150 - Interest A", "$200 - Interest B", "$180 - Interest C" };
-        //private List<string> RecentPendingInterests = new() { "$100 - Pending A", "$120 - Pending B" };
-        //private List<string> RecentProperties = new() { "Property 101", "Property 202", "Property 303" };
 
+        bool showDataLabels = true;
+        public class PaymentInterestData
+        {
+            public string ClientName { get; set; }
+            public double Amount { get; set; }
+        }
+        List<PaymentInterestData> lstPaymentInterestData = new List<PaymentInterestData>();
+        string FormatCurrency(object value)
+        {
+            return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-IN"));
+        }
 
         protected override async Task OnInitializedAsync()
         {
-            IsLoading = true;
-            ClientData = await ClientService.GetAllClients<List<ClientViewModel>>();
-            clientPaymentData = await PaymentService.GetAllClientPayments<List<ClientPaymentViewModel>>();
-            clientPaymentInterestData = await PaymentInterestService.GetAllClientPaymentInterests<List<ClientPaymentInterestViewModel>>();
-            clientPaymentInterestPendingData = await PaymentInterestService.GetAllClientsPaymentInterestsPendingDetais<List<ClientPaymentInterestPending>>();
+            IsLoading = true;          
+            await GetAllClientPayments();
+            await GetAllClientPaymentInterestAmounts();
+            await GetAllClientPaymentInterestPendingAmountDetails();
             IsLoading = false;
         }
+
+        protected async Task GetAllClientPayments()
+        {
+            clientPaymentData = await PaymentService.GetAllClientPayments<List<ClientPaymentViewModel>>();
+            if(clientPaymentData!=null)
+            {
+                foreach (var item in clientPaymentData)
+                {
+                    TotalPaymentsAmount = TotalPaymentsAmount + item.Amount;
+                }
+            }          
+        }
+
+        protected async Task GetAllClientPaymentInterestAmounts()
+        {
+            clientPaymentInterestData = await PaymentInterestService.GetAllClientPaymentInterests<List<ClientPaymentInterestViewModel>>();
+            if(clientPaymentInterestData !=null)
+            {
+                foreach (var item in clientPaymentInterestData)
+                {
+                    TotalPaymentInterestsAmount = TotalPaymentInterestsAmount + item.Amount;
+                }
+                TotalCompletedPaymentInterestsAmount = TotalPaymentInterestsAmount;
+
+                var groupByPaymentInterestData = (from c in clientPaymentInterestData.GroupBy(x => x.ClientName) select c).ToList();
+                foreach (var group in groupByPaymentInterestData)
+                {
+                    var data = new PaymentInterestData
+                    {
+                        ClientName = group.Key,
+                        Amount = (double)group.Sum(x => x.InterestAmount) // safely handle nullable
+                    };
+                    lstPaymentInterestData.Add(data);
+                }
+            }            
+        }
+        protected async Task GetAllClientPaymentInterestPendingAmountDetails()
+        {
+            clientPaymentInterestPendingData = await PaymentInterestService.GetAllClientsPaymentInterestsPendingDetais<List<ClientPaymentInterestPending>>();
+            if(clientPaymentInterestPendingData != null)
+            {
+                foreach (var item in clientPaymentInterestPendingData)
+                {
+                    TotalPendingPaymentInterestsAmount = TotalPendingPaymentInterestsAmount + item.InterestAmount;
+                }               
+            }           
+        }
+
+        protected string FormatIntoINR(decimal totalAmount)
+        {
+            CultureInfo culture = new CultureInfo("en-IN");
+            string formattedValue = string.Format(culture, "{0:C}", totalAmount);
+            return formattedValue;
+        }
+
+
     }
 }
  

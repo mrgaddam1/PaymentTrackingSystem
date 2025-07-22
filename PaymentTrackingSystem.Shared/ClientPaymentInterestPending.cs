@@ -12,6 +12,8 @@ namespace PaymentTrackingSystem.Shared
         public string MonthName { get; set; }
         public string Amount { get; set; }
         public string PaymentStatus { get; set; }
+        public decimal InterestRate { get; set; }
+        public decimal InterestAmount { get; set; }
 
     }
 }

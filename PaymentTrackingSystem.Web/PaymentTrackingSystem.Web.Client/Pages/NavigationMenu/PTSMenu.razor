@@ -17,7 +17,7 @@
             <div class="navbar-header">
                 <b style="color:white;font-size:25px;">Payment Tracking System </b>
                 &nbsp;
-                <b style="color:white;font-size:xx-small;">Version:20250707.1</b>
+                <b style="color:white;font-size:xx-small;">Version: @todayDate </b>
             </div>
             <div class="navbar-header">
                 <b style="color:white;font-size:13px;">
@@ -61,11 +61,12 @@
 @code {
     [Parameter] public string Token { get; set; }
     [Parameter] public string UserName { get; set; }
-
+    string todayDate;
     public string LoginUserName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        todayDate = DateTime.Now.ToString("yyyyMMdd") + ".1";
         if (Token !=null && UserName != null)
         {
             var PTSToken = EncryptionHelper.Decrypt(Token);

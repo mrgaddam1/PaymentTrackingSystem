@@ -3,7 +3,9 @@
 @layout PTSMainLayout
 
 @using PaymentTrackingSystem.Shared
+@using Radzen
 @using Radzen.Blazor
+@using System.Globalization
 
 
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
@@ -19,230 +21,244 @@
 else
 {
 
-    <div class="container py-4 page-fade-in">
-        <h2 class="mb-4">Dashboard</h2>
-
-        <div class="row g-4">
-
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-primary text-white shadow-sm h-15">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-people-fill display-5 me-3"></i>
-                            <h5 class="card-title mb-0">Clients</h5>
-                        </div>
-                        <p class="fs-3 flex-grow-1">@ClientData.Count</p>
-                        <a href="/client/clientList" class="btn btn-outline-light mt-auto">View Details</a>
-                    </div>
-                </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Recent Clients</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @if (ClientData != null)
-                                {
-                                    <RadzenDataGrid class="radzen-grid radgen-grid-font"
-                                                    Data="@ClientData"
-                                                    TItem="ClientViewModel"
-                                                    EditMode="Radzen.DataGridEditMode.Single"
-                                                    AllowFiltering="true"
-                                                    AllowPaging="true"
-                                                    AllowSorting="true"
-                                                    PageSize="3"
-                                                    GridLines="@GridLines">
-                                        <Columns>
-                                            <RadzenDataGridColumn Property="FirstName" Title="First Name" />
-                                            <RadzenDataGridColumn Property="LastName" Title="Last Name" />
-                                        </Columns>
-                                    </RadzenDataGrid>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-12 col-md-6 col-lg-4">
+    <div class="row page-fade-in">
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
                 <div class="card dashboard-card bg-success text-white shadow-sm h-15">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
                             <i class="bi bi-cash-coin display-5 me-3"></i>
                             <h5 class="card-title mb-0">Payments</h5>
                         </div>
-                        <p class="fs-3 flex-grow-1">$@clientPaymentData.Count</p>
-                        <a href="/clientPayments/clientPaymentList" class="btn btn-outline-light mt-auto">View Details</a>
-                    </div>
-                </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Recent Payments</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @if (clientPaymentData != null)
-                                {
-                                    <RadzenDataGrid class="radzen-grid radgen-grid-font"
-                                                    Data="@clientPaymentData"
-                                                    TItem="ClientPaymentViewModel"                                                   
-                                                    AllowFiltering="true"
-                                                    AllowPaging="true"
-                                                    AllowSorting="true"
-                                                    PageSize="3"
-                                                    GridLines="@GridLines">
-                                        <Columns>
-                                            <RadzenDataGridColumn Property="FirstName" Title="First Name" />
-                                            <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                                             <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate" />                                             
-                                        </Columns>
-                                    </RadzenDataGrid>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-info text-white shadow-sm h-15">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-percent display-5 me-3"></i>
-                            <h5 class="card-title mb-0">Payment Interests</h5>
+                        <p class="fs-3 flex-grow-1">
+                            @if (TotalPaymentsAmount != 0)
+                                @FormatIntoINR(TotalPaymentsAmount)
+                            </p>
                         </div>
-                        <p class="fs-3 flex-grow-1">$@clientPaymentInterestData.Count</p>
-                        <a href="/paymentInterest/list" class="btn btn-outline-light mt-auto">View Details</a>
                     </div>
                 </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Recent Interests</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @if (clientPaymentInterestData != null)
-                                {
-                                    <RadzenDataGrid class="radzen-grid radgen-grid-font"
-                                                    Data="@clientPaymentInterestData"
-                                                    TItem="ClientPaymentInterestViewModel"                                                
-                                                    AllowFiltering="true"
-                                                    AllowPaging="true"
-                                                    AllowSorting="true"
-                                                    PageSize="3"
-                                                    GridLines="@GridLines">
-                                        <Columns>
-                                            <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
-                                            <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                                            <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount" />
-                                            <RadzenDataGridColumn Property="InterestPaidDate" Title="Interest Paid Date" />
-                                         </Columns>
-                                    </RadzenDataGrid>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-danger text-white shadow-sm h-15">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-hourglass-split display-5 me-3"></i>
-                            <h5 class="card-title mb-0">Pending Payment Interests</h5>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="card dashboard-card bg-info text-white shadow-sm h-15">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-percent display-5 me-3"></i>
+                                <h5 class="card-title mb-0">Payment Interests</h5>
+                            </div>
+                            <p class="fs-3 flex-grow-1">
+                                @if (TotalPaymentInterestsAmount != 0)
+                                    @FormatIntoINR(@TotalPaymentInterestsAmount)
+                               </p>
+                            </div>
                         </div>
-                        <p class="fs-3 flex-grow-1">$@PendingPaymentInterestsAmount</p>
-                        <a href="#" class="btn btn-outline-dark mt-auto">View Details</a>
                     </div>
-                </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Pending Items</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @if (clientPaymentInterestPendingData != null)
-                                {
-                                    <RadzenDataGrid class="radzen-grid radgen-grid-font"
-                                                    Data="@clientPaymentInterestPendingData"
-                                                    TItem="ClientPaymentInterestPending"
-                                                    AllowFiltering="true"
-                                                    AllowPaging="true"
-                                                    AllowSorting="true"
-                                                    PageSize="3"
-                                                    GridLines="@GridLines">
-                                        <Columns>
-                                            <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
-                                            <RadzenDataGridColumn Property="MonthName" Title="Amount" />
-                                            <RadzenDataGridColumn Property="Amount" Title="Amount" />
-                                            <RadzenDataGridColumn Property="PaymentStatus" Title="Status" />
-                                        </Columns>
-                                    </RadzenDataGrid>
-                                }
-                            </tbody>                           
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-dark text-white shadow-sm h-15">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-house-fill display-5 me-3"></i>
-                            <h5 class="card-title mb-0">Properties</h5>
+
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card dashboard-card bg-danger text-white shadow-sm h-15">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-hourglass-split display-5 me-3"></i>
+                                    <h5 class="card-title mb-0">Pending Payment Interests</h5>
+                                </div>
+                                <p class="fs-3 flex-grow-1">
+                                    @if (TotalPendingPaymentInterestsAmount != 0)
+                                        @FormatIntoINR(TotalPendingPaymentInterestsAmount)
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <p class="fs-3 flex-grow-1">@PropertiesCount</p>
-                        <a href="/property/list" class="btn btn-outline-light mt-auto">View Details</a>
-                    </div>
-                </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Recent Properties</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                               @*  @foreach (var property in RecentProperties)
-                                {
-                                    <tr>
-                                        <td>@property</td>
-                                    </tr>
-                                } *@
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-warning text-dark shadow-sm h-15">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-hourglass-split display-5 me-3"></i>
-                            <h5 class="card-title mb-0">Completed Payment Interests</h5>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <div class="card dashboard-card bg-warning text-dark shadow-sm h-15">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="bi bi-hourglass-split display-5 me-3"></i>
+                                        <h5 class="card-title mb-0">Completed Payment Interests</h5>
+                                    </div>
+                                    <p class="fs-3 flex-grow-1">
+                                        @if (TotalCompletedPaymentInterestsAmount != 0)
+                                            @FormatIntoINR(TotalCompletedPaymentInterestsAmount)
+                                                                </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="fs-3 flex-grow-1">$@CompletedPaymentInterestsAmount</p>
-                        <a href="#" class="btn btn-outline-dark mt-auto">View Details</a>
                     </div>
-                </div>
-                <div class="card mt-2 shadow-sm">
-                    <div class="card-body p-2">
-                        <h6 class="card-subtitle mb-2 text-muted">Pending Items</h6>
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @* @foreach (var pending in RecentPendingInterests)
-                                {
-                                    <tr>
-                                        <td>@pending</td>
-                                    </tr>
-                                } *@
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
 
+                    @if (clientPaymentData != null)
+                    {
+                        <h4 style="margin-top:20px;" class="text-success"><u>Client Payment Transfers</u></h4>
+                        <div class="row" >
+                            <div class="col-lg-12" style="margin-top:5px;border: 1px solid; border-color:whitesmoke;">
+                                <RadzenColumn Size="6">
+                                    <RadzenChart>
+                                        <RadzenColumnSeries Data="@clientPaymentData" CategoryProperty="FirstName" LineType="LineType.Dashed" ValueProperty="Amount">
+                                            <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                        </RadzenColumnSeries>
+                                        <RadzenColumnOptions Radius="5" />
+                                        <RadzenValueAxis Formatter="@FormatCurrency">
+                                            <RadzenGridLines Visible="true" />
+                                            <RadzenAxisTitle Text="Revenue in INR" />
+                                        </RadzenValueAxis>
+                                    </RadzenChart>
+                                </RadzenColumn>
+                            </div>
+                        </div>
+                        <br />
 
-        </div>
-    </div>
-    
-     
+                        <div class="row">
+                            <RadzenDataGrid class="radzen-grid radgen-grid-font"
+                                            Data="@clientPaymentData"
+                                            TItem="ClientPaymentViewModel"
+                                            AllowFiltering="true"
+                                            AllowPaging="true"
+                                            AllowSorting="true"
+                                            PageSize="5"
+                                            GridLines="@GridLines">
+                                <Columns>
+                                    <RadzenDataGridColumn Property="FirstName" Title="First Name" />
+                                    <RadzenDataGridColumn Property="LastName" Title="Last Name" />
+                                    <RadzenDataGridColumn Property="Amount" Title="Amount">
+                                        <Template Context="data">
+                                            <span style="color:blue;font-weight:bold;">
+                                                @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                            </span>
+                                        </Template>
+                                        <FooterTemplate>
+                                            <span style="color:blue;font-weight:600;">
+                                                <b>Total: @clientPaymentData.Sum(t => t.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))</b>
+                                            </span>
+                                        </FooterTemplate>
+
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate">
+                                        <Template Context="data">
+                                            <span style="color:red;font-weight:bold;">
+                                                @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                            </span>
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn Property="AmountTransferedDate" Title="Transferred Date">
+                                        <Template Context="data">
+                                            @data.AmountTransferedDate.Value.ToString("dd/MM/yyyy")
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </div>
+                    }
+                    @if (clientPaymentInterestData != null)
+                    {
+                        <br />
+                        <h4 class="text-info"><u>Client Payment Interest Paid Amounts</u></h4>
+
+                        <div class="row">
+                            <div class="col-lg-4" style="margin-top:5px;border: 1px solid; border-color:whitesmoke;">
+                                <RadzenColumn Size="7">
+
+                                    <RadzenStack Style="width: 100%; max-width: 600px;">
+                                        <RadzenChart>
+                                            <RadzenPieSeries Data="@lstPaymentInterestData" Title="Revenue" CategoryProperty="ClientName" ValueProperty="Amount">
+                                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                            </RadzenPieSeries>
+                                        </RadzenChart>
+                                    </RadzenStack>
+                                </RadzenColumn>
+                            </div>
+
+                            <div class="col-lg-8" style="margin-top:5px;">
+                                <RadzenDataGrid class="radzen-grid radgen-grid-font"
+                                                Data="@clientPaymentInterestData"
+                                                TItem="ClientPaymentInterestViewModel"
+                                                AllowFiltering="true"
+                                                AllowPaging="true"
+                                                AllowSorting="true"
+                                                PageSize="10"
+                                                GridLines="@GridLines">
+                                    <Columns>
+                                        <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
+                                        <RadzenDataGridColumn Property="Amount" Title="Amount">
+                                            <Template Context="data">
+                                                <span style="color:red;font-weight:bold;">
+                                                    @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                                </span>
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount">
+                                            <Template Context="data">
+                                                <span style="color:orange;font-weight:500;">
+                                                    @data.InterestAmount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                                </span>
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Property="InterestPaidDate" Title="Interest Paid Date">
+                                            <Template Context="data">
+                                                @data.InterestPaidDate.Value.ToString("dd/MM/yyyy")
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </div>
+                        </div>
+                    }
+
+                    @if (clientPaymentInterestPendingData != null)
+                    {
+                        <br />
+                        <h4 class="text-info"><u>Client Payment Interest Pending Details</u></h4>
+
+                         <div class="row">
+                            <div class="col-lg-4" style="margin-top:5px;border: 1px solid; border-color:whitesmoke;">
+                                <RadzenColumn Size="7">
+                                    <RadzenStack Style="width: 100%; max-width: 600px;">
+                                        <RadzenChart>
+                                            <RadzenPieSeries Data="@clientPaymentInterestPendingData" Title="Pending Payments" CategoryProperty="ClientName" ValueProperty="InterestAmount">
+                                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                                            </RadzenPieSeries>
+                                        </RadzenChart>
+                                    </RadzenStack>
+                                </RadzenColumn>
+                            </div>
+                            <div class="col-lg-8" style="margin-top:5px;">
+
+                                <RadzenDataGrid class="radzen-grid radgen-grid-font"
+                                                Data="@clientPaymentInterestPendingData"
+                                                TItem="ClientPaymentInterestPending"
+                                                AllowFiltering="true"
+                                                AllowPaging="true"
+                                                AllowSorting="true"
+                                                PageSize="10"
+                                                GridLines="@GridLines">
+                                    <Columns>
+                                        <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
+                                        <RadzenDataGridColumn Property="MonthName" Title="Month Name" />
+                                        <RadzenDataGridColumn Property="Amount" Title="Amount" />
+                                        <RadzenDataGridColumn Property="InterestRate" Title="Interest Rate">
+                                            <Template Context="data">
+                                                <span style="color:red;font-weight:500;">
+                                                    @data.InterestRate.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                                </span>
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount">
+                                            <Template Context="data">
+                                                <span style="color:orangered;font-weight:500;">
+                                                    @data.InterestAmount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"))
+                                                </span>
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Property="PaymentStatus" Title="Status">
+                                            <Template Context="data">
+                                                <span style="color:red;font-weight:500;">
+                                                    @data.PaymentStatus
+                                                </span>
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </div>
+                        </div>
+                    }
 }
