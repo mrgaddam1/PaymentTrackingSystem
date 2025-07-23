@@ -13,6 +13,7 @@ namespace PaymentTrackingSystem.Shared
         public int? ClientId { get; set; }
         public decimal Amount{ get; set; }
         public DateTime? AmountTransferedDate { get; set; }
+        public DateTime? DueDate { get; set; }
         public decimal InterestRate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get;set; }

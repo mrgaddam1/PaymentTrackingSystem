@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
@@ -25,38 +26,30 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         private readonly IMapper mapper;
         private PTSContext DbContext { get; set; }
 
-        public PaymentInterestManager(PTSContext _DbContext, IMapper _mapper)
+        public PaymentInterestManager(PTSContext _DbContext, IMapper _mapper, 
+            ILogger<PaymentInterestManager> _logger)
         {
             DbContext = _DbContext;
             mapper = _mapper;
+            logger = _logger;
         }
         public async Task<List<ClientPaymentInterestViewModel>> GetAll()
         {
             try
             {
-                var interestPaymentData = await (from cpi in DbContext.ClientInterestPayments.AsNoTracking()
-                                                 join cp in DbContext.ClientPayments.AsNoTracking()
-                                                 on cpi.PaymentId equals cp.PaymentId
-                                                 join c in DbContext.Clients.AsNoTracking()
-                                                 on cpi.ClientId equals c.ClientId
-                                                 where cpi.IsDeleted == false
-                                                 select new ClientPaymentInterestViewModel
-                                                 {
-                                                     InterestId = cpi.InterestId,
-                                                     ClientId = cpi.ClientId,
-                                                     ClientName = c.FirstName + " " + c.LastName,
-                                                     PaymentId = cp.PaymentId,
-                                                     Amount = cp.Amount.Value,
-                                                     InterestRate = cp.InterestRate.Value,
-                                                     InterestAmount = cpi.InterestAmount.Value,
-                                                     InterestPaidDate = cpi.InterestPaidDate,
-                                                     AmountTransferedDate = cp.AmountTransferedDate,
-                                                     IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
-                                                     IsitDeleted = cpi.IsDeleted,
-
-                                                 }).OrderBy(x => x.InterestId).ToListAsync();
-
+                var interestPaymentData = new List<ClientPaymentInterestViewModel>();
+                try
+                {
+                    var data = DataHelper.GetData(DbContext.Database.GetDbConnection(), "Up_GetAll_ClientPaymentInterestDetails", null);
+                    interestPaymentData = ConvertDataTableToGenericList.ConvertDataTable<ClientPaymentInterestViewModel>(data).ToList();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.Message, "An error occured while processing the request.");
+                    interestPaymentData = new List<ClientPaymentInterestViewModel>();
+                }
                 return interestPaymentData;
+
             }
             catch (Exception ex)
             {
@@ -80,13 +73,13 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                              select new ClientPaymentInterestViewModel
                                              {
                                                  InterestId = cpi.InterestId,
-                                                 ClientId = cpi.ClientId,
+                                                 ClientId = cpi.ClientId.Value,
                                                  ClientName = c.FirstName + " " + c.LastName,
                                                  PaymentId = cp.PaymentId,
                                                  Amount = cp.Amount.Value,
                                                  InterestRate = cp.InterestRate.Value,
                                                  InterestAmount = cpi.InterestAmount.Value,
-                                                 InterestPaidDate = cpi.InterestPaidDate,
+                                                 InterestPaidDate = cpi.InterestPaidDate.Value,
                                                  IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
                                                  IsitDeleted = cpi.IsDeleted,
 
@@ -105,138 +98,44 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         }
         public async Task<string> Add(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
-            string message = "";
-            bool isRecordAlreadyExists;
-           
-            using var transaction = await DbContext.Database.BeginTransactionAsync();          
+            string message = string.Empty;
+
             try
             {
-                var interestData = mapper.Map<ClientInterestPayment>(clientPaymentInterestViewModel);
-
-                //check for duplicates....
-                isRecordAlreadyExists =  CheckPaymentInterestDataExistsOrNot(clientPaymentInterestViewModel);
-
-                if (!isRecordAlreadyExists)
+                var sqlParameters = new List<SqlParameter>
                 {
+                    new SqlParameter("@PaymentId", clientPaymentInterestViewModel.PaymentId),
+                    new SqlParameter("@ClientId", clientPaymentInterestViewModel.ClientId),
+                    new SqlParameter("@UserId", 1),
+                    new SqlParameter("@InterestAmount", clientPaymentInterestViewModel.InterestAmount),
+                    new SqlParameter("@InterestPaidDate", clientPaymentInterestViewModel.InterestPaidDate),
+                    new SqlParameter("@IsitPaidForTheCurrentMonth", clientPaymentInterestViewModel.IsitPaidForTheCurrentMonth),
+                };
 
-                    //check number of days is should be 30 days or 60 days
-                    DateTime today = DateTime.Today;
-                    var paymentDueData = await DbContext.PaymentDueDates
-                                                        .Where(x => x.PaymentId == interestData.PaymentId
-                                                        && x.ClientId == interestData.ClientId)
-                                                        .SingleOrDefaultAsync();
+                var data = DataHelper.GetData(DbContext.Database.GetDbConnection(), "Up_Insert_Client_Payment_Interest_Details", sqlParameters.ToArray());
 
-                    TimeSpan diffenceInDays;
-            
-                    if (paymentDueData.DueDate.Value.Date > clientPaymentInterestViewModel.InterestPaidDate.Value.Date)
-                    {
-                        diffenceInDays = (paymentDueData.DueDate.Value.Date - clientPaymentInterestViewModel.InterestPaidDate.Value.Date);
-
-                        if (diffenceInDays.TotalDays >= 30)
-                        {
-                           if (interestData != null)
-                            {
-                                //Adding Missing Payments...
-                                return await AddPaymentInterestDetails(transaction, interestData);
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        DateTime previousMonthInterestPaidate;
-
-                        diffenceInDays = (clientPaymentInterestViewModel.InterestPaidDate.Value.Date - paymentDueData.DueDate.Value.Date);
-
-                        if (diffenceInDays.TotalDays > 45 && diffenceInDays.TotalDays < 90)
-                        {
-                            DateTime? maxInterestPaidDate = await DbContext.ClientInterestPayments
-                                                            .Where(x => x.PaymentId == interestData.PaymentId
-                                                            && x.ClientId == interestData.ClientId)
-                                                            .MaxAsync(o => (DateTime?)o.InterestPaidDate);
-                       
-                            diffenceInDays = (clientPaymentInterestViewModel.InterestPaidDate.Value.Date - maxInterestPaidDate.Value.Date);
-                        }
-
-                    }
-
-                    if (diffenceInDays.TotalDays <= 30 || (diffenceInDays.TotalDays > 40 && diffenceInDays.TotalDays < 90))
-                    {
-                        message = await AddPaymentInterestAndPaymentDueData(message, transaction, interestData, paymentDueData, diffenceInDays);
-                    }
-                    else
-                    {
-                        message = ClientPaymentInterestValidationMessages.ClientPaymentInterestMissingTwoMonthsErrorMessage;
-                    }
-                }
-                else
+                if (data.Rows.Count > 0)
                 {
-                    message = ClientPaymentInterestValidationMessages.ClientPaymentInterestRecordAlreadyExistsErrorMessage;
+                    message = data.Rows[0]["Transaction_Message"].ToString();
+                    if (message == "Data inserted successfully.")
+                    {
+                        logger.LogInformation(message);
+                        message = "Success";
+                    }
+                    else if (message == "Unable to process transaction.")
+                    {
+                        logger.LogInformation(message);
+                        message = ClientPaymentInterestValidationMessages.ClientPaymentInterestCommonErrorMessage;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message, ClientPaymentInterestValidationMessages.ClientPaymentInterestCommonErrorMessage);
                 message = ClientPaymentInterestValidationMessages.ClientPaymentInterestCommonErrorMessage;
-                await transaction.RollbackAsync();
             }
             return message;
-          
         }
-
-        private async Task<string> AddPaymentInterestAndPaymentDueData(string message, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction, ClientInterestPayment? interestData, PaymentDueDate paymentDueData, TimeSpan diffenceInDays)
-        {
-            if (interestData != null)
-            {
-                interestData.IsItMissedPayment = false;
-                interestData.UserId = 1;
-                interestData.IsDeleted = false;
-                interestData.CreatedDate = DateTime.UtcNow;
-                DbContext.ClientInterestPayments.Add(interestData);
-                await DbContext.SaveChangesAsync();
-            }
-            if (paymentDueData != null)
-            {
-
-                paymentDueData.DueDate = diffenceInDays.TotalDays > 60
-                                    ? paymentDueData.DueDate.Value.AddDays(65)
-                                    : paymentDueData.DueDate.Value.AddDays(40);
-
-                paymentDueData.MonthName = paymentDueData.DueDate.Value.ToString("MMMM", new CultureInfo("en-GB"));
-                paymentDueData.CreatedDate = DateTime.Now;
-
-                DbContext.PaymentDueDates.Update(paymentDueData);
-                await DbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-                message = "Success";
-            }
-
-            return message;
-        }
-
-        private async Task<string> AddPaymentInterestDetails(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction, ClientInterestPayment? interestData)
-        {
-            interestData.IsItMissedPayment = true;
-            interestData.UserId = 1;
-            interestData.IsDeleted = false;
-            interestData.CreatedDate = DateTime.UtcNow;
-            DbContext.ClientInterestPayments.Add(interestData);
-            await DbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-            return "Success";
-        }
-
-        private bool CheckPaymentInterestDataExistsOrNot(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
-        {
-            var checkDataExistsOrNot = (DbContext.ClientInterestPayments.Where(
-                                            x => x.ClientId == clientPaymentInterestViewModel.ClientId &&
-                                            x.PaymentId == clientPaymentInterestViewModel.PaymentId &&
-                                            x.InterestPaidDate.Value.Date == clientPaymentInterestViewModel.InterestPaidDate.Value.Date
-                                            ));
-            return checkDataExistsOrNot.Any() ? true : false;
-        }
-
-       
 
         public async Task<bool> Update(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {

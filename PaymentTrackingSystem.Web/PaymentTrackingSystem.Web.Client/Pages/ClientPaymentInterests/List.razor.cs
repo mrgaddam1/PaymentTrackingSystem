@@ -3,6 +3,7 @@ using Microsoft.JSInterop;
 using PaymentTrackingSystem.Client.Infrastructure.Implementation;
 using PaymentTrackingSystem.Client.Infrastructure.Interface;
 using PaymentTrackingSystem.Shared;
+using Radzen;
 using Radzen.Blazor;
 using System;
 
@@ -58,7 +59,14 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
             }
 
         }
+        void OnCellRender(DataGridCellRenderEventArgs<ClientPaymentInterestViewModel> args)
+        {
+            if ((args.Data.IsItMissedPayment == true))
+            {
+                args.Attributes.Add("style", "color:#842029;background-color:#f8d7da;border-color:#f5c2c7");
+            }
 
+        }
         private void AddClient()
         {
             NavigationManager.NavigateTo("/paymentInterest/add");

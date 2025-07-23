@@ -101,10 +101,10 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
                 ClientPaymentData = (ClientPayment.Find(x => x.ClientId == Convert.ToInt32(selectedValue)));
                 if(ClientPaymentData!=null)
                 {
-                    ClientPaymentInterest.ClientId = ClientPaymentData.ClientId;
+                    ClientPaymentInterest.ClientId = ClientPaymentData.ClientId.Value;
                     ClientPaymentInterest.PaymentId = ClientPaymentData.PaymentId;
                     ClientPaymentInterest.AmountTransferedDate = ClientPaymentData.AmountTransferedDate;
-
+                    ClientPaymentInterest.DueDate = ClientPaymentData.DueDate.Value;
                     borrowedAmount = ClientPaymentData.Amount;
                     interestRate = ClientPaymentData.InterestRate;
                     ClientPaymentInterest.InterestAmount = (borrowedAmount * interestRate / 100);

@@ -30,6 +30,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
             {
                 clientPaymentdata = await (from p in DbContext.ClientPayments
                                            join c in DbContext.Clients on p.ClientId equals c.ClientId
+                                           join pd in DbContext.PaymentDueDates on p.PaymentId equals pd.PaymentId
                                            where p.IsDeleted == false
                                            select new ClientPaymentViewModel
                                            {
@@ -40,6 +41,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                                Amount = p.Amount.Value,
                                                AmountTransferedDate = p.AmountTransferedDate,
                                                InterestRate = p.InterestRate.Value,
+                                               DueDate = pd.DueDate,
                                            }).ToListAsync();
 
             }
