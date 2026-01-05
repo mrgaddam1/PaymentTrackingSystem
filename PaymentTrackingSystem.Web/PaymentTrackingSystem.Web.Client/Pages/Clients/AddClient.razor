@@ -12,10 +12,10 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8 mx-auto">
+        <div class="col-md-9 mx-auto">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    Add Customer
+                    <h6>Add Customer</h6>
                 </div>
                 <div class="card-body">
                     <div class="col-lg-12">
@@ -33,71 +33,65 @@
                                 }                                                             
                             }
                             <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    First Name
+                                <div class="col-sm-2">
+                                    First Name &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.FirstName"  maxLength="150" class="form-control" />
                                 </div>
-                            </div>
-
-                            <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Last Name
+                      
+                                <div class="col-sm-2">
+                                    Last Name &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.LastName"  maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
                             <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Mobile Number
+                                <div class="col-sm-2">
+                                    Mobile Number &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.MobileNumber" maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
                                 </div>
-                            </div>
-                            <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Email Id
+                            
+                                <div class="col-sm-2">
+                                    Email Id &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.Email" maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
                             <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Address Line1
+                                <div class="col-sm-2">
+                                    Address Line1 &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.AddressLine1"  maxLength="150" class="form-control" />
                                 </div>
-                            </div>
-
-                            <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Address Line2
+                           
+                                <div class="col-sm-2">
+                                    Address Line2 &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.AddressLine2"  maxLength="150" class="form-control" />
                                 </div>
                             </div>
 
                             <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    City
+                                <div class="col-sm-2">
+                                    City &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.City"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
                                 </div>
-                            </div>
-                            <div class="row rowMargin">
-                                <div class="col-sm-3">
-                                    Postcode
+                           
+                                <div class="col-sm-2">
+                                    Postcode &nbsp;&nbsp;:&nbsp;&nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <InputText @bind-Value="client.Postcode"  maxLength="15" style="color:red;font-weight:bold;" class="form-control" />
                                 </div>
                             </div>

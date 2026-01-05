@@ -1,6 +1,6 @@
 @import 'PaymentTrackingSystem.Web.Client.36cbtti8nc.bundle.scp.css';
 
-/* _content/PaymentTrackingSystem.Web/Components/Layout/EmptyLayout.razor.rz.scp.css */
+/* /Components/Layout/EmptyLayout.razor.rz.scp.css */
 .page[b-slg7a28toj] {
     position: relative;
     display: flex;
@@ -97,7 +97,7 @@ main[b-slg7a28toj] {
         right: 0.75rem;
         top: 0.5rem;
     }
-/* _content/PaymentTrackingSystem.Web/Components/Layout/Header.razor.rz.scp.css */
+/* /Components/Layout/Header.razor.rz.scp.css */
 .navbar-toggler[b-nv8oby0gjx] {
     appearance: none;
     cursor: pointer;
@@ -203,7 +203,7 @@ main[b-slg7a28toj] {
         overflow-y: auto;
     }
 }
-/* _content/PaymentTrackingSystem.Web/Components/Layout/LoginHeader.razor.rz.scp.css */
+/* /Components/Layout/LoginHeader.razor.rz.scp.css */
 .navbar-toggler[b-4g0vv7xawn] {
     appearance: none;
     cursor: pointer;
@@ -309,7 +309,7 @@ main[b-slg7a28toj] {
         overflow-y: auto;
     }
 }
-/* _content/PaymentTrackingSystem.Web/Components/Layout/MainLayout.razor.rz.scp.css */
+/* /Components/Layout/MainLayout.razor.rz.scp.css */
 .page[b-kjxw5exms7] {
     position: relative;
     display: flex;
@@ -406,7 +406,7 @@ main[b-kjxw5exms7] {
         right: 0.75rem;
         top: 0.5rem;
     }
-/* _content/PaymentTrackingSystem.Web/Components/Layout/Menu.razor.rz.scp.css */
+/* /Components/Layout/Menu.razor.rz.scp.css */
 .navbar-toggler[b-dgao1y0kh9] {
     appearance: none;
     cursor: pointer;
@@ -512,7 +512,7 @@ main[b-kjxw5exms7] {
         overflow-y: auto;
     }
 }
-/* _content/PaymentTrackingSystem.Web/Components/Layout/NavMenu.razor.rz.scp.css */
+/* /Components/Layout/NavMenu.razor.rz.scp.css */
 .navbar-toggler[b-7rpq5cz1op] {
     appearance: none;
     cursor: pointer;

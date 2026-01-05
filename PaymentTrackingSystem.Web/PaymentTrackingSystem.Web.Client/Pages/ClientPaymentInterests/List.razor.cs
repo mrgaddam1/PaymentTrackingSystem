@@ -2,6 +2,7 @@
 using Microsoft.JSInterop;
 using PaymentTrackingSystem.Client.Infrastructure.Implementation;
 using PaymentTrackingSystem.Client.Infrastructure.Interface;
+using PaymentTrackingSystem.Common.CommonFunctions;
 using PaymentTrackingSystem.Shared;
 using Radzen;
 using Radzen.Blazor;
@@ -13,10 +14,17 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
     {
         [Inject] public IPaymentInterestService PaymentInterestService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
-
+        [Inject] public IClientService ClientService { get; set; }
         [Inject] public IJSRuntime jSRuntime { get; set; }
+
         private string? errorMessage;
+
+        int? clientValue;
+        int? value;
+        protected string paymentStatus { get; set; }
+        public bool isRowDisabled = false;
         public List<ClientPaymentInterestViewModel> clientPaymentInterestData = new List<ClientPaymentInterestViewModel>();
+        public List<ClientViewModel> ClientData = new();
         Radzen.DataGridGridLines GridLines = Radzen.DataGridGridLines.Both;
         private RadzenDataGrid<ClientPaymentInterestViewModel> clientPaymentInterestGrid;
         protected override async Task OnInitializedAsync()
@@ -24,12 +32,22 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
             try
             {
                 clientPaymentInterestData = await GetAllClientPaymentInterest();
+                await GetAllClients();
+
+
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Error loading data.");
             }
         }
+        private async Task<List<ClientViewModel>> GetAllClients()
+        {
+            var clients = await ClientService.GetAllClients<List<ClientViewModel>>();
+            ClientData = clients ?? new List<ClientViewModel>();
+            ClientData.Add(new ClientViewModel { ClientId = 0, FirstName = "All" });
+            return ClientData;
+        }   
         private async Task<List<ClientPaymentInterestViewModel>> GetAllClientPaymentInterest()
         {
             return await PaymentInterestService.GetAllClientPaymentInterests<List<ClientPaymentInterestViewModel>>();
@@ -61,15 +79,35 @@ namespace PaymentTrackingSystem.Web.Client.Pages.ClientPaymentInterests
         }
         void OnCellRender(DataGridCellRenderEventArgs<ClientPaymentInterestViewModel> args)
         {
-            if ((args.Data.IsItMissedPayment == true))
+            var currentMonthName = CommonApplicationFunctions.GetCurrentMonthName();          
+            
+            if ((args.Data.InterestPaidMonth == currentMonthName) && (args.Data.IsitPaidForTheCurrentMonth == false))
             {
+                isRowDisabled = false;
+                paymentStatus = "Pending";
+            }
+            else if (args.Data.InterestPaidMonth != currentMonthName)
+            {
+                isRowDisabled = true;
+                paymentStatus = "Pending";
                 args.Attributes.Add("style", "color:#842029;background-color:#f8d7da;border-color:#f5c2c7");
             }
-
+            else if ((args.Data.InterestPaidMonth == currentMonthName) && (args.Data.IsitPaidForTheCurrentMonth == true))
+            {
+                isRowDisabled = true;
+                paymentStatus = "Paid";
+                args.Attributes.Add("style", "color:#842029;background-color:#ADD8E6;border-color:#ADD8E6");
+            }
         }
-        private void AddClient()
+       private async Task onClientNameChangeEvent(object selectedValue)
         {
-            NavigationManager.NavigateTo("/paymentInterest/add");
+            if (selectedValue != null)
+            {
+               clientPaymentInterestData = (selectedValue.ToString() == "0" 
+                                            ? await GetAllClientPaymentInterest()
+                                            : clientPaymentInterestData.Where(x => x.ClientId == Convert.ToInt32(selectedValue)).ToList());
+                StateHasChanged();
+            }
         }
     }
 }

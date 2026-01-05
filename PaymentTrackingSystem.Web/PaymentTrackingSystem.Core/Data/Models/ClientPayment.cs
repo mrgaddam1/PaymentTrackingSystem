@@ -17,6 +17,8 @@ public partial class ClientPayment
 
     public decimal? InterestRate { get; set; }
 
+    public DateTime? InterestAmountCutOffDate { get; set; }
+
     public int? CreatedBy { get; set; }
 
     public DateTime? CreatedDate { get; set; }

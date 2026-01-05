@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PaymentTrackingSystem.Shared
+﻿namespace PaymentTrackingSystem.Shared
 {
     public class ClientPaymentInterestViewModel
     {
@@ -17,6 +11,10 @@ namespace PaymentTrackingSystem.Shared
         public decimal InterestRate { get; set; }
         public decimal InterestAmount { get; set; }
         public DateTime? InterestPaidDate { get; set; }
+        public string InterestPaidMonth { get; set; }
+        public DateTime InterestFirstCutOffDate { get; set; }
+        public DateTime InterestSecondCutOffDate { get; set; }
+        public int InterestPaidYear { get; set; }
         public DateTime DueDate { get; set; }
         public bool? IsitPaidForTheCurrentMonth { get; set; }
         public bool? IsItMissedPayment { get; set; }

@@ -13,12 +13,28 @@
 <div class="row">
     <div class="col-lg-6" align="left">
         <h2>Client Payment Interest Details</h2>
+    </div>  
+    <div class="col-lg-3" align="right" style="padding-top:7px;">
+        <h6>Select Customer &nbsp;&nbsp;: &nbsp;&nbsp;</h6>
     </div>
-    <div class="col-lg-6" align="right">
-        <button @onclick="AddClient" class="btn btn-success fw-bold">
-            <i class="fas fa-plus" aria-hidden="true"></i>
-            &nbsp;&nbsp;Add Client
-        </button>
+        <div class="col-lg-3" align="right" >     
+        <RadzenStack Orientation="Orientation.Horizontal"
+                     AlignItems="AlignItems.Center"
+                     JustifyContent="JustifyContent.Center"
+                     Gap="0.1rem">
+            <RadzenLabel Component="DropDownClear" />
+
+            <RadzenDropDown @bind-Value=@value
+                            Data=@ClientData
+                            TextProperty="@nameof(ClientViewModel.FirstName)"
+                            ValueProperty="ClientId"
+                            AllowClear=true 
+                            Placeholder="Select Client"
+                            Style="width:500px;"
+                            Change="onClientNameChangeEvent"
+                            Name="DropDownClear" />
+        </RadzenStack>
+ 
     </div>
 </div>
 <div class="row">
@@ -43,44 +59,72 @@
                             CellRender="@OnCellRender">
                 <Columns>
                     <RadzenDataGridColumn Property="InterestId" Title="Id" Width="100" Visible="false" />
-                    <RadzenDataGridColumn Property="ClientName" Title="Client Name" />
-                     <RadzenDataGridColumn Property="Amount" Title="Amount" >
+                    <RadzenDataGridColumn Property="ClientName" Title="Client Name" Width="200" />
+                    <RadzenDataGridColumn Property="Amount" Title="Amount" Width="150">
                         <Template Context="data">
                             <span style="color:red;font-weight:bold;">
                                 @data.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
                             </span>
                         </Template>
                      </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount"  >
+                    <RadzenDataGridColumn Property="InterestAmount" Title="Interest Amount" Width="150">
                         <Template Context="data">
                             <span style="color:orange;font-weight:500;">
                                 @data.InterestAmount.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
                             </span>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Property="InterestPaidDate" Title="Interest Paid Date"  >
+                    <RadzenDataGridColumn Property="InterestPaidDate" Title="Next month Interest Pay Date" Width="350">
                         <Template Context="data">
                              @if (@data.InterestPaidDate is not null){
                                 @data.InterestPaidDate.Value.ToString("dd/MM/yyyy")
-                            }
-                          
+                            }                          
+                        </Template>
+                    </RadzenDataGridColumn>
+                   
+                    <RadzenDataGridColumn Property="IsitPaidForTheCurrentMonth" Title="Payment Status" Width="150">
+                        <Template Context="data">
+                            @paymentStatus
                         </Template>
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="ClientPaymentInterestViewModel">
                         <Template Context="data">
-                            <RadzenButton ButtonType="Radzen.ButtonType.Button"
-                                          Icon="edit" Size="Radzen.ButtonSize.Small"
-                                          Style="margin-right:5px;"
-                                          Click="@(() => EditRow(data))" />
+                            @if(isRowDisabled)
+                            {
+                                <RadzenButton ButtonType="Radzen.ButtonType.Button"
+                                              Icon="edit" Size="Radzen.ButtonSize.Small"
+											  Style="margin-right:5px;" 
+                                              Disabled="true"
+                                              Click="@(() => EditRow(data))" />
+                            }
+                            else
+                            {
+                                <RadzenButton ButtonType="Radzen.ButtonType.Button"
+                                              Icon="edit" Size="Radzen.ButtonSize.Small"
+                                              Style="margin-right:5px;" 
+                                              Click="@(() => EditRow(data))" />
+                            }
+                           
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ClientPaymentInterestViewModel">
+                    <RadzenDataGridColumn TItem="ClientPaymentInterestViewModel" >
                         <Template Context="data">
-                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"
-                                          Size="Radzen.ButtonSize.Small"
-                                          Style="margin-left:5px;"
-                                          Click="@(() => DeleteRow(data))" />
+                            @if (isRowDisabled)
+                            {
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"
+                                    Size="Radzen.ButtonSize.Small"
+									Style="margin-left:5px;"
+                                    Disabled="true"
+                                    Click="@(() => DeleteRow(data))" />
+                            }
+                            else
+                            {
+                                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"
+                                              Size="Radzen.ButtonSize.Small"
+                                              Style="margin-left:5px;"
+                                              Click="@(() => DeleteRow(data))" />
+                            }
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>

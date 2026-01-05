@@ -72,6 +72,7 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.InterestAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.InterestPaidDate).HasColumnType("datetime");
+            entity.Property(e => e.InterestPaidMonth).HasMaxLength(100);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });
 
@@ -85,6 +86,7 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.AmountTransferedDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.InterestAmountCutOffDate).HasColumnType("datetime");
             entity.Property(e => e.InterestRate).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });

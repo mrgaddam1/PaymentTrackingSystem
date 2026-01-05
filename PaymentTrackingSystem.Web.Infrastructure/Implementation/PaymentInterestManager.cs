@@ -1,22 +1,14 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
+using PaymentTrackingSystem.Common.CommonFunctions;
 using PaymentTrackingSystem.Common.Helpers.Extensions;
 using PaymentTrackingSystem.Common.Utils.ClientPaymentInterestMessages;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Core.Helpers;
 using PaymentTrackingSystem.Shared;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 {
@@ -73,13 +65,13 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                              select new ClientPaymentInterestViewModel
                                              {
                                                  InterestId = cpi.InterestId,
-                                                 ClientId = cpi.ClientId.Value,
+                                                 ClientId = cpi.ClientId,
                                                  ClientName = c.FirstName + " " + c.LastName,
                                                  PaymentId = cp.PaymentId,
                                                  Amount = cp.Amount.Value,
                                                  InterestRate = cp.InterestRate.Value,
-                                                 InterestAmount = cpi.InterestAmount.Value,
-                                                 InterestPaidDate = cpi.InterestPaidDate.Value,
+                                                 InterestAmount = cpi.InterestAmount,
+                                                 InterestPaidDate = cpi.InterestPaidDate,
                                                  IsitPaidForTheCurrentMonth = cpi.IsitPaidForTheCurrentMonth,
                                                  IsitDeleted = cpi.IsDeleted,
 
@@ -140,8 +132,10 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         public async Task<bool> Update(ClientPaymentInterestViewModel clientPaymentInterestViewModel)
         {
             bool isSuccess = false;
+            using var transaction = await DbContext.Database.BeginTransactionAsync();
             try
             {
+
                 var interestPaymentData = await (DbContext
                                           .ClientInterestPayments
                                           .AsNoTracking()
@@ -151,17 +145,47 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 
                 if (interestPaymentData != null)
                 {
-                    interestPaymentData.InterestPaidDate = clientPaymentInterestViewModel.InterestPaidDate;
+                    interestPaymentData.InterestPaidDate = clientPaymentInterestViewModel.InterestPaidDate.Value.Date;
+                    interestPaymentData.IsitPaidForTheCurrentMonth = true;
                     interestPaymentData.UserId = 1;
+                    interestPaymentData.InterestFirstCutOffDate = clientPaymentInterestViewModel.InterestPaidDate.Value.Date;
+                    interestPaymentData.InterestSecondCutOffDate = clientPaymentInterestViewModel.InterestPaidDate.Value.Date;
+                    interestPaymentData.IsItMissedPayment = false;
                     interestPaymentData.ModifiedDate = DateTime.UtcNow;
                     DbContext.ClientInterestPayments.Update(interestPaymentData);
-                    await DbContext.SaveChangesAsync();
-                    isSuccess = true;
+
+
+                    //Add a new record for next month...
+                    var clientInterestPayment = new ClientInterestPayment
+                    {
+                        ClientId = interestPaymentData.ClientId,
+                        PaymentId = interestPaymentData.PaymentId,
+                        UserId = interestPaymentData.UserId,
+                        InterestAmount = interestPaymentData.InterestAmount,
+
+                        InterestPaidDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 5),
+                        InterestPaidMonth = CommonApplicationFunctions.GetMonthName(1),
+                        InterestPaidYear = CommonApplicationFunctions.GetCurrentYear(1),
+
+                        IsitPaidForTheCurrentMonth = false,
+                        InterestFirstCutOffDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 10),
+                        InterestSecondCutOffDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 15),
+                        IsItMissedPayment = false,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                    };
+                    DbContext.ClientInterestPayments.Add(clientInterestPayment);
                 }
+                
+
+                await DbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                isSuccess = true;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message, "An error occured while processing details...");
+                await transaction.RollbackAsync();
             }
             return isSuccess;
         }

@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Common", "4-Common", "{EA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-Client-Infrastructure", "5-Client-Infrastructure", "{DCF52086-C6FF-4B16-84D5-688B72050B45}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-Server-", "6-Server-", "{B453CA61-0A43-4391-8197-847EE98EA2FE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-Server-Infrastructure", "6-Server-Infrastructure", "{B453CA61-0A43-4391-8197-847EE98EA2FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7-Core", "7-Core", "{896F67AA-6754-45D5-990F-26E17525A12A}"
 EndProject

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PaymentTrackingSystem.Common.CommonFunctions;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Shared;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
@@ -84,8 +85,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 
         public async Task<bool> Add(ClientPaymentViewModel clientPayment)
         {
-            DateTime today = DateTime.Today;
-
+           
             var clientExists = await (DbContext.ClientPayments.AnyAsync(x => x.ClientId == clientPayment.ClientId));
             if (!clientExists)
             {
@@ -97,24 +97,30 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                     clientPaymentData.IsDeleted = false;
                     clientPaymentData.CreatedDate = DateTime.UtcNow;
                     clientPaymentData.UserId = 1;
-
+     
                     DbContext.ClientPayments.Add(clientPaymentData);
                     DbContext.SaveChanges();
 
-                    var clientPaymentDueDate = new PaymentDueDate
+                    var clientInterestPayment = new ClientInterestPayment
                     {
+                        ClientId = (int)clientPayment.ClientId,
                         PaymentId = clientPaymentData.PaymentId,
-                        ClientId = clientPayment.ClientId,
-                        InterestId = null,
-                        DueDate = clientPaymentData.AmountTransferedDate.Value.AddDays(40),
-                        MonthStartDate = new DateTime(today.Year, today.Month, 1),
-                        MonthEndDate = today.AddMonths(1).AddDays(-1),
-                        CreatedDate = DateTime.UtcNow,
-                        IsPaid = false,
-                    };
+                        UserId = clientPaymentData.UserId,
+                        InterestAmount = (decimal)((clientPaymentData.Amount * clientPaymentData.InterestRate) / 100),
 
-                    DbContext.PaymentDueDates.Add(clientPaymentDueDate);
-                    await DbContext.SaveChangesAsync();
+                        InterestPaidDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 5),
+                        InterestPaidMonth = CommonApplicationFunctions.GetMonthName(1),
+                        InterestPaidYear = CommonApplicationFunctions.GetCurrentYear(1),
+                        IsitPaidForTheCurrentMonth = false,
+                        InterestFirstCutOffDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 10),
+                        InterestSecondCutOffDate = CommonApplicationFunctions.ObtainDateByAddingNumberToMonthAndDate(1, 15),
+                        IsItMissedPayment = false,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                    };
+                    DbContext.ClientInterestPayments.Add(clientInterestPayment);
+                    await DbContext.SaveChangesAsync();              
+
                     await transaction.CommitAsync();
                     return true;
                 }
@@ -134,17 +140,19 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         {
             try
             {
-                var clientPaymentData = await (DbContext.ClientPayments.FindAsync(clientPaymentViewModel.PaymentId));
-                if (clientPaymentData == null)
-                {
-                    return false;
-                }
-                clientPaymentData.Amount = clientPaymentViewModel.Amount;
-                clientPaymentData.InterestRate = clientPaymentViewModel.InterestRate;
-                clientPaymentData.ModifiedDate = DateTime.Now;
-                clientPaymentData.UserId = 1;               
-                DbContext.ClientPayments.Update(clientPaymentData);
-                await DbContext.SaveChangesAsync();
+                //var clientPaymentData = await (DbContext.ClientPayments.FindAsync(clientPaymentViewModel.PaymentId));
+                //if (clientPaymentData == null)
+                //{
+                //    return false;
+                //}
+                //clientPaymentData.Amount = clientPaymentViewModel.Amount;
+                //clientPaymentData.InterestRate = clientPaymentViewModel.InterestRate;
+                //clientPaymentData.InterestCutOffDate = clientPaymentViewModel.InterestAmountCutOffDate;
+                //clientPaymentData.ModifiedDate = DateTime.Now;
+                //clientPaymentData.UserId = 1;  
+                
+                //DbContext.ClientPayments.Update(clientPaymentData);
+                //await DbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

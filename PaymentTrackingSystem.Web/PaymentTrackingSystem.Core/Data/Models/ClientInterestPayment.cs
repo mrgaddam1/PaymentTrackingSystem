@@ -7,17 +7,25 @@ public partial class ClientInterestPayment
 {
     public int InterestId { get; set; }
 
-    public int? ClientId { get; set; }
+    public int ClientId { get; set; }
 
-    public int? PaymentId { get; set; }
+    public int PaymentId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
-    public decimal? InterestAmount { get; set; }
+    public decimal InterestAmount { get; set; }
 
-    public DateTime? InterestPaidDate { get; set; }
+    public DateTime InterestPaidDate { get; set; }
+
+    public string InterestPaidMonth { get; set; } = null!;
+
+    public int InterestPaidYear { get; set; }
 
     public bool? IsitPaidForTheCurrentMonth { get; set; }
+
+    public DateTime InterestFirstCutOffDate { get; set; }
+
+    public DateTime InterestSecondCutOffDate { get; set; }
 
     public bool? IsItMissedPayment { get; set; }
 

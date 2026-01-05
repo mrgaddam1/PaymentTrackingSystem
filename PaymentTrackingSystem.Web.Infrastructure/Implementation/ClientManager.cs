@@ -4,11 +4,6 @@ using Microsoft.Extensions.Logging;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Shared;
 using PaymentTrackingSystem.Web.Infrastructure.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
 {
