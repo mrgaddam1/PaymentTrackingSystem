@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36121.58
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11312.210 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Web", "PaymentTrackingSystem.Web\PaymentTrackingSystem.Web.csproj", "{0AD2BDB4-25CF-4A0A-9250-F41B6D5D4984}"
 EndProject
@@ -30,6 +30,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-Server-Infrastructure", "6-Server-Infrastructure", "{B453CA61-0A43-4391-8197-847EE98EA2FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7-Core", "7-Core", "{896F67AA-6754-45D5-990F-26E17525A12A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentTrackingSystem.Jobs", "PaymentTrackingSystem.Jobs\PaymentTrackingSystem.Jobs.csproj", "{0C58F2A8-0B0C-4285-9BF5-E346FFFA3944}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5424D24-2DC4-4E49-87C1-A9A75123EDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C58F2A8-0B0C-4285-9BF5-E346FFFA3944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C58F2A8-0B0C-4285-9BF5-E346FFFA3944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C58F2A8-0B0C-4285-9BF5-E346FFFA3944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C58F2A8-0B0C-4285-9BF5-E346FFFA3944}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
