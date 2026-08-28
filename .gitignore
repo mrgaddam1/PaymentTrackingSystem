@@ -230,7 +230,10 @@ blazor.boot.json
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.js
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.native.js
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Web.Client/bin/Debug/net8.0/wwwroot/_framework/dotnet.runtime.js
+<<<<<<< HEAD
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18
+=======
+>>>>>>> d4b47b04a048ab695eca1c587ece33e99ce033de
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18/0769BCFF6169F0A6CE19675A7B0E0E5C
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18/262AA0DE67C34072108A4F1BB8B2849D
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18/5A92BB9B97FA33720C34AC1016BF8FFD
@@ -238,8 +241,16 @@ blazor.boot.json
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18/A3A671B243A3CDD4AABF29CB6A780610
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/5FC733C339F89741AF3382DBA65FCA18/E48AF0AAD90E8D0EBAADBD184F6C1C1B
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Core/obj/Debug/net8.0/PaymentT.DE8B32E6.Up2Date
+<<<<<<< HEAD
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Jobs/obj/Debug/net8.0/PaymentT.6EA92573.Up2Date
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Jobs/obj/Debug/net8.0/PaymentTrackingSystem.Jobs.AssemblyInfo.cs
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Jobs/obj/Debug/net8.0/PaymentTrackingSystem.Jobs.GeneratedMSBuildEditorConfig.editorconfig
 /PaymentTrackingSystem.Web/PaymentTrackingSystem.Jobs/Properties/serviceDependencies.local.json.user
+=======
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Core/obj/Debug/net8.0/PaymentTrackingSystem.Core.csproj.FileListAbsolute.txt
+>>>>>>> d4b47b04a048ab695eca1c587ece33e99ce033de
 /PaymentTrackingSystem.Web/.vs/CopilotSnapshots/571C6DD46B2DEC489A05C29B4FA1A8FF/state.mpack
+/PaymentTrackingSystem.Common/obj/Debug/net8.0/PaymentT.2002C8FF.Up2Date
+/PaymentTrackingSystem.Shared/obj/Debug/net8.0/PaymentT.80EAD4DF.Up2Date
+/PaymentTrackingSystem.Web/.vs/PaymentTrackingSystem.Web/copilot-chat/d6b11d39/sessions/d46d1c57-2d6b-48ec-9a05-c29b4fa1a8ff
+/PaymentTrackingSystem.Web/PaymentTrackingSystem.Web/obj/project.assets.json
