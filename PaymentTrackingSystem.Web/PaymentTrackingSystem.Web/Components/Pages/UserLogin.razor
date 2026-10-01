@@ -18,6 +18,7 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @inject ProtectedLocalStorage protectedLocalStorage
 @inject IConfiguration Configuration
+@inject ITokenService TokenService
 @rendermode InteractiveServer
 
 
@@ -80,15 +81,14 @@ else
         IsLoading = true;
         var user = await iAuthService.UserLogin<UserViewModel>(loginModel);
         if (user != null)
-        {
-            await protectedLocalStorage.SetAsync("PTSToken", user.Token);
-            await protectedLocalStorage.SetAsync("UserName", user.UserName);
-            await protectedLocalStorage.SetAsync("RoleName", "SuperAdmin");
-          
-            var Token = Uri.EscapeDataString(EncryptionHelper.Encrypt(user.Token));
-            var UserName = Uri.EscapeDataString(EncryptionHelper.Encrypt(user.UserName));
+        {         
+      
+            TokenService.Set("PTSToken", user.Token);
+            TokenService.Set("UserName", user.UserName);
+            TokenService.Set("UserId", user.UserId.ToString());
  
-            Navigation.NavigateTo("/navigationMenu/menu" + "/" + Token + "/" + UserName);
+            //Navigation.NavigateTo("/navigationMenu/menu" + "/" + Token + "/" + UserName + "/" + UserId);
+            Navigation.NavigateTo("/navigationMenu/menu");
            
         }
         else

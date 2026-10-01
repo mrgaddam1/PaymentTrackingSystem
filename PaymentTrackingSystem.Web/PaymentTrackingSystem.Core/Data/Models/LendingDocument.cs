@@ -23,7 +23,5 @@ public partial class LendingDocument
 
     public DateTimeOffset? DeletedDate { get; set; }
 
-    public virtual Lender Lender { get; set; } = null!;
-
     public virtual User User { get; set; } = null!;
 }

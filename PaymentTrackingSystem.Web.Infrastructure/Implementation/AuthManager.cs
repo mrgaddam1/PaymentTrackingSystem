@@ -20,7 +20,7 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
         {
             var userViewModel = new UserViewModel();
             var user = await DbContext.Users.FirstOrDefaultAsync(u => u.EmailId == emailId);
-            //string hashedPassword = BCrypt.Net.BCrypt.HashPassword("Demo@523274");
+            //string hashedPassword = BCrypt.Net.BCrypt.HashPassword("Kittu@8019202040");
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return userViewModel = null;

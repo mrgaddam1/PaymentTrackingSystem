@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PaymentTrackingSystem.Core.Data.Models;
 
-public partial class LendingInterest
+public partial class LendingAmountDetail
 {
     public int LendingInterestId { get; set; }
 
@@ -11,13 +11,17 @@ public partial class LendingInterest
 
     public int UserId { get; set; }
 
-    public DateTimeOffset DueDate { get; set; }
+    public decimal LendingAmount { get; set; }
 
-    public DateTimeOffset PaidDate { get; set; }
+    public int LendingInterestRateId { get; set; }
+
+    public decimal ActualInterestAmount { get; set; }
 
     public decimal ExpectedInterestAmount { get; set; }
 
-    public decimal ActualInterestAmount { get; set; }
+    public DateTimeOffset PaidDate { get; set; }
+
+    public DateTimeOffset DueDate { get; set; }
 
     public int PaymentModeId { get; set; }
 
@@ -29,7 +33,7 @@ public partial class LendingInterest
 
     public DateTimeOffset? DeletedDate { get; set; }
 
-    public virtual Lender Lender { get; set; } = null!;
+    public virtual LendingInterestRate LendingInterestRate { get; set; } = null!;
 
     public virtual PaymentMode PaymentMode { get; set; } = null!;
 

@@ -1,0 +1,179 @@
+﻿@* @page "/lendings/edit/{lendingId:int}"
+@using PaymentTrackingSystem.Shared
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@inject ILendingService LendingService
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Edit Lending</h2>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+                </div>
+            }
+
+            @if (isLoading)
+            {
+                <div class="alert alert-info">Loading lending details...</div>
+            }
+            else if (model != null)
+            {
+                <form @onsubmit="HandleSubmit">
+                    <div class="mb-3">
+                        <label for="lendingId" class="form-label">Lending ID</label>
+                        <input type="number" class="form-control" id="lendingId" @bind="model.LendingId" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="clientId" class="form-label">Client ID</label>
+                        <input type="number" class="form-control" id="clientId" @bind="model.ClientId" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Client Name</label>
+                        <input type="text" class="form-control" id="clientName" @bind="model.ClientName" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lendingAmount" class="form-label">Lending Amount</label>
+                                <input type="number" step="0.01" class="form-control" id="lendingAmount" @bind="model.LendingAmount" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="interestRate" class="form-label">Interest Rate (%)</label>
+                                <input type="number" step="0.01" class="form-control" id="interestRate" @bind="model.InterestRate" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lendingTerm" class="form-label">Lending Term (Months)</label>
+                                <input type="number" class="form-control" id="lendingTerm" @bind="model.LendingTerm" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lendingDate" class="form-label">Lending Date</label>
+                                <input type="date" class="form-control" id="lendingDate" @bind="model.LendingDate" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dueDate" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="dueDate" @bind="model.DueDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="remainingAmount" class="form-label">Remaining Amount</label>
+                                <input type="number" step="0.01" class="form-control" id="remainingAmount" @bind="model.RemainingAmount" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lendingStatus" class="form-label">Lending Status</label>
+                        <select class="form-select" id="lendingStatus" @bind="model.LendingStatus">
+                            <option value="ACTIVE">Active</option>
+                            <option value="CLOSED">Closed</option>
+                            <option value="DEFAULT">Default</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    <span>Updating...</span>
+                                }
+                                else
+                                {
+                                    <span>Update Lending</span>
+                                }
+                            </button>
+                            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int LendingId { get; set; }
+
+    private LendingViewModel? model;
+    private string? errorMessage;
+    private bool isLoading = true;
+    private bool isSubmitting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            model = await LendingService.GetLendingDetailsById<LendingViewModel>(LendingId);
+            if (model == null)
+            {
+                errorMessage = "Lending not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading lending: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        errorMessage = null;
+        isSubmitting = true;
+
+        try
+        {
+            //model.ModifiedDate = DateTime.UtcNow;
+            bool success = await LendingService.Update(model);
+            if (success)
+            {
+                NavigationManager.NavigateTo("/lendings/list");
+            }
+            else
+            {
+                errorMessage = "Failed to update lending. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/lendings/list");
+    }
+} *@
