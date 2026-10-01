@@ -9,6 +9,8 @@ namespace PaymentTrackingSystem.Shared
     public class InterestRatesViewModel
     {
         public int InterestId { get; set; }
-        public string AmountInterestRate { get; set; }
+        public decimal AmountInterestRate { get; set; }
+
+        public decimal InterestRate { get; set; }
     }
 }

@@ -15,14 +15,14 @@ namespace PaymentTrackingSystem.Web.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             RegisterClientDependency(builder);
-        
+
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddHttpClient("httpClient", client =>
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
 
-          
+
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("WebAPI"));
 
             builder.Services.AddScoped<CustomAuthStateProvider>();
@@ -40,7 +40,8 @@ namespace PaymentTrackingSystem.Web.Client
             builder.Services.AddScoped<IPaymentInterestService, PaymentInterestService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
-
+            builder.Services.AddScoped<ILendingService, LendingService>();
+            builder.Services.AddScoped<IInvestorService, InvestorService>();
             builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
         }
     }

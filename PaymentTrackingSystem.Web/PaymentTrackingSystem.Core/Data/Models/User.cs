@@ -20,4 +20,8 @@ public partial class User
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual ICollection<LendingAmountDetail> LendingAmountDetails { get; set; } = new List<LendingAmountDetail>();
+
+    public virtual ICollection<LendingDocument> LendingDocuments { get; set; } = new List<LendingDocument>();
 }

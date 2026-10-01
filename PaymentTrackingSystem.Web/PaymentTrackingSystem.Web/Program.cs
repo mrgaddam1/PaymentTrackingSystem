@@ -1,18 +1,18 @@
 using AutoMapper;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using PaymentTrackingSystem.Client.Infrastructure.Services;
 using PaymentTrackingSystem.Common.GlobalError;
 using PaymentTrackingSystem.Core.Data.Models;
 using PaymentTrackingSystem.Web.ApplicationSettings.AutoMapper;
 using PaymentTrackingSystem.Web.ApplicationSettings.CORS;
 using PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings;
+using PaymentTrackingSystem.Web.ApplicationSettings.Exceptions;
 using PaymentTrackingSystem.Web.ApplicationSettings.Http;
 using PaymentTrackingSystem.Web.Client.Pages;
 using PaymentTrackingSystem.Web.Components;
 using PaymentTrackingSystem.Web.Infrastructure.AutoMapperProfileSettings;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-
 namespace PaymentTrackingSystem.Web
 {
     public class Program
@@ -21,7 +21,7 @@ namespace PaymentTrackingSystem.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBlazoredLocalStorage();         
+            builder.Services.AddBlazoredLocalStorage();
 
 
             ApplicationCORSSettings.RegisterCORS(builder);
@@ -58,9 +58,6 @@ namespace PaymentTrackingSystem.Web
 
             var app = builder.Build();
 
-            // Add the middleware
-            app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -72,6 +69,9 @@ namespace PaymentTrackingSystem.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //Global Exception Handling Middleware
+            app.UseMiddleware<GLobalExceptionHandlerMiddleware>();
+
             app.UseRouting();
 
             app.UseHttpsRedirection();
@@ -86,7 +86,7 @@ namespace PaymentTrackingSystem.Web
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
-                .AddInteractiveWebAssemblyRenderMode()                
+                .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
             app.Run();

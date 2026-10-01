@@ -1,10 +1,12 @@
-﻿@page "/navigationMenu/menu/{token}/{userName}"
+﻿@page "/navigationMenu/menu"
 @using PaymentTrackingSystem.Common.Helpers.Implmentation
 @using PaymentTrackingSystem.Common.Helpers.Interface
 @using PaymentTrackingSystem.Web.Client.Pages.Layout
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
 
 @inject IEncryptionHelper EncryptionHelper
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject ITokenService TokenService
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
 
 <header style="margin-left:-15px;">
@@ -35,6 +37,14 @@
             <li>
                 <NavLink href="/dashboard/home" activeClass="active">Dashboard</NavLink>
             </li>
+               <li>
+                <NavLink href="/lending/add" activeClass="active">Lendings</NavLink>
+            </li>
+            
+              <li>
+                <NavLink href="/investor/add" activeClass="active">Investor</NavLink>
+            </li>
+
             <li>
                 <NavLink href="/client/clientList" activeClass="active">Clients</NavLink>
             </li>
@@ -59,30 +69,18 @@
 </div>
 
 @code {
-    [Parameter] public string Token { get; set; }
-    [Parameter] public string UserName { get; set; }
+    // [Parameter] public string Token { get; set; }
+    // [Parameter] public string UserName { get; set; }
+    // [Parameter] public string UserId { get; set; }
     string todayDate;
     public string LoginUserName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        todayDate = DateTime.Now.ToString("yyyyMMdd") + ".1";
-        if (Token !=null && UserName != null)
-        {
-            var PTSToken = EncryptionHelper.Decrypt(Token);
-            LoginUserName = EncryptionHelper.Decrypt(UserName);
-
-            await localStorage.SetItemAsync("authToken", PTSToken);
-            await localStorage.SetItemAsync("UserName", LoginUserName);
-            
-        }
-        else
-        {
-            Token = await localStorage.GetItemAsync<string>("authToken");
-            LoginUserName = await localStorage.GetItemAsync<string>("UserName"); 
-        }
-        StateHasChanged();
+         todayDate = DateTime.Now.ToString("yyyyMMdd") + ".1";    
+        LoginUserName =await localStorage.GetItemAsync<string>("UserName");
+         StateHasChanged();
        
-    }
+     }
 
 }

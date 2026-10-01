@@ -1,0 +1,346 @@
+/*.investor-form-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-header {
+    margin-bottom: 30px;
+}
+
+.form-header h1 {
+    font-size: 28px;
+    margin: 0;
+    color: #333;
+}
+
+.investor-form-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.form-section h2 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-control {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-control:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.checkbox-row input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+}
+
+.alert-error {
+    padding: 12px 16px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.btn-primary:disabled {
+    background-color: #6c757d;
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .investor-form-page {
+        padding: 12px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}*/
+
+.investor-form-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    background-color: whitesmoke;
+}
+
+.form-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #101828;
+    margin: 0 0 0.3rem 0;
+}
+
+.form-header p {
+    color: #667085;
+    font-size: 0.92rem;
+    margin: 0 0 1.75rem 0;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #667085;
+    font-size: 0.95rem;
+}
+
+.investor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-section {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    padding: 1.5rem;
+}
+
+    .form-section h2 {
+        font-size: 1rem;
+        font-weight: 650;
+        color: #101828;
+        margin: 0 0 1.1rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #eef1f5;
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+    .form-group.span-2 {
+        grid-column: span 2;
+    }
+
+    .form-group label {
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: #344054;
+    }
+
+.form-input,
+.form-file {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #d0d5dd;
+    border-radius: 9px;
+    font-size: 0.92rem;
+    color: #101828;
+    background: #ffffff;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .form-input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 4rem;
+}
+
+.field-error {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    color: #344054;
+    cursor: pointer;
+    margin: 0.25rem 0 1rem 0;
+}
+
+    .checkbox-row input {
+        accent-color: #10b981;
+        width: 15px;
+        height: 15px;
+    }
+
+.file-hint {
+    font-size: 0.8rem;
+    color: #667085;
+    margin: 0.4rem 0 0 0;
+}
+
+.alert-error {
+    background: #fef3f2;
+    border: 1px solid #fecdca;
+    color: #b42318;
+    padding: 0.7rem 0.9rem;
+    border-radius: 9px;
+    font-size: 0.87rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.65rem 1.4rem;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+}
+
+    .btn-primary:hover:not(:disabled) {
+        filter: brightness(1.06);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+.btn-secondary {
+    background: #ffffff;
+    color: #344054;
+    border: 1px solid #d0d5dd;
+}
+
+    .btn-secondary:hover {
+        background: #f9fafb;
+    }

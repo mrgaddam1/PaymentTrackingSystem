@@ -18,13 +18,18 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
             _localStorage = localStorage;
         }
 
-        public async Task<string> GetTokenAsync() =>
-            await _localStorage.GetItemAsStringAsync(TokenKey);
+        public async Task ClearAllAsync()
+        {
+            await _localStorage.ClearAsync();
+        }
 
-        public async Task SetTokenAsync(string token) =>
-            await _localStorage.SetItemAsStringAsync(TokenKey, token);
+        public async Task<string> Get(string key) =>
+           await _localStorage.GetItemAsStringAsync(key);
 
-        public async Task RemoveTokenAsync() =>
-            await _localStorage.RemoveItemAsync(TokenKey);
+        public async Task Set(string key, string value) =>
+            await _localStorage.SetItemAsStringAsync(key, value);
+
+        public async Task Remove(string key) =>
+            await _localStorage.RemoveItemAsync(key);
     }
 }

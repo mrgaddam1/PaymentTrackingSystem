@@ -1,0 +1,159 @@
+﻿@page "/lendings/lending"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Shared
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject ILendingService LendingApiService
+
+<PageTitle>Lending Records</PageTitle>
+
+@* <div class="lending-list-page">
+    <div class="list-header">
+        <div>
+            <h1>Lending Records</h1>
+            <p>Money you've lent out, and the terms attached to each.</p>
+        </div>
+        <button class="btn-primary" @onclick="CreateNew">+ New Lending Record</button>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-state">Loading…</div>
+    }
+    else if (records.Count == 0)
+    {
+        <div class="empty-state">No lending records yet. Create your first one to get started.</div>
+    }
+    else
+    {
+        <div class="table-wrapper">
+            <table class="lending-table">
+                <thead>
+                    <tr>
+                        <th>Borrower</th>
+                        <th>Principal</th>
+                        <th>Rate</th>
+                        <th>Term</th>
+                        <th>Lending Date</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in records)
+                    {
+                        <tr>
+                            <td>
+                                <div class="borrower-cell">
+                                    <span class="borrower-name">@record.BorrowerFirstName @record.BorrowerLastName</span>
+                                    <span class="borrower-email">@record.EmailId</span>
+                                </div>
+                            </td>
+                            <td>@record.PrincipalAmount.ToString("C")</td>
+                            <td>@record.InterestRate%/mo</td>
+                            <td>@record.LendingTerm mo</td>
+                            <td>@record.LendingDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="status-badge status-@record.StatusId">@StatusName(record.StatusId)</span></td>
+                            <td class="row-actions">
+                                <button class="link-btn" @onclick="() => Edit(record.LendingId)">Edit</button>
+                                <button class="link-btn danger" @onclick="() => Delete(record.LendingId)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<LendingViewModel> records = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRecords();
+    }
+
+    private async Task LoadRecords()
+    {
+        isLoading = true;
+        // call service to get a collection type and guard against null
+        records = await LendingApiService.GetAllLendings<List<LendingViewModel>>() ?? new List<LendingViewModel>();
+        isLoading = false;
+    }
+        
+    private void CreateNew() => Navigation.NavigateTo("/lending/create");
+
+    private void Edit(int id) => Navigation.NavigateTo($"/lending/edit/{id}");
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Delete this lending record? This cannot be undone.");
+        if (!confirmed)
+        {
+            return;
+        }
+
+        if (await LendingApiService.Delete(id))
+        {
+            await LoadRecords();
+        }
+    }
+
+    private static string StatusName(int statusId) => statusId switch
+    {
+        1 => "Active",
+        2 => "Closed",
+        3 => "Overdue",
+        4 => "Defaulted",
+        _ => "Unknown"
+    };
+}
+
+
+<style type="text/css" >
+    .lending-list-page {
+        padding: 20px;
+    }
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .list-header h1 {
+        margin: 0;
+    }
+    .list-header p {
+        margin: 0;
+        color: #666;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .loading-state,
+    .empty-state {
+        text-align: center;
+        font-size: 1.2em;
+        color: #666;
+        margin-top: 50px;
+    }
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    .lending-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>
+ *@
