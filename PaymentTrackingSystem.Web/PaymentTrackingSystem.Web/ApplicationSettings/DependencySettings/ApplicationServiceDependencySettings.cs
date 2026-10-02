@@ -19,6 +19,10 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
             builder.Services.AddScoped<ILendingManager, LendingManager>();
             builder.Services.AddScoped<ICountryManager, CountryManager>();
             builder.Services.AddScoped<IInvestorManager, InvestorManager>();
+            builder.Services.AddScoped<IPropertyManager, PropertyManager>();
+            builder.Services.AddScoped<IDistrictManager, DistrictManager>();
+            builder.Services.AddScoped<IStateManager, StateManager>();
+            builder.Services.AddScoped<IPropertyTypeManager, PropertyTypeManager>();
 
             builder.Services.AddScoped<IClientService, ClientService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
@@ -28,6 +32,10 @@ namespace PaymentTrackingSystem.Web.ApplicationSettings.DependencySettings
             builder.Services.AddScoped<ILendingService, LendingService>();
             builder.Services.AddScoped<ICountryService, CountryService>();
             builder.Services.AddScoped<IInvestorService, InvestorService>();
+            builder.Services.AddScoped<IPropertyService, PropertyService>();
+            builder.Services.AddScoped<IDistrictService, DistrictService>();
+            builder.Services.AddScoped<IStateService, StateService>();
+            builder.Services.AddScoped<IPropertyTypeService, PropertyTypeService>();
 
             builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
             builder.Services.AddScoped<TooltipService>();
