@@ -10,12 +10,12 @@ namespace PaymentTrackingSystem.Web.Client.Pages.Dashboard
 {
     public partial class Home : ComponentBase
     {
-        [Inject]public IClientService ClientService { get;set; }
+        [Inject] public IClientService ClientService { get; set; }
         [Inject] public IPaymentService PaymentService { get; set; }
         [Inject] public IPaymentInterestService PaymentInterestService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
-       
-        
+
+
         public List<ClientViewModel> ClientData = new List<ClientViewModel>();
         public List<ClientPaymentViewModel> clientPaymentData = new List<ClientPaymentViewModel>();
         public List<ClientPaymentInterestViewModel> clientPaymentInterestData = new List<ClientPaymentInterestViewModel>();
@@ -38,36 +38,38 @@ namespace PaymentTrackingSystem.Web.Client.Pages.Dashboard
             public double Amount { get; set; }
         }
         List<PaymentInterestData> lstPaymentInterestData = new List<PaymentInterestData>();
-        string FormatCurrency(object value)
-        {
-            return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-IN"));
-        }
+        //string FormatCurrency(object value)
+        //{
+        //    return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-IN"));
+        //}
 
         protected override async Task OnInitializedAsync()
         {
-            IsLoading = true;          
+            IsLoading = true;
             await GetAllClientPayments();
             await GetAllClientPaymentInterestAmounts();
-            await GetAllClientPaymentInterestPendingAmountDetails();
+            //await GetAllClientPaymentInterestPendingAmountDetails();
+            //IsLoading = false;
+            await Task.Delay(1000); // Simulate loading
             IsLoading = false;
         }
 
         protected async Task GetAllClientPayments()
         {
             clientPaymentData = await PaymentService.GetAllClientPayments<List<ClientPaymentViewModel>>();
-            if(clientPaymentData!=null)
+            if (clientPaymentData != null)
             {
                 foreach (var item in clientPaymentData)
                 {
                     TotalPaymentsAmount = TotalPaymentsAmount + item.Amount;
                 }
-            }          
+            }
         }
 
         protected async Task GetAllClientPaymentInterestAmounts()
         {
             clientPaymentInterestData = await PaymentInterestService.GetAllClientPaymentInterests<List<ClientPaymentInterestViewModel>>();
-            if(clientPaymentInterestData !=null)
+            if (clientPaymentInterestData != null)
             {
                 foreach (var item in clientPaymentInterestData)
                 {
@@ -85,28 +87,34 @@ namespace PaymentTrackingSystem.Web.Client.Pages.Dashboard
                     };
                     lstPaymentInterestData.Add(data);
                 }
-            }            
+            }
         }
         protected async Task GetAllClientPaymentInterestPendingAmountDetails()
         {
             clientPaymentInterestPendingData = await PaymentInterestService.GetAllClientsPaymentInterestsPendingDetais<List<ClientPaymentInterestPending>>();
-            if(clientPaymentInterestPendingData != null)
+            if (clientPaymentInterestPendingData != null)
             {
                 foreach (var item in clientPaymentInterestPendingData)
                 {
                     TotalPendingPaymentInterestsAmount = TotalPendingPaymentInterestsAmount + item.InterestAmount;
-                }               
-            }           
+                }
+            }
         }
 
         protected string FormatIntoINR(decimal totalAmount)
         {
-            CultureInfo culture = new CultureInfo("en-IN");
-            string formattedValue = string.Format(culture, "{0:C}", totalAmount);
-            return formattedValue;
+            //CultureInfo culture = new CultureInfo("en-IN");
+            //string formattedValue = string.Format(culture, "{0:C}", totalAmount);
+            //return formattedValue;
+            return totalAmount.ToString("C", CultureInfo.CreateSpecificCulture("en-IN"));
         }
 
-
+        private string FormatCurrency(object value)
+        {
+            if (value is decimal decimalValue)
+                return decimalValue.ToString("C0", CultureInfo.CreateSpecificCulture("en-IN"));
+            return value?.ToString() ?? "₹0";
+        }
     }
 }
- 
+

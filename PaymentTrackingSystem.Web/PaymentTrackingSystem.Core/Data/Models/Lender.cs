@@ -24,10 +24,4 @@ public partial class Lender
     public DateTimeOffset? DeletedDate { get; set; }
 
     public bool IsActive { get; set; }
-
-    public virtual ICollection<LendingDocument> LendingDocuments { get; set; } = new List<LendingDocument>();
-
-    public virtual ICollection<LendingInterest> LendingInterests { get; set; } = new List<LendingInterest>();
-
-    public virtual User User { get; set; } = null!;
 }

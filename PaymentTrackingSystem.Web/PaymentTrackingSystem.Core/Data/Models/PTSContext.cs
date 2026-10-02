@@ -25,13 +25,21 @@ public partial class PTSContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<District> Districts { get; set; }
+
+    public virtual DbSet<Investor> Investors { get; set; }
+
     public virtual DbSet<Lender> Lenders { get; set; }
 
     public virtual DbSet<LenderAddress> LenderAddresses { get; set; }
 
+    public virtual DbSet<LendingAmountDetail> LendingAmountDetails { get; set; }
+
     public virtual DbSet<LendingDocument> LendingDocuments { get; set; }
 
-    public virtual DbSet<LendingInterest> LendingInterests { get; set; }
+    public virtual DbSet<LendingDueDateDescription> LendingDueDateDescriptions { get; set; }
+
+    public virtual DbSet<LendingInterestRate> LendingInterestRates { get; set; }
 
     public virtual DbSet<PaymentDueDate> PaymentDueDates { get; set; }
 
@@ -46,6 +54,8 @@ public partial class PTSContext : DbContext
     public virtual DbSet<PropertyAddress> PropertyAddresses { get; set; }
 
     public virtual DbSet<PropertyType> PropertyTypes { get; set; }
+
+    public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<Tenant> Tenants { get; set; }
 
@@ -132,6 +142,53 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.CountryName).HasMaxLength(150);
         });
 
+        modelBuilder.Entity<District>(entity =>
+        {
+            entity.ToTable("District");
+
+            entity.Property(e => e.DistrictName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Investor>(entity =>
+        {
+            entity.Property(e => e.CompensatedAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Compensated_Amount");
+            entity.Property(e => e.CompensatedBy)
+                .HasMaxLength(150)
+                .HasColumnName("Compensated_By");
+            entity.Property(e => e.CompensationDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_Date");
+            entity.Property(e => e.DeletedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Deleted_Date");
+            entity.Property(e => e.EmailId)
+                .HasMaxLength(250)
+                .HasColumnName("Email_Id");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(150)
+                .HasColumnName("First_Name");
+            entity.Property(e => e.HaveYouCompensated).HasColumnName("HaveYou_Compensated");
+            entity.Property(e => e.InvestAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Invest_Amount");
+            entity.Property(e => e.InvestedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Invested_Date");
+            entity.Property(e => e.IsDeleted).HasColumnName("Is_Deleted");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(150)
+                .HasColumnName("Last_Name");
+            entity.Property(e => e.MobileNumber)
+                .HasMaxLength(15)
+                .HasColumnName("Mobile_Number");
+            entity.Property(e => e.ModifiedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Modified_Date");
+        });
+
         modelBuilder.Entity<Lender>(entity =>
         {
             entity.HasKey(e => e.LenderId).HasName("PK_Lenders");
@@ -150,11 +207,6 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.MobileNumber)
                 .HasMaxLength(15)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.User).WithMany(p => p.Lenders)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Lenders_User");
         });
 
         modelBuilder.Entity<LenderAddress>(entity =>
@@ -171,6 +223,32 @@ public partial class PTSContext : DbContext
                 .HasConstraintName("FK_LenderAddress_Country");
         });
 
+        modelBuilder.Entity<LendingAmountDetail>(entity =>
+        {
+            entity.HasKey(e => e.LendingInterestId).HasName("PK_LendingInterest");
+
+            entity.ToTable("LendingAmountDetail");
+
+            entity.Property(e => e.ActualInterestAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.ExpectedInterestAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.LendingAmount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.LendingInterestRate).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.LendingInterestRateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_LendingInterestRates");
+
+            entity.HasOne(d => d.PaymentMode).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.PaymentModeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_PaymentMode");
+
+            entity.HasOne(d => d.User).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_User");
+        });
+
         modelBuilder.Entity<LendingDocument>(entity =>
         {
             entity.ToTable("LendingDocument");
@@ -182,38 +260,24 @@ public partial class PTSContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Lender).WithMany(p => p.LendingDocuments)
-                .HasForeignKey(d => d.LenderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LendingDocument_Lender");
-
             entity.HasOne(d => d.User).WithMany(p => p.LendingDocuments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LendingDocument_User");
         });
 
-        modelBuilder.Entity<LendingInterest>(entity =>
+        modelBuilder.Entity<LendingDueDateDescription>(entity =>
         {
-            entity.ToTable("LendingInterest");
+            entity.HasKey(e => e.LendingDueDateId);
 
-            entity.Property(e => e.ActualInterestAmount).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.ExpectedInterestAmount).HasColumnType("decimal(18, 2)");
+            entity.ToTable("LendingDueDateDescription");
 
-            entity.HasOne(d => d.Lender).WithMany(p => p.LendingInterests)
-                .HasForeignKey(d => d.LenderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LendingInterest_Lender");
+            entity.Property(e => e.LendingDueDateDescritpion).HasMaxLength(250);
+        });
 
-            entity.HasOne(d => d.PaymentMode).WithMany(p => p.LendingInterests)
-                .HasForeignKey(d => d.PaymentModeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LendingInterest_PaymentMode");
-
-            entity.HasOne(d => d.User).WithMany(p => p.LendingInterests)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LendingInterest_User");
+        modelBuilder.Entity<LendingInterestRate>(entity =>
+        {
+            entity.Property(e => e.InterestRate).HasColumnType("decimal(18, 2)");
         });
 
         modelBuilder.Entity<PaymentDueDate>(entity =>
@@ -284,6 +348,13 @@ public partial class PTSContext : DbContext
             entity.ToTable("PropertyType");
 
             entity.Property(e => e.PropertyTypeName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<State>(entity =>
+        {
+            entity.ToTable("State");
+
+            entity.Property(e => e.Statement).HasMaxLength(250);
         });
 
         modelBuilder.Entity<Tenant>(entity =>

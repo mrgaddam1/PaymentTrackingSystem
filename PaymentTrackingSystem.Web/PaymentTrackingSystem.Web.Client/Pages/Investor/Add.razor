@@ -1,0 +1,105 @@
+@page "/investor/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<div class="investor-form-page"  >
+    <div class="form-header">
+        <h1>New Investment Record</h1>      
+    </div>
+
+    <EditForm EditContext="editContext" OnValidSubmit="HandleSubmit" class="investor-form">
+        <DataAnnotationsValidator />
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert-error">@errorMessage</div>
+        }
+
+       <section class="form-section">
+            <h2>Investor Details</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <InputText id="firstName" class="form-control" @bind-Value="model.FirstName" maxlength="50" minlength="2" />
+                    <ValidationMessage For="@(() => model.FirstName)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <InputText id="lastName" class="form-control" @bind-Value="model.LastName" maxlength="50" minlength="2" />
+                    <ValidationMessage For="@(() => model.LastName)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <InputText id="email" class="form-control" @bind-Value="model.Email" />
+                    <ValidationMessage For="@(() => model.Email)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <InputText id="phone" class="form-control" @bind-Value="model.PhoneNumber" maxlength="15" minlength="10" />
+                    <ValidationMessage For="@(() => model.PhoneNumber)" class="alert-danger" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Investment Details</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="investmentAmount">Investment Amount</label>
+                    <InputNumber id="investmentAmount" class="form-control" @bind-Value="model.InvestmentAmount" />
+                    <ValidationMessage For="@(() => model.InvestmentAmount)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="investmentDate">Investment Date</label>
+                    <InputDate id="investmentDate" class="form-control" @bind-Value="model.InvestmentDate" />
+                    <ValidationMessage For="@(() => model.InvestmentDate)" class="alert-danger" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Compensation</h2>
+            <label class="checkbox-row">
+                <input type="checkbox"
+                       checked="@model.HaveYouCompensated"
+                       @onchange="OnCompensationCheckedChanged" />
+                <span>Have you received compensation for this investment?</span>
+            </label>
+            @if (model.HaveYouCompensated == true)
+            {
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="compensatedAmount">Compensation Amount</label>
+                        <InputNumber id="compensatedAmount" class="form-control" @bind-Value="model.CompensatedAmount" />
+                        <ValidationMessage For="@(() => model.CompensatedAmount)" class="alert-danger" />
+                    </div>
+                    <div class="form-group">
+                        <label for="compensationDate">Compensation Date</label>
+                        <InputDate id="compensationDate" class="form-control" @bind-Value="compensationDateValue" @bind-Value:after="OnCompensationDateChanged" />
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label for="compensatedBy">Compensated By</label>
+                        <InputText id="compensatedBy" class="form-control" @bind-Value="model.CompensatedBy" maxlength="100" />
+                        <ValidationMessage For="@(() => model.CompensatedBy)" class="alert-danger" />
+                    </div>
+                </div>
+            }
+        </section>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" @onclick="Cancel">Cancel</button>
+            <button type="submit" class="btn-primary" disabled="@isSubmitting">
+                @(isSubmitting ? "Saving…" : "Create Record")
+            </button>
+        </div>
+
+    </EditForm> 
+</div>
+@if(showAlert)
+{
+    <div class="alert alert-@alertType alert-dismissible fade show" role="alert">
+        <strong>@(alertType == "success" ? "Success!" : "Error!")</strong> @alertMessage
+        <button type="button" class="btn-close" @onclick="CloseAlert"></button>
+    </div>
+}

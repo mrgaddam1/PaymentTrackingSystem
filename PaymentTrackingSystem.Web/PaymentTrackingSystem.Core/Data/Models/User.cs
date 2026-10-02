@@ -21,9 +21,7 @@ public partial class User
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual ICollection<Lender> Lenders { get; set; } = new List<Lender>();
+    public virtual ICollection<LendingAmountDetail> LendingAmountDetails { get; set; } = new List<LendingAmountDetail>();
 
     public virtual ICollection<LendingDocument> LendingDocuments { get; set; } = new List<LendingDocument>();
-
-    public virtual ICollection<LendingInterest> LendingInterests { get; set; } = new List<LendingInterest>();
 }

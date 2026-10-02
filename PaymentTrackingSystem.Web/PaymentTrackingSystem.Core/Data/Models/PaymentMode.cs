@@ -9,5 +9,5 @@ public partial class PaymentMode
 
     public string PaymentModeDescription { get; set; } = null!;
 
-    public virtual ICollection<LendingInterest> LendingInterests { get; set; } = new List<LendingInterest>();
+    public virtual ICollection<LendingAmountDetail> LendingAmountDetails { get; set; } = new List<LendingAmountDetail>();
 }
