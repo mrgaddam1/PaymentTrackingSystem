@@ -1,0 +1,206 @@
+﻿using Microsoft.Extensions.Logging;
+using PaymentTrackingSystem.Client.Infrastructure.Interface;
+using PaymentTrackingSystem.Common.ApplicationStatusCodeHandler;
+using PaymentTrackingSystem.Shared;
+using PaymentTrackingSystem.Shared.Routes;
+using System.Net.Http.Json;
+
+namespace PaymentTrackingSystem.Client.Infrastructure.Implementation
+{
+    public class InvestorService : IInvestorService
+    {
+        public HttpClient httpClient { get; set; }
+        public string investorApiPath = APIRoutes.Investor.BaseURL;
+        private readonly ILogger<InvestorService> logger;
+        private ITokenService tokenService { get; set; }
+
+        public InvestorService(HttpClient _httpClient,
+                              ITokenService _tokenService,
+                              ILogger<InvestorService> _logger)
+        {
+            this.httpClient = _httpClient;
+            tokenService = _tokenService;
+            logger = _logger;
+        }
+
+        public async Task<bool> Add(InvestorViewModel investor)
+        {
+            bool isSuccess = false;
+            try
+            {
+                var authToken = await tokenService.Get("PTSToken");
+
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    logger.LogError("Error: Authentication token is missing or invalid");
+                    return false;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Post, investorApiPath + "Add");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+                request.Content = new StringContent(
+                    System.Text.Json.JsonSerializer.Serialize(investor),
+                    System.Text.Encoding.UTF8,
+                    "application/json"
+                );
+
+                var response = await httpClient.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    logger.LogError($"Error: {response.StatusCode} - {errorContent}");
+                    isSuccess = false;
+                }
+                else
+                {
+                    isSuccess = true;
+                }
+
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while adding investor record");
+                return false;
+            }
+        }
+
+        public async Task<bool> Delete(int investorId)
+        {
+            try
+            {
+                var authToken = await tokenService.Get("PTSToken");
+
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    logger.LogError("Error: Authentication token is missing or invalid");
+                    return false;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Delete, investorApiPath + $"Delete/{investorId}");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+                var response = await httpClient.SendAsync(request);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while deleting investor record");
+                return false;
+            }
+        }
+
+        public async Task<T?> GetAllInvestors<T>()
+        {
+            try
+            {
+                var authToken = await tokenService.Get("PTSToken");
+
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    logger.LogError("Error: Authentication token is missing or invalid");
+                    return default;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, investorApiPath + "GetAllInvestors");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+                var response = await httpClient.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    logger.LogError($"Error: {response.StatusCode} - {errorContent}");
+                    return default;
+                }
+
+                var result = await response.Content.ReadAsAsync<T>();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while retrieving investor records");
+                return default;
+            }
+        }
+
+        public async Task<T?> GetInvestorDetailsById<T>(int investorId)
+        {
+            try
+            {
+                var authToken = await tokenService.Get("PTSToken");
+
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    logger.LogError("Error: Authentication token is missing or invalid");
+                    return default;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, investorApiPath + $"GetInvestorDetailsById/{investorId}");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+                var response = await httpClient.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    logger.LogError($"Error: {response.StatusCode} - {errorContent}");
+                    return default;
+                }
+
+                var result = await response.Content.ReadAsAsync<T>();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while retrieving investor details");
+                return default;
+            }
+        }
+
+        public async Task<bool> Update(InvestorViewModel investorViewModel)
+        {
+            bool isSuccess = false;
+            try
+            {
+                var authToken = await tokenService.Get("PTSToken");
+
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    logger.LogError("Error: Authentication token is missing or invalid");
+                    return false;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Post, investorApiPath + "Update");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+                request.Content = new StringContent(
+                    System.Text.Json.JsonSerializer.Serialize(investorViewModel),
+                    System.Text.Encoding.UTF8,
+                    "application/json"
+                );
+
+                var response = await httpClient.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    logger.LogError($"Error: {response.StatusCode} - {errorContent}");
+                    isSuccess = false;
+                }
+                else
+                {
+                    isSuccess = true;
+                }
+
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while updating investor record");
+                return false;
+            }
+        }
+    }
+}

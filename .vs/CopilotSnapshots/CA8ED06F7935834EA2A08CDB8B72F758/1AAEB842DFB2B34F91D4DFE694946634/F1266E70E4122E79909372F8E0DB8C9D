@@ -1,0 +1,505 @@
+﻿@page "/property/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<div class="property-page">
+    <div class="property-shell">
+        <header class="page-heading">
+            <div class="heading-icon">
+                <i class="bi bi-buildings"></i>
+            </div>
+            <div>
+                <p class="eyebrow">PROPERTY MANAGEMENT</p>
+                <h1>Add a property</h1>
+                <p class="heading-description">Enter the property and owner details below.</p>
+            </div>
+        </header>
+
+        <div class="property-card">
+            <div class="card-topline"></div>
+
+            <EditForm Model="@property" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="form-content">
+                    @if (errorMessages != null && errorMessages.Any(m => !string.IsNullOrEmpty(m)))
+                    {
+                        <div class="alert alert-danger error-alert" role="alert">
+                            <i class="bi bi-exclamation-circle-fill"></i>
+                            <div>
+                                <strong>Please check the following:</strong>
+                                <ul class="mb-0">
+                                    @foreach (var message in errorMessages.Where(m => !string.IsNullOrEmpty(m)))
+                                    {
+                                        <li>@message</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+
+                    <section class="form-section">
+                        <div class="section-heading">
+                            <span class="section-number">01</span>
+                            <div>
+                                <h2>Property details</h2>
+                                <p>Basic information about the property.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="field-group field-span-2">
+                                <label for="propertyName">Property name <span class="required">*</span></label>
+                                <InputText id="propertyName" @bind-Value="property.PropertyName" class="form-control" placeholder="e.g. Riverside Apartments" />
+                                <ValidationMessage For="@(() => property.PropertyName)" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="propertyTypeId">Property type ID <span class="required">*</span></label>
+                                <InputNumber id="propertyTypeId" @bind-Value="property.PropertyTypeId" class="form-control" placeholder="Enter type ID" />
+                                <ValidationMessage For="@(() => property.PropertyTypeId)" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="section-heading">
+                            <span class="section-number">02</span>
+                            <div>
+                                <h2>Owner details</h2>
+                                <p>Contact information for the property owner.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="field-group">
+                                <label for="ownerName">Owner name <span class="required">*</span></label>
+                                <InputText id="ownerName" @bind-Value="property.PropertOwnerName" class="form-control" placeholder="Enter owner name" />
+                                <ValidationMessage For="@(() => property.PropertOwnerName)" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="mobileNumber">Mobile number <span class="required">*</span></label>
+                                <InputText id="mobileNumber" @bind-Value="property.OwnerMobileNumber" class="form-control" placeholder="Enter mobile number" />
+                                <ValidationMessage For="@(() => property.OwnerMobileNumber)" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="section-heading">
+                            <span class="section-number">03</span>
+                            <div>
+                                <h2>Location</h2>
+                                <p>Provide the property's address and region.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="field-group field-span-2">
+                                <label for="addressLine1">Address line 1 <span class="required">*</span></label>
+                                <InputText id="addressLine1" @bind-Value="property.AddressLine1" class="form-control" placeholder="Street address, building name" />
+                                <ValidationMessage For="@(() => property.AddressLine1)" />
+                            </div>
+
+                            <div class="field-group field-span-2">
+                                <label for="addressLine2">Address line 2 <span class="optional">(optional)</span></label>
+                                <InputText id="addressLine2" @bind-Value="property.AddressLine2" class="form-control" placeholder="Apartment, suite, unit, etc." />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="postcode">Postcode <span class="required">*</span></label>
+                                <InputText id="postcode" @bind-Value="property.Postcode" class="form-control" placeholder="Enter postcode" />
+                                <ValidationMessage For="@(() => property.Postcode)" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="countryId">Country ID <span class="required">*</span></label>
+                                <InputNumber id="countryId" @bind-Value="property.CountryId" class="form-control" placeholder="Enter country ID" />
+                                <ValidationMessage For="@(() => property.CountryId)" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="stateId">State ID <span class="required">*</span></label>
+                                <InputNumber id="stateId" @bind-Value="property.StateId" class="form-control" placeholder="Enter state ID" />
+                                <ValidationMessage For="@(() => property.StateId)" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="districtId">District ID <span class="required">*</span></label>
+                                <InputNumber id="districtId" @bind-Value="property.DistrictId" class="form-control" placeholder="Enter district ID" />
+                                <ValidationMessage For="@(() => property.DistrictId)" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <footer class="form-footer">
+                    <span class="required-note"><span class="required">*</span> Required fields</span>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-cancel" @onclick="Cancel">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-save">
+                            <i class="bi bi-check2"></i>
+                            Save property
+                        </button>
+                    </div>
+                </footer>
+            </EditForm>
+        </div>
+
+        <p class="page-note">
+            <i class="bi bi-shield-check"></i>
+            Your property information is stored securely.
+        </p>
+    </div>
+</div>
+
+<style>
+    .property-page {
+        min-height: calc(100vh - 70px);
+        padding: 48px 20px 64px;
+        background:
+            radial-gradient(ellipse at 10% 0%, rgba(59, 130, 246, 0.09), transparent 36%),
+            #f4f7fb;
+        color: #172033;
+    }
+
+    .property-shell {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .page-heading {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 0 0 28px;
+    }
+
+    .heading-icon {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+        place-items: center;
+        border: 1px solid #dce8ff;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #eef4ff, #fff);
+        color: #3568d4;
+        font-size: 25px;
+        box-shadow: 0 8px 20px rgba(35, 74, 142, 0.08);
+    }
+
+    .eyebrow {
+        margin: 0 0 5px;
+        color: #6480ae;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }
+
+    .page-heading h1 {
+        margin: 0;
+        color: #172033;
+        font-size: clamp(26px, 4vw, 34px);
+        font-weight: 750;
+        letter-spacing: -1px;
+    }
+
+    .heading-description {
+        margin: 5px 0 0;
+        color: #748096;
+        font-size: 14px;
+    }
+
+    .property-card {
+        overflow: hidden;
+        border: 1px solid #e6ebf2;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 18px 50px rgba(29, 46, 77, 0.08);
+    }
+
+    .card-topline {
+        height: 5px;
+        background: linear-gradient(90deg, #3568d4, #6fa3ff 58%, #c3dcff);
+    }
+
+    .form-content {
+        padding: 34px 40px 8px;
+    }
+
+    .form-section {
+        padding: 0 0 30px;
+    }
+
+    .form-section + .form-section {
+        padding-top: 28px;
+        border-top: 1px solid #edf0f5;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-bottom: 22px;
+    }
+
+    .section-number {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        place-items: center;
+        border-radius: 11px;
+        background: #eef4ff;
+        color: #3568d4;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: #1f2b40;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .section-heading p {
+        margin: 4px 0 0;
+        color: #8490a3;
+        font-size: 13px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 19px 20px;
+        padding-left: 47px;
+    }
+
+    .field-span-2 {
+        grid-column: span 2;
+    }
+
+    .field-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #39465b;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .required {
+        color: #dc5361;
+    }
+
+    .optional {
+        color: #98a2b3;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .field-group .form-control {
+        min-height: 46px;
+        padding: 10px 13px;
+        border: 1px solid #dfe5ee;
+        border-radius: 9px;
+        background-color: #fbfcfe;
+        color: #243149;
+        font-size: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .field-group .form-control::placeholder {
+        color: #a4adba;
+    }
+
+    .field-group .form-control:hover {
+        border-color: #becce0;
+        background-color: #fff;
+    }
+
+    .field-group .form-control:focus {
+        border-color: #6892e8;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(53, 104, 212, 0.11);
+        outline: 0;
+    }
+
+    .field-group ::deep .validation-message {
+        display: block;
+        margin-top: 5px;
+        color: #cf3e4c;
+        font-size: 12px;
+    }
+
+    .error-alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        margin-bottom: 26px;
+        border: 1px solid #f5c6ca;
+        border-radius: 10px;
+        font-size: 13px;
+    }
+
+    .error-alert > i {
+        margin-top: 2px;
+        font-size: 17px;
+    }
+
+    .error-alert ul {
+        margin-top: 5px;
+        padding-left: 18px;
+    }
+
+    .form-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 40px;
+        border-top: 1px solid #edf0f5;
+        background: #fbfcfe;
+    }
+
+    .required-note {
+        color: #8792a3;
+        font-size: 12px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form-actions .btn {
+        min-height: 43px;
+        padding: 10px 19px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 650;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .form-actions .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+        border: 1px solid #dfe5ee;
+        background: #fff;
+        color: #59667a;
+    }
+
+    .btn-cancel:hover {
+        border-color: #cbd4e1;
+        background: #f5f7fa;
+        color: #39465b;
+    }
+
+    .btn-save {
+        border: 1px solid #3568d4;
+        background: #3568d4;
+        color: #fff;
+        box-shadow: 0 5px 12px rgba(53, 104, 212, 0.2);
+    }
+
+    .btn-save:hover {
+        border-color: #2859c0;
+        background: #2859c0;
+        color: #fff;
+        box-shadow: 0 7px 16px rgba(53, 104, 212, 0.26);
+    }
+
+    .btn-save i {
+        margin-right: 5px;
+        font-size: 15px;
+        vertical-align: -1px;
+    }
+
+    .page-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin: 18px 0 0;
+        color: #8994a5;
+        font-size: 12px;
+    }
+
+    .page-note i {
+        color: #5d9b79;
+    }
+
+    @@media (max-width: 640px) {
+        .property-page {
+            padding: 28px 14px 42px;
+        }
+
+        .page-heading {
+            gap: 13px;
+            margin-bottom: 21px;
+        }
+
+        .heading-icon {
+            width: 49px;
+            height: 49px;
+            flex-basis: 49px;
+            border-radius: 14px;
+            font-size: 21px;
+        }
+
+        .form-content {
+            padding: 26px 20px 4px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            padding-left: 0;
+        }
+
+        .field-span-2 {
+            grid-column: auto;
+        }
+
+        .form-section {
+            padding-bottom: 25px;
+        }
+
+        .form-section + .form-section {
+            padding-top: 24px;
+        }
+
+        .form-footer {
+            align-items: stretch;
+            flex-direction: column;
+            padding: 18px 20px;
+        }
+
+        .form-actions {
+            width: 100%;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .field-group .form-control,
+        .form-actions .btn {
+            transition: none;
+        }
+    }
+</style>

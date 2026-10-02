@@ -1,0 +1,118 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PaymentTrackingSystem.Core.Data.Models;
+using PaymentTrackingSystem.Shared;
+using PaymentTrackingSystem.Web.Infrastructure.Interface;
+
+namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
+{
+    public class StateManager : IStateManager
+    {
+        private readonly PTSContext dbContext;
+        private readonly ILogger<StateManager> logger;
+
+        public StateManager(PTSContext dbContext, ILogger<StateManager> logger)
+        {
+            this.dbContext = dbContext;
+            this.logger = logger;
+        }
+
+        public async Task<List<StateViewModel>> GetAllStates()
+        {
+            return await dbContext.States
+                .AsNoTracking()
+                .OrderBy(state => state.Statement)
+                .Select(state => new StateViewModel
+                {
+                    StateId = state.Stateid,
+                    StateName = state.Statement
+                })
+                .ToListAsync();
+        }
+
+        public async Task<StateViewModel?> GetStateDetailsById(int stateId)
+        {
+            var state = await dbContext.States
+                .AsNoTracking()
+                .Where(item => item.Stateid == stateId)
+                .Select(item => new StateViewModel
+                {
+                    StateId = item.Stateid,
+                    StateName = item.Statement
+                })
+                .FirstOrDefaultAsync();
+
+            return state;
+        }
+
+        public async Task<bool> Add(StateViewModel stateViewModel)
+        {
+            if (string.IsNullOrWhiteSpace(stateViewModel.StateName))
+            {
+                return false;
+            }
+
+            try
+            {
+                dbContext.States.Add(new State
+                {
+                    Statement = stateViewModel.StateName.Trim()
+                });
+
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to add state.");
+                return false;
+            }
+        }
+
+        public async Task<bool> Update(StateViewModel stateViewModel)
+        {
+            if (stateViewModel.StateId <= 0 || string.IsNullOrWhiteSpace(stateViewModel.StateName))
+            {
+                return false;
+            }
+
+            try
+            {
+                var state = await dbContext.States.FindAsync(stateViewModel.StateId);
+                if (state == null)
+                {
+                    return false;
+                }
+
+                state.Statement = stateViewModel.StateName.Trim();
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to update state {StateId}.", stateViewModel.StateId);
+                return false;
+            }
+        }
+
+        public async Task<bool> Delete(int stateId)
+        {
+            try
+            {
+                var state = await dbContext.States.FindAsync(stateId);
+                if (state == null)
+                {
+                    return false;
+                }
+
+                dbContext.States.Remove(state);
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to delete state {StateId}.", stateId);
+                return false;
+            }
+        }
+    }
+}

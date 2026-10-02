@@ -1,0 +1,206 @@
+﻿@page "/lending/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using Microsoft.AspNetCore.Components.Forms
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<div class="lending-form-page">
+    <div class="form-header">
+        <h1>New Lending Record</h1>      
+    </div>
+
+    <EditForm EditContext="editContext" OnValidSubmit="HandleSubmit" class="lending-form">
+        <DataAnnotationsValidator />
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert-error">@errorMessage</div>
+        }
+
+        <section class="form-section">
+            <h2>Borrower Details</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <InputText id="firstName" class="form-control" @bind-Value="model.FirstName" maxlength="50" minlength="2"  />
+                    <ValidationMessage For="@(() => model.FirstName)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <InputText id="lastName" class="form-control" @bind-Value="model.LastName" maxlength="50" minlength="2" />
+                    <ValidationMessage For="@(() => model.LastName)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <InputText id="email" class="form-control" @bind-Value="model.EmailId" />
+                    <ValidationMessage For="@(() => model.EmailId)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <InputText id="phone" class="form-control" @bind-Value="model.PhoneNumber" maxlength="15" minlength="10" />
+                    <ValidationMessage For="@(() => model.PhoneNumber)" class="alert-danger" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Address</h2>
+            <div class="form-grid">
+                <div class="form-group span-2">
+                    <label for="address1">Address Line 1</label>
+                    <InputText id="address1" class="form-control" @bind-Value="model.AddressLine1" maxlength="100" minlength="5" />
+                    <ValidationMessage For="@(() => model.AddressLine1)" class="alert-danger" />
+                </div>
+                <div class="form-group span-2">
+                    <label for="address2">Address Line 2</label>
+                    <InputText id="address2" class="form-control" @bind-Value="model.AddressLine2" maxlength="100" minlength="5" />
+                    <ValidationMessage For="@(() => model.AddressLine2)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="postcode">Postcode</label>
+                    <InputText id="postcode" class="form-control" @bind-Value="model.Postcode" maxlength="10" minlength="6" />
+                    <ValidationMessage For="@(() => model.Postcode)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <InputSelect id="country" class="form-control" @bind-Value="model.CountryId">
+                        <option value="0">Select a country</option>
+                        @foreach (var country in countries)
+                        {
+                            <option value="@country.CountryId">@country.CountryName</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => model.CountryId)" class="alert-danger" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Interest &amp; Payment Terms</h2>
+            <div class="form-grid">
+                 <div class="form-group">
+                    <label for="rate">Lending Amount</label>
+                    <InputNumber id="rate" class="form-control" @bind-Value="model.LendingAmount"   maxlength="8" minlength="4  "  />
+                    <ValidationMessage For="@(() => model.LendingAmount)" class="alert-danger" />
+                </div>
+
+                <div class="form-group">
+                    <label for="rate">Interest Rate (%)</label>                 
+                       <InputSelect id="interestRate" class="form-control" 
+                        @bind-Value="@model.LendingInterestRateId"
+                        @bind-Value:after="OnInterestRateChanged">
+                        <option value="0">Select a Interest Rate</option>
+                        @foreach (var interestRate in interestRates)
+                        {
+                            <option value="@interestRate.InterestId">@interestRate.AmountInterestRate</option>
+                        }
+                    </InputSelect>
+                                   
+                    <ValidationMessage For="@(() => model.LendingInterestRateId)" class="alert-danger" />
+
+
+                </div>
+                <div class="form-group">
+                    <label for="expectedAmount">Expected Interest Amount</label>
+                    <InputNumber id="expectedAmount" class="form-control" @bind-Value="model.ExpectedInterestAmount" />
+                    <ValidationMessage For="@(() => model.ExpectedInterestAmount)" class="alert-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>                 
+                    <InputSelect id="dueDate" class="form-control" @bind-Value="model.LendingDueDateId" 
+                            
+                            @bind-Value:after="OnDueDateChanged">
+                        <option value="0">Select a Due Date</option>
+                        @foreach (var dueDate in lendingDueDateDescriptions)
+                        {
+                            <option value="@dueDate.LendingDueDateId">@dueDate.LendingDueDateDescritpion</option>
+                        }
+                    </InputSelect>                   
+
+                    <ValidationMessage For="@(() => model.LendingDueDateId)" class="alert-danger" />
+
+
+                </div>
+                <div class="form-group">
+                    <label for="paymentMode">Payment Mode</label>
+                    <InputSelect id="paymentMode" class="form-control" @bind-Value="model.PaymentModeId">
+                        <option value="0">Select payment mode</option>
+                        @foreach (var mode in paymentModes)
+                        {
+                            <option value="@mode.PaymentModeId">@mode.PaymentModeDescription</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => model.PaymentModeId)" class="alert-danger" />
+                </div>
+            </div>
+
+
+
+            @if (model.IsPaid)
+            {
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="actualAmount">Actual Interest Received</label>
+                        <InputNumber id="actualAmount" class="form-control" @bind-Value="model.ActualInterestAmount" />
+                        <ValidationMessage For="@(() => model.ActualInterestAmount)" class="alert-danger" />
+                    </div>
+                    <div class="form-group">
+                        <label for="paidDate">Paid Date</label>
+                        <InputDate id="paidDate" class="form-control" @bind-Value="model.PaidDate" />
+                    </div>
+                </div>
+            }
+        </section>
+
+        <section class="form-section">
+            <h2>Agreement</h2>
+            <label class="checkbox-row">
+               <input type="checkbox"
+                       checked="@model.AnyAgreement"
+                       @onchange="OnAgreementCheckedChanged" />
+                <span>There is a signed agreement for this loan</span>
+            </label>
+            @if (model.AnyAgreement)
+            {
+                <div class="form-group">
+                    <label for="agreementFile">Agreement Document</label>
+                    <InputFile id="agreementFile" 
+                                OnChange="OnFileSelected" 
+                                class="form-file" 
+                                accept=".pdf,.doc,.docx,.jpg,.png" />
+                    @if (!string.IsNullOrEmpty(model.DocumentName))
+                    {
+                        <p class="file-hint">Selected: @model.DocumentName@model.DocumentExtension</p>
+                    }
+                    @if (isUploading)
+                    {
+                        <p class="file-hint">Uploading...</p>
+                    }
+                    @if (!string.IsNullOrEmpty(uploadError))
+                    {
+                        <p class="file-error" style="color:red;">@uploadError</p>                        
+                    }
+                    <ValidationMessage For="@(() => model.UploadDocumentData)" class="alert-danger" />
+                </div>
+            }
+        </section>   
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" @onclick="Cancel">Cancel</button>
+            <button type="submit" class="btn-primary" disabled="@isSubmitting">
+                @(isSubmitting ? "Saving…" : "Create Record")
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private async Task OnInterestRateChanged(object value)
+{
+    if (value != null)
+    {
+        model.LendingInterestRateId = (int)value;
+        // Your logic here
+    }
+}
+}

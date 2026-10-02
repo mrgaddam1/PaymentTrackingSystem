@@ -1,0 +1,3 @@
+﻿/* Update Page Styles */
+
+@import './Add.razor.css';
