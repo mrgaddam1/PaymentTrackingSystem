@@ -1,0 +1,118 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PaymentTrackingSystem.Core.Data.Models;
+using PaymentTrackingSystem.Shared;
+using PaymentTrackingSystem.Web.Infrastructure.Interface;
+
+namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
+{
+    public class PropertyTypeManager : IPropertyTypeManager
+    {
+        private readonly PTSContext dbContext;
+        private readonly ILogger<PropertyTypeManager> logger;
+
+        public PropertyTypeManager(PTSContext dbContext, ILogger<PropertyTypeManager> logger)
+        {
+            this.dbContext = dbContext;
+            this.logger = logger;
+        }
+
+        public async Task<List<PropertyTypeViewModel>> GetAllPropertyTypes()
+        {
+            return await dbContext.PropertyTypes
+                .AsNoTracking()
+                .OrderBy(propertyType => propertyType.PropertyTypeName)
+                .Select(propertyType => new PropertyTypeViewModel
+                {
+                    PropertyTypeId = propertyType.PropertyTypeId,
+                    PropertyTypeName = propertyType.PropertyTypeName
+                })
+                .ToListAsync();
+        }
+
+        public async Task<PropertyTypeViewModel?> GetPropertyTypeDetailsById(int propertyTypeId)
+        {
+            var propertyType = await dbContext.PropertyTypes
+                .AsNoTracking()
+                .Where(item => item.PropertyTypeId == propertyTypeId)
+                .Select(item => new PropertyTypeViewModel
+                {
+                    PropertyTypeId = item.PropertyTypeId,
+                    PropertyTypeName = item.PropertyTypeName
+                })
+                .FirstOrDefaultAsync();
+
+            return propertyType;
+        }
+
+        public async Task<bool> Add(PropertyTypeViewModel propertyTypeViewModel)
+        {
+            if (string.IsNullOrWhiteSpace(propertyTypeViewModel.PropertyTypeName))
+            {
+                return false;
+            }
+
+            try
+            {
+                dbContext.PropertyTypes.Add(new PropertyType
+                {
+                    PropertyTypeName = propertyTypeViewModel.PropertyTypeName.Trim()
+                });
+
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to add property type.");
+                return false;
+            }
+        }
+
+        public async Task<bool> Update(PropertyTypeViewModel propertyTypeViewModel)
+        {
+            if (propertyTypeViewModel.PropertyTypeId <= 0 || string.IsNullOrWhiteSpace(propertyTypeViewModel.PropertyTypeName))
+            {
+                return false;
+            }
+
+            try
+            {
+                var propertyType = await dbContext.PropertyTypes.FindAsync(propertyTypeViewModel.PropertyTypeId);
+                if (propertyType == null)
+                {
+                    return false;
+                }
+
+                propertyType.PropertyTypeName = propertyTypeViewModel.PropertyTypeName.Trim();
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to update property type {PropertyTypeId}.", propertyTypeViewModel.PropertyTypeId);
+                return false;
+            }
+        }
+
+        public async Task<bool> Delete(int propertyTypeId)
+        {
+            try
+            {
+                var propertyType = await dbContext.PropertyTypes.FindAsync(propertyTypeId);
+                if (propertyType == null)
+                {
+                    return false;
+                }
+
+                dbContext.PropertyTypes.Remove(propertyType);
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to delete property type {PropertyTypeId}.", propertyTypeId);
+                return false;
+            }
+        }
+    }
+}

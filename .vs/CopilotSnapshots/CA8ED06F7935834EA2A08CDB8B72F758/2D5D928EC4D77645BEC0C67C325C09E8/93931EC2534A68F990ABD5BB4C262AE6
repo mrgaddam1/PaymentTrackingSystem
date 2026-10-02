@@ -1,0 +1,72 @@
+﻿@page "/property/list"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Properties List</h4>
+                    <button class="btn btn-light" @onclick="AddProperty">
+                        <i class="bi bi-plus-circle"></i> Add Property
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (propertyData == null)
+                    {
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    else if (propertyData.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            No properties found. <a href="/property/add" class="alert-link">Add a new property</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <RadzenDataGrid @ref="propertyGrid" Data="@propertyData" TItem="PropertyViewModel" AllowFiltering="true" AllowPaging="true" 
+                                       AllowSorting="true" PageSize="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="PropertyId" Title="ID" Width="80px" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="PropertyName" Title="Property Name" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="PropertOwnerName" Title="Owner Name" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="OwnerMobileNumber" Title="Mobile Number" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="AddressLine1" Title="Address" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Property="Postcode" Title="Postcode" Width="100px" />
+                                <RadzenDataGridColumn TItem="PropertyViewModel" Title="Actions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="120px">
+                                    <Template Context="row">
+                                        <button class="btn btn-sm btn-warning" @onclick="() => EditRow(row)">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeleteRow(row)">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @errorMessage
+        <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+    </div>
+}

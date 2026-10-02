@@ -1,0 +1,178 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using PaymentTrackingSystem.Shared;
+using PaymentTrackingSystem.Web.Infrastructure.Interface;
+
+namespace PaymentTrackingSystem.Web.Controller
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class InvestorsController : ControllerBase
+    {
+        private readonly ILogger<InvestorsController> logger;
+        private IInvestorManager InvestorManager { get; set; }
+
+        public InvestorsController(IInvestorManager _InvestorManager, ILogger<InvestorsController> _logger)
+        {
+            InvestorManager = _InvestorManager;
+            logger = _logger;
+        }
+
+        [HttpGet]
+        [Route("GetAllInvestors")]
+        public async Task<IActionResult> GetAllInvestors()
+        {
+            try
+            {
+                var investors = await InvestorManager.GetAllInvestors();
+                if (investors.Count == 0)
+                {
+                    return NoContent();
+                }
+                return Ok(investors);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInvestorDetailsById/{investorId}")]
+        public async Task<IActionResult> GetInvestorDetailsById(int investorId)
+        {
+            try
+            {
+                var investor = await InvestorManager.GetInvestorDetailsById(investorId);
+                if (investor == null || investor.InvestorId == 0)
+                {
+                    return NoContent();
+                }
+                return Ok(investor);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("Add")]
+        public async Task<IActionResult> Add([FromBody] InvestorViewModel investor)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await InvestorManager.Add(investor);
+
+                if (!result)
+                {
+                    return BadRequest(new
+                    {
+                        Message = "Failed to add investor record."
+                    });
+                }
+
+                return Ok(new
+                {
+                    Message = "Investor record added successfully.",
+                    IsSuccess = true
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("Update")]
+        public async Task<IActionResult> Update([FromBody] InvestorViewModel investor)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await InvestorManager.Update(investor);
+
+                if (!result)
+                {
+                    return BadRequest(new
+                    {
+                        Message = "Failed to update investor record."
+                    });
+                }
+
+                return Ok(new
+                {
+                    Message = "Investor record updated successfully.",
+                    IsSuccess = true
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+
+        [HttpDelete]
+        [Route("Delete/{investorId}")]
+        public async Task<IActionResult> Delete(int investorId)
+        {
+            try
+            {
+                var result = await InvestorManager.Delete(investorId);
+
+                if (!result)
+                {
+                    return BadRequest(new
+                    {
+                        Message = "Failed to delete investor record."
+                    });
+                }
+
+                return Ok(new
+                {
+                    Message = "Investor record deleted successfully.",
+                    IsSuccess = true
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while processing your request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Message = ex.Message,
+                    Details = ex.StackTrace
+                });
+            }
+        }
+    }
+}

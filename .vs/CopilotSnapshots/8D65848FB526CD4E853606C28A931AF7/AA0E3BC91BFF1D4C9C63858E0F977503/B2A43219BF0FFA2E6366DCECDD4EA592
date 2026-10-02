@@ -1,0 +1,18 @@
+﻿using PaymentTrackingSystem.Web.Infrastructure.AutoMapperProfileSettings;
+
+namespace PaymentTrackingSystem.Web.ApplicationSettings.AutoMapper
+{
+    public static class ApplicationAutoMapperSettings
+    {
+        public static void AutoMapper(WebApplicationBuilder builder)
+        {
+            var mappingConfig = new global::AutoMapper.MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            global::AutoMapper.IMapper mapper = mappingConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
+        }
+    }
+}

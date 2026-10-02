@@ -1,0 +1,110 @@
+﻿@page "/property/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add New Property</h4>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@property" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (errorMessages != null && errorMessages.Any(m => !string.IsNullOrEmpty(m)))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (var message in errorMessages.Where(m => !string.IsNullOrEmpty(m)))
+                                    {
+                                        <li>@message</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label for="propertyName" class="form-label">Property Name <span class="text-danger">*</span></label>
+                            <InputText id="propertyName" @bind-Value="property.PropertyName" class="form-control" placeholder="Enter property name" />
+                            <ValidationMessage For="@(() => property.PropertyName)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="propertyTypeId" class="form-label">Property Type <span class="text-danger">*</span></label>
+                            <InputNumber id="propertyTypeId" @bind-Value="property.PropertyTypeId" class="form-control" placeholder="Enter property type ID" />
+                            <ValidationMessage For="@(() => property.PropertyTypeId)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ownerName" class="form-label">Owner Name <span class="text-danger">*</span></label>
+                            <InputText id="ownerName" @bind-Value="property.PropertOwnerName" class="form-control" placeholder="Enter owner name" />
+                            <ValidationMessage For="@(() => property.PropertOwnerName)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                            <InputText id="mobileNumber" @bind-Value="property.OwnerMobileNumber" class="form-control" placeholder="Enter mobile number" />
+                            <ValidationMessage For="@(() => property.OwnerMobileNumber)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="addressLine1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+                            <InputText id="addressLine1" @bind-Value="property.AddressLine1" class="form-control" placeholder="Enter address line 1" />
+                            <ValidationMessage For="@(() => property.AddressLine1)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="addressLine2" class="form-label">Address Line 2</label>
+                            <InputText id="addressLine2" @bind-Value="property.AddressLine2" class="form-control" placeholder="Enter address line 2" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postcode" class="form-label">Postcode <span class="text-danger">*</span></label>
+                            <InputText id="postcode" @bind-Value="property.Postcode" class="form-control" placeholder="Enter postcode" />
+                            <ValidationMessage For="@(() => property.Postcode)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="countryId" class="form-label">Country <span class="text-danger">*</span></label>
+                            <InputNumber id="countryId" @bind-Value="property.CountryId" class="form-control" placeholder="Enter country ID" />
+                            <ValidationMessage For="@(() => property.CountryId)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stateId" class="form-label">State <span class="text-danger">*</span></label>
+                            <InputNumber id="stateId" @bind-Value="property.StateId" class="form-control" placeholder="Enter state ID" />
+                            <ValidationMessage For="@(() => property.StateId)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="districtId" class="form-label">District <span class="text-danger">*</span></label>
+                            <InputNumber id="districtId" @bind-Value="property.DistrictId" class="form-control" placeholder="Enter district ID" />
+                            <ValidationMessage For="@(() => property.DistrictId)" />
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-check-circle"></i> Save Property
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-secondary w-100" @onclick="Cancel">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

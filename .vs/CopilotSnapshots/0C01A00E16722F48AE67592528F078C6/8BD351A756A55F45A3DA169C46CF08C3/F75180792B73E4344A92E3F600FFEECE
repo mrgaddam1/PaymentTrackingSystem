@@ -1,0 +1,386 @@
+﻿@page "/dashboard/home"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+@using System.Globalization
+
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
+
+<style>
+    .dashboard-container {
+        padding: 24px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        margin-bottom: 32px;
+    }
+
+    .dashboard-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a237e;
+        margin: 0 0 8px 0;
+    }
+
+    .dashboard-subtitle {
+        font-size: 14px;
+        color: #546e7a;
+        margin: 0;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .metric-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border-left: 5px solid;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .metric-card.primary {
+        border-left-color: #1976d2;
+    }
+
+    .metric-card.success {
+        border-left-color: #388e3c;
+    }
+
+    .metric-card.warning {
+        border-left-color: #f57c00;
+    }
+
+    .metric-card.danger {
+        border-left-color: #d32f2f;
+    }
+
+    .metric-card.info {
+        border-left-color: #0097a7;
+    }
+
+    .metric-label {
+        font-size: 13px;
+        color: #78909c;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+    }
+
+    .metric-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #263238;
+        margin-bottom: 12px;
+    }
+
+    .metric-footer {
+        font-size: 12px;
+        color: #90a4ae;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .metric-icon {
+        font-size: 28px;
+        float: right;
+        opacity: 0.15;
+        margin-top: -10px;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-header {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .badge-success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-warning {
+        background-color: #fff3e0;
+        color: #e65100;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-danger {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .list-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #eceff1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .list-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-label {
+        color: #37474f;
+        font-weight: 500;
+    }
+
+    .list-value {
+        color: #1976d2;
+        font-weight: 600;
+    }
+
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background-color: #eceff1;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+        border-radius: 4px;
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+</style>
+
+@if (IsLoading)
+{
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">📊 Payment Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back! Here's your payment tracking overview.</p>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card primary">
+                <div class="metric-label">Total Revenue</div>
+                <div class="metric-value">$124,540</div>
+                <div class="metric-icon">💰</div>
+                <div class="metric-footer">
+                    <span style="color: #388e3c;">↑ 12.5%</span> from last month
+                </div>
+            </div>
+
+            <div class="metric-card success">
+                <div class="metric-label">Completed Payments</div>
+                <div class="metric-value">856</div>
+                <div class="metric-icon">✓</div>
+                <div class="metric-footer">
+                    <span style="color: #388e3c;">↑ 8.2%</span> from last month
+                </div>
+            </div>
+
+            <div class="metric-card warning">
+                <div class="metric-label">Pending Payments</div>
+                <div class="metric-value">124</div>
+                <div class="metric-icon">⏳</div>
+                <div class="metric-footer">
+                    <span style="color: #f57c00;">↑ 3.1%</span> from last month
+                </div>
+            </div>
+
+            <div class="metric-card danger">
+                <div class="metric-label">Overdue Payments</div>
+                <div class="metric-value">23</div>
+                <div class="metric-icon">⚠️</div>
+                <div class="metric-footer">
+                    <span style="color: #d32f2f;">↑ 1.2%</span> from last month
+                </div>
+            </div>
+
+            <div class="metric-card info">
+                <div class="metric-label">Disputed Payments</div>
+                <div class="metric-value">8</div>
+                <div class="metric-icon">❓</div>
+                <div class="metric-footer">Requires attention
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Recent Transactions -->
+            <div class="card">
+                <div class="card-header">
+                    💳 Recent Transactions
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Order #ORD-2024-001</div>
+                    <div>
+                        <span class="badge-success">Completed</span>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Order #ORD-2024-002</div>
+                    <div>
+                        <span class="badge-success">Completed</span>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Order #ORD-2024-003</div>
+                    <div>
+                        <span class="badge-warning">Pending</span>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Order #ORD-2024-004</div>
+                    <div>
+                        <span class="badge-danger">Overdue</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="card">
+                <div class="card-header">
+                    💳 Payment Methods
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Credit Card</div>
+                    <div class="list-value">45%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%;"></div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Bank Transfer</div>
+                    <div class="list-value">35%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 35%; background: linear-gradient(90deg, #388e3c 0%, #2e7d32 100%);"></div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Digital Wallet</div>
+                    <div class="list-value">20%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%; background: linear-gradient(90deg, #0097a7 0%, #00838f 100%);"></div>
+                </div>
+            </div>
+
+            <!-- Top Customers -->
+            <div class="card">
+                <div class="card-header">
+                    👥 Top Customers
+                </div>
+                <div class="list-item">
+                    <div class="list-label">ABC Corporation</div>
+                    <div class="list-value">$24,500</div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">XYZ Industries</div>
+                    <div class="list-value">$18,750</div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Global Solutions</div>
+                    <div class="list-value">$15,200</div>
+                </div>
+                <div class="list-item">
+                    <div class="list-label">Tech Ventures</div>
+                    <div class="list-value">$12,890</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Width Section -->
+        <div class="card full-width">
+            <div class="card-header">
+                📈 Monthly Performance
+            </div>
+            <div style="padding: 20px 0;">
+                <p style="color: #546e7a; margin-bottom: 20px;">Track your payment metrics over time</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px;">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <div style="text-align: center; padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #546e7a; margin-bottom: 8px;">Month @i</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #1976d2;">@(10000 + (i * 1500))</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+   // private bool IsLoading = false;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    IsLoading = true;
+        // Simulate loading
+    //    await Task.Delay(1000);
+    //    IsLoading = false;
+    //}
+}
