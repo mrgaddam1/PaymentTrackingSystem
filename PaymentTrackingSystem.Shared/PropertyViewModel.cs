@@ -19,6 +19,12 @@ namespace PaymentTrackingSystem.Shared
         public int? DistrictId { get; set; }
         public int? StateId { get; set; }
         public int? CountryId { get; set; }
+        public bool? DoesPropertyHasParking { get; set; }
+        public bool? DoesPropertyHasFurniture { get; set; }
+        public bool? DoesPropertyHasAnyMaintananceBill { get; set; }
+        public bool? DoesPropertyHasAnyWaterBill { get; set; }
+        public bool? DoesPropertyHasAnyElectricityBill { get; set; }
+        public bool? DoesThisPropertyOccupied { get; set; }
 
     }
 }

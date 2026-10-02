@@ -6,20 +6,19 @@ namespace PaymentTrackingSystem.Core.Data.Models;
 public partial class Property
 {
     public int PropertyId { get; set; }
-
     public string? PropertyName { get; set; }
-
     public int? PropertyTypeId { get; set; }
-
     public string? PropertOwnerName { get; set; }
-
     public string? OwnerMobileNumber { get; set; }
-
     public int? UserId { get; set; }
-
     public DateTime? CreatedDate { get; set; }
-
     public DateTime? ModifiedDate { get; set; }
-
     public DateTime? DeleteDate { get; set; }
+    public bool? DoesPropertyHasParking { get; set; }
+    public bool? DoesPropertyHasFurniture { get; set; }
+    public bool? DoesPropertyHasAnyMaintananceBill { get; set; }
+    public bool? DoesPropertyHasAnyWaterBill { get; set; }
+    public bool? DoesPropertyHasAnyElectricityBill { get; set; }
+    public bool? DoesThisPropertyOccupied { get; set; }
+
 }
