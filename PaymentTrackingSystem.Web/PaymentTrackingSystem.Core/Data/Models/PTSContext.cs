@@ -15,6 +15,8 @@ public partial class PTSContext : DbContext
     {
     }
 
+    public virtual DbSet<City> Citys { get; set; }
+
     public virtual DbSet<Client> Clients { get; set; }
 
     public virtual DbSet<ClientAddress> ClientAddresses { get; set; }
@@ -63,11 +65,13 @@ public partial class PTSContext : DbContext
 
     public virtual DbSet<TenantAgreement> TenantAgreements { get; set; }
 
+    public virtual DbSet<TenantMonthlyPaymentDetail> TenantMonthlyPaymentDetails { get; set; }
+
     public virtual DbSet<TenantPreviousAddress> TenantPreviousAddresses { get; set; }
 
     public virtual DbSet<TenantProfession> TenantProfessions { get; set; }
 
-    public virtual DbSet<TenantRent> TenantRents { get; set; }
+    public virtual DbSet<TenantPropertyAssigned> TenantPropertyAssigneds { get; set; }
 
     public virtual DbSet<TenantType> TenantTypes { get; set; }
 
@@ -79,6 +83,13 @@ public partial class PTSContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<City>(entity =>
+        {
+            entity.Property(e => e.CityName)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Client>(entity =>
         {
             entity.ToTable("Client");
@@ -393,6 +404,17 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.AgreementFileType).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<TenantMonthlyPaymentDetail>(entity =>
+        {
+            entity.HasKey(e => e.TenantPropertyId).HasName("PK_TenantPropertyRentDetail");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Rent).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.UpdatedDate)
+                .HasMaxLength(10)
+                .IsFixedLength();
+        });
+
         modelBuilder.Entity<TenantPreviousAddress>(entity =>
         {
             entity.ToTable("TenantPreviousAddress");
@@ -413,11 +435,11 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.CompanyName).HasMaxLength(250);
         });
 
-        modelBuilder.Entity<TenantRent>(entity =>
+        modelBuilder.Entity<TenantPropertyAssigned>(entity =>
         {
-            entity.HasKey(e => e.RentId);
+            entity.HasKey(e => e.RentId).HasName("PK_TenantRent");
 
-            entity.ToTable("TenantRent");
+            entity.ToTable("TenantPropertyAssigned");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");

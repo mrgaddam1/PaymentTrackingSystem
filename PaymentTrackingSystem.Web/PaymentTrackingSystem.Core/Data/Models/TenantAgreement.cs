@@ -13,6 +13,8 @@ public partial class TenantAgreement
 
     public int TenantId { get; set; }
 
+    public string? AgreementFileName { get; set; }
+
     public string? AgreementFileType { get; set; }
 
     public byte[]? AgreementData { get; set; }

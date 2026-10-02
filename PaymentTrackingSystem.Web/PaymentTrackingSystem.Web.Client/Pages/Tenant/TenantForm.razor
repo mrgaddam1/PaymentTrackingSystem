@@ -1,0 +1,355 @@
+@using PaymentTrackingSystem.Shared
+@using PaymentTrackingSystem.Client.Infrastructure.Interface
+
+<div class="tenant-form">
+    <header class="tenant-form__header">
+        <div>
+            <span class="tenant-form__eyebrow">TENANT DETAILS</span>
+            <h2>Tenant information</h2>
+            <p>Enter the tenant’s personal and current address details.</p>
+        </div>
+        <span class="tenant-form__step">01 <span>/ 02</span></span>
+    </header>
+
+    <section class="tenant-form__section">
+        <div class="tenant-form__section-heading">
+            <span class="tenant-form__icon" aria-hidden="true">01</span>
+            <div>
+                <h3>Personal details</h3>
+                <p>Basic contact information for the tenant.</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-first-name">First name</label>
+                <InputText id="tenant-first-name" class="form-control" @bind-Value="Model.FirstName" placeholder="Enter first name" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-last-name">Last name</label>
+                <InputText id="tenant-last-name" class="form-control" @bind-Value="Model.LastName" placeholder="Enter last name" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-mobile">Mobile number</label>
+                <InputText id="tenant-mobile" class="form-control" @bind-Value="Model.MobileNumber" placeholder="Enter mobile number" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-email">Email address</label>
+                <InputText id="tenant-email" class="form-control" @bind-Value="Model.EmailId" placeholder="name@example.com" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-type">Tenant type ID</label>
+                <InputSelect id="tenant-type" class="form-select" @bind-Value="Model.TenantTypeId">
+                    <option value="">Select a tenant type</option>
+                    @foreach (var tenantType in TenantTypes)
+                    {
+                        <option value="@tenantType.TenantTypeId">@tenantType.TenantTypeName</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </section>
+
+    <section class="tenant-form__section">
+        <div class="tenant-form__section-heading">
+            <span class="tenant-form__icon" aria-hidden="true">02</span>
+            <div>
+                <h3>Current address</h3>
+                <p>Where the tenant currently resides.</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-country">Country</label>
+                <InputSelect id="tenant-country" class="form-select" @bind-Value="Model.CountryId">
+                    <option value="">Select a country</option>
+                    @foreach (var country in Countries)
+                    {
+                        <option value="@country.CountryId">@country.CountryName</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-state">State</label>
+                <InputSelect id="tenant-state" class="form-select" @bind-Value="Model.StateId">
+                    <option value="">Select a state</option>
+                    @foreach (var state in States)
+                    {
+                        <option value="@state.StateId">@state.StateName</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-city">City</label>
+              
+               <InputSelect id="tenant-city" class="form-select" @bind-Value="Model.CityId">
+                    <option value="">Select a city</option>
+                    @foreach (var city in Cities)   
+                    {
+                        <option value="@city.CityId">@city.CityName</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tenant-postcode">Postcode</label>
+                <InputText id="tenant-postcode" class="form-control" @bind-Value="Model.Postcode" placeholder="Enter postcode" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="tenant-address-1">Address line 1</label>
+                <InputText id="tenant-address-1" class="form-control" @bind-Value="Model.AddressLine1" placeholder="Street address" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="tenant-address-2">Address line 2 <span class="tenant-form__optional">Optional</span></label>
+                <InputText id="tenant-address-2" class="form-control" @bind-Value="Model.AddressLine2" placeholder="Apartment, suite, etc." />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="tenant-address-3">Address line 3 <span class="tenant-form__optional">Optional</span></label>
+                <InputText id="tenant-address-3" class="form-control" @bind-Value="Model.AddressLine3" placeholder="Additional address details" />
+            </div>
+        </div>
+    </section>
+
+    <section class="tenant-form__previous">
+        <label class="tenant-form__toggle">
+            <InputCheckbox class="form-check-input" @bind-Value="Model.DoesHavePreviousAddress" />
+            <span>
+                <strong>Previous address</strong>
+                <small>Provide the tenant’s previous address if applicable.</small>
+            </span>
+        </label>
+
+        @if (Model.DoesHavePreviousAddress)
+        {
+            <div class="row g-3 tenant-form__previous-fields">
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-address-1">Address line 1</label>
+                    <InputText id="tenant-previous-address-1" class="form-control" @bind-Value="Model.PreviousAddressLine1" placeholder="Street address" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-address-2">Address line 2</label>
+                    <InputText id="tenant-previous-address-2" class="form-control" @bind-Value="Model.PreviousAddressLine2" placeholder="Apartment, suite, etc." />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-address-3">Address line 3</label>
+                    <InputText id="tenant-previous-address-3" class="form-control" @bind-Value="Model.PreviousAddressLine3" placeholder="Additional address details" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-postcode">Postcode</label>
+                    <InputText id="tenant-previous-postcode" class="form-control" @bind-Value="Model.PreviousPostcode" placeholder="Enter postcode" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-city">City ID</label>
+                   <InputSelect id="tenant-city" class="form-select" @bind-Value="Model.PreviousCityId">
+                    <option value="">Select a city</option>
+                    @foreach (var city in Cities)   
+                    {
+                        <option value="@city.CityId">@city.CityName</option>
+                    }
+                </InputSelect>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="tenant-previous-state">State ID</label>
+                    <InputSelect id="tenant-previous-state" class="form-select" @bind-Value="Model.PreviousStateId">
+                        <option value="">Select a state</option>
+                        @foreach (var state in States)
+                        {
+                            <option value="@state.StateId">@state.StateName</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+        }
+    </section>
+</div>
+
+<style>
+    .tenant-form {
+        --tenant-ink: #172b4d;
+        --tenant-muted: #718096;
+        --tenant-border: #e4eaf2;
+        --tenant-accent: #4263eb;
+        color: var(--tenant-ink);
+        background: #fff;
+        border: 1px solid var(--tenant-border);
+        border-radius: 18px;
+        box-shadow: 0 12px 34px rgba(31, 45, 61, .07);
+        overflow: hidden;
+    }
+
+    .tenant-form__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 28px 32px;
+        background: linear-gradient(115deg, #f4f7ff 0%, #fff 75%);
+        border-bottom: 1px solid var(--tenant-border);
+    }
+
+    .tenant-form__eyebrow {
+        color: var(--tenant-accent);
+        font-size: .7rem;
+        font-weight: 800;
+        letter-spacing: .12em;
+    }
+
+    .tenant-form__header h2 {
+        margin: 6px 0;
+        font-size: 1.45rem;
+        font-weight: 750;
+        letter-spacing: -.03em;
+    }
+
+    .tenant-form__header p,
+    .tenant-form__section-heading p {
+        margin: 0;
+        color: var(--tenant-muted);
+        font-size: .9rem;
+    }
+
+    .tenant-form__step {
+        color: var(--tenant-accent);
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+    .tenant-form__step span {
+        color: #9aa7bb;
+        font-weight: 500;
+    }
+
+    .tenant-form__section {
+        padding: 28px 32px 32px;
+        border-bottom: 1px solid var(--tenant-border);
+    }
+
+    .tenant-form__section-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .tenant-form__icon {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        place-items: center;
+        color: var(--tenant-accent);
+        background: #edf1ff;
+        border-radius: 12px;
+        font-size: .75rem;
+        font-weight: 800;
+    }
+
+    .tenant-form__section-heading h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .tenant-form .form-label {
+        margin-bottom: 8px;
+        color: #344563;
+        font-size: .84rem;
+        font-weight: 650;
+    }
+
+    .tenant-form .form-control,
+    .tenant-form .form-select {
+        min-height: 46px;
+        padding: 10px 13px;
+        color: var(--tenant-ink);
+        background-color: #fff;
+        border: 1px solid #dce3ed;
+        border-radius: 9px;
+        font-size: .9rem;
+        transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .tenant-form .form-control::placeholder {
+        color: #a1adbd;
+    }
+
+    .tenant-form .form-control:focus,
+    .tenant-form .form-select:focus {
+        border-color: #8095ff;
+        box-shadow: 0 0 0 3px rgba(66, 99, 235, .12);
+    }
+
+    .tenant-form__optional {
+        margin-left: 5px;
+        color: #98a4b5;
+        font-size: .75rem;
+        font-weight: 400;
+    }
+
+    .tenant-form__previous {
+        margin: 24px 32px 30px;
+        padding: 18px 20px;
+        background: #f8faff;
+        border: 1px solid var(--tenant-border);
+        border-radius: 12px;
+    }
+
+    .tenant-form__toggle {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        cursor: pointer;
+    }
+
+    .tenant-form__toggle .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        flex: 0 0 auto;
+        cursor: pointer;
+    }
+
+    .tenant-form__toggle strong,
+    .tenant-form__toggle small {
+        display: block;
+    }
+
+    .tenant-form__toggle strong {
+        font-size: .9rem;
+        font-weight: 700;
+    }
+
+    .tenant-form__toggle small {
+        margin-top: 3px;
+        color: var(--tenant-muted);
+        font-size: .8rem;
+    }
+
+    .tenant-form__previous-fields {
+        margin-top: 22px;
+        padding-top: 22px;
+        border-top: 1px solid var(--tenant-border);
+    }
+
+    @@media (max-width: 575.98px) {
+        .tenant-form__header,
+        .tenant-form__section {
+            padding: 22px 20px;
+        }
+
+        .tenant-form__previous {
+            margin: 18px 20px 22px;
+        }
+
+        .tenant-form__step {
+            display: none;
+        }
+    }
+</style>
+
+@code {
+    [Parameter] public TenantViewModel Model { get; set; } = default!;
+    [Parameter] public List<CountryViewModel> Countries { get; set; } = new();
+    [Parameter] public List<StateViewModel> States { get; set; } = new();
+    [Parameter] public List<CityViewModel> Cities { get; set; } = new();
+    [Parameter] public List<TenantTypeViewModel> TenantTypes { get; set; } = new();
+}

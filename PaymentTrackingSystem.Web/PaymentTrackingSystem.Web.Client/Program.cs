@@ -42,6 +42,9 @@ namespace PaymentTrackingSystem.Web.Client
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<ILendingService, LendingService>();
             builder.Services.AddScoped<IInvestorService, InvestorService>();
+            builder.Services.AddScoped<ITenantService, TenantService>();
+            builder.Services.AddScoped<ICityService, CityService>();
+            builder.Services.AddScoped<ITenantTypeService, TenantTypeService>();
             builder.Services.AddScoped<IEncryptionHelper, EncryptionHelper>();
         }
     }

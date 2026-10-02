@@ -9,12 +9,6 @@ public partial class Tenant
 
     public int? UserId { get; set; }
 
-    public int PropertyId { get; set; }
-
-    public int PropertyTypeId { get; set; }
-
-    public int AddressId { get; set; }
-
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
