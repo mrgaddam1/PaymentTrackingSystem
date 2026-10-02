@@ -1,0 +1,23 @@
+@page "/tenant/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@using Microsoft.AspNetCore.Components.Forms
+@layout PTSMainLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<div class="container tenant-page">
+    <div class="card">
+        <div class="card-header bg-primary text-white"><h4 class="mb-0">Add Tenant</h4></div>
+        <div class="card-body">
+            @if (errorMessages.Count > 0)
+            {
+                <div class="alert alert-danger"><ul class="mb-0">@foreach (var message in errorMessages){<li>@message</li>}</ul></div>
+            }
+            <EditForm Model="@tenant" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+            <TenantForm Model="tenant" Countries="countries" States="states" Cities="cities" TenantTypes="tenantTypes" />
+                <div class="form-actions"><button type="submit" class="btn btn-primary">Add Tenant</button><button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button></div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+ 

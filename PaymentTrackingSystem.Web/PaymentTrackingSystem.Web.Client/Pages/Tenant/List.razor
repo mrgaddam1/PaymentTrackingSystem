@@ -1,0 +1,49 @@
+@page "/tenant/list"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@using PaymentTrackingSystem.Shared
+@using Radzen
+@using Radzen.Blazor
+@layout PTSMainLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<div class="container-fluid tenant-page">
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Tenants</h4>
+            <button class="btn btn-light" @onclick="AddTenant">Add Tenant</button>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+            @if (tenantData == null)
+            {
+                <div class="text-center"><span class="spinner-border text-primary"></span></div>
+            }
+            else if (tenantData.Count == 0)
+            {
+                <div class="alert alert-info">No tenants found.</div>
+            }
+            else
+            {
+                <RadzenDataGrid @ref="tenantGrid" Data="@tenantData" TItem="TenantViewModel" AllowFiltering="true" AllowPaging="true" AllowSorting="true" PageSize="10">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="TenantId" Title="ID" Width="80px" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="FirstName" Title="First Name" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="LastName" Title="Last Name" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="EmailId" Title="Email" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="MobileNumber" Title="Mobile" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Property="Postcode" Title="Postcode" />
+                        <RadzenDataGridColumn TItem="TenantViewModel" Title="Actions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                            <Template Context="tenant">
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditTenant(tenant)">Edit</button>
+                                <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeleteTenant(tenant)">Delete</button>
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            }
+        </div>
+    </div>
+</div>

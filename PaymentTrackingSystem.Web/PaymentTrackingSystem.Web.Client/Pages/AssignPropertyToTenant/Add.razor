@@ -1,0 +1,105 @@
+@page "/assign-property-to-tenant/add"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using Microsoft.AspNetCore.Components.Forms
+@using PaymentTrackingSystem.Shared
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<div class="assignment-page">
+    <div class="assignment-shell">
+        <header class="page-heading">
+            <div class="heading-icon"><i class="bi bi-house-check"></i></div>
+            <div>
+                <p class="eyebrow">PROPERTY MANAGEMENT</p>
+                <h1>Assign property to tenant</h1>
+                <p class="heading-description">Set up a tenancy and add the rent agreement details.</p>
+            </div>
+        </header>
+
+        <section class="assignment-card">
+            <div class="card-accent"></div>
+            <EditForm Model="@assignment" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="form-content">
+                    @if (errorMessages.Count > 0)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Please review:</strong>
+                            <ul class="mb-0">
+                                @foreach (var message in errorMessages)
+                                {
+                                    <li>@message</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="section-heading"><span class="section-number">01</span><div><h2>Tenancy details</h2><p>Select the people and property for this rental.</p></div></div>
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label for="tenantId">Tenant <span class="required">*</span></label>
+                            <InputSelect id="tenantId" class="form-control" @bind-Value="assignment.TenantId" @bind-Value:after="OnTenantChanged">
+                                <option value="0">Select a tenant</option>
+                                @foreach (var tenant in tenants)
+                                {
+                                    <option value="@tenant.TenantId">@tenant.FirstName @tenant.LastName</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="field-group">
+                            <label for="propertyId">Property <span class="required">*</span></label>
+                            <InputSelect id="propertyId" class="form-control" @bind-Value="assignment.PropertyId" @bind-Value:after="OnPropertyChanged">
+                                <option value="0">Select a property</option>
+                                @foreach (var property in properties)
+                                {
+                                    <option value="@property.PropertyId">@property.PropertyName</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="field-group">
+                            <label for="rentAmount">Monthly rent <span class="required">*</span></label>
+                            <InputNumber id="rentAmount" class="form-control" @bind-Value="assignment.RentAmount" min="0" step="0.01" />
+                        </div>
+                        <div class="field-group">
+                            <label for="tenantStartDate">Start date <span class="required">*</span></label>
+                            <InputDate id="tenantStartDate" class="form-control" @bind-Value="assignment.TenantStartDate" />
+                        </div>
+                        <div class="field-group">
+                            <label for="tenantEndDate">End date <span class="optional">(optional)</span></label>
+                            <InputDate TValue="DateTime?" id="tenantEndDate" class="form-control" @bind-Value="assignment.TenantEndDate" />
+                        </div>
+                    </div>
+
+                    <div class="section-heading agreement-heading"><span class="section-number">02</span><div><h2>Agreement</h2><p>Optionally attach a digital copy of the tenancy agreement.</p></div></div>
+                    <div class="agreement-panel">
+                        <label class="agreement-toggle">
+                            <InputCheckbox class="form-check-input" @bind-Value="assignment.AnyAgreement" @bind-Value:after="OnAgreementChanged" />
+                            <span><strong>Agreement is available</strong><small>Attach a copy if you have one.</small></span>
+                        </label>
+                        @if (assignment.AnyAgreement)
+                        {
+                            <div class="field-group file-field">
+                                <label for="agreementFile">Agreement file</label>
+                                <InputFile id="agreementFile" OnChange="OnAgreementFileChanged" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                                @if (!string.IsNullOrWhiteSpace(assignment.AgreementFileName))
+                                {
+                                    <small class="file-name">Selected: @assignment.AgreementFileName</small>
+                                }
+                                <small class="form-hint">Maximum file size: 10 MB.</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <footer class="form-footer">
+                    <span class="required-note"><span class="required">*</span> Required fields</span>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-cancel" @onclick="Cancel">Cancel</button>
+                        <button type="submit" class="btn btn-save"><i class="bi bi-check2"></i> Save assignment</button>
+                    </div>
+                </footer>
+            </EditForm>
+        </section>
+    </div>
+</div>

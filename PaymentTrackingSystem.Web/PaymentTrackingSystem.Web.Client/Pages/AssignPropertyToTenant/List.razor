@@ -1,0 +1,74 @@
+@page "/assign-property-to-tenant/list"
+@using PaymentTrackingSystem.Web.Client.Pages.Layout
+@layout PTSMainLayout
+@using PaymentTrackingSystem.Shared
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<div class="assignment-list-page">
+    <div class="list-shell">
+        <header class="list-heading">
+            <div>
+                <p class="eyebrow">PROPERTY MANAGEMENT</p>
+                <h1>Tenant property assignments</h1>
+                <p>Review and manage active rental agreements.</p>
+            </div>
+            <button class="btn btn-create" @onclick="AddAssignment"><i class="bi bi-plus-lg"></i> New assignment</button>
+        </header>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">@errorMessage</div>
+        }
+
+        <section class="table-card">
+            @if (assignments == null)
+            {
+                <div class="loading-state"><span class="spinner-border text-primary" role="status"></span><span>Loading assignments…</span></div>
+            }
+            else if (assignments.Count == 0)
+            {
+                <div class="empty-state"><i class="bi bi-house-add"></i><h2>No assignments yet</h2><p>Create an assignment to connect a tenant with a property.</p><button class="btn btn-create" @onclick="AddAssignment">Create assignment</button></div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table assignment-table align-middle mb-0">
+                        <thead>
+                            <tr><th>Tenant</th><th>Property</th><th>Monthly rent</th><th>Lease period</th><th>Agreement</th><th class="actions-heading">Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in assignments)
+                            {
+                                <tr>
+                                    <td><strong>@item.TenantName</strong><small class="cell-subtitle">Tenant #@item.TenantId</small></td>
+                                    <td><strong>@item.PropertyName</strong><small class="cell-subtitle">Property #@item.PropertyId</small></td>
+                                    <td><span class="rent-value">@item.RentAmount.ToString("C")</span></td>
+                                    <td>@item.TenantStartDate.ToString("MMM d, yyyy")<small class="cell-subtitle">to @(item.TenantEndDate?.ToString("MMM d, yyyy") ?? "Ongoing")</small></td>
+                                    <td>
+                                        @if (item.AnyAgreement)
+                                        {
+                                            <span class="agreement-badge"><i class="bi bi-file-earmark-check"></i> Available</span>
+                                            @if (!string.IsNullOrWhiteSpace(item.AgreementFileName))
+                                            {
+                                                <small class="cell-subtitle">@item.AgreementFileName</small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="agreement-none">Not provided</span>
+                                        }
+                                    </td>
+                                    <td class="action-cell">
+                                        <button class="btn btn-edit" title="Edit assignment" @onclick="() => EditAssignment(item)"><i class="bi bi-pencil-square"></i><span>Edit</span></button>
+                                        <button class="btn btn-delete" title="Delete assignment" @onclick="() => DeleteAssignment(item)"><i class="bi bi-trash3"></i><span>Delete</span></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+</div>
