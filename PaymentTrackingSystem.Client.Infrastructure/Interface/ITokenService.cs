@@ -8,8 +8,9 @@ namespace PaymentTrackingSystem.Client.Infrastructure.Interface
 {
     public interface ITokenService
     {
-        Task<string> GetTokenAsync();
-        Task SetTokenAsync(string token);
-        Task RemoveTokenAsync();
+        Task<string> Get(string key);
+        Task Set(string key, string value);
+        Task Remove(string key);
+        Task ClearAllAsync();
     }
 }

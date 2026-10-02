@@ -25,9 +25,51 @@ public partial class PTSContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<District> Districts { get; set; }
+
+    public virtual DbSet<Investor> Investors { get; set; }
+
+    public virtual DbSet<Lender> Lenders { get; set; }
+
+    public virtual DbSet<LenderAddress> LenderAddresses { get; set; }
+
+    public virtual DbSet<LendingAmountDetail> LendingAmountDetails { get; set; }
+
+    public virtual DbSet<LendingDocument> LendingDocuments { get; set; }
+
+    public virtual DbSet<LendingDueDateDescription> LendingDueDateDescriptions { get; set; }
+
+    public virtual DbSet<LendingInterestRate> LendingInterestRates { get; set; }
+
     public virtual DbSet<PaymentDueDate> PaymentDueDates { get; set; }
 
+    public virtual DbSet<PaymentMode> PaymentModes { get; set; }
+
     public virtual DbSet<PaymentMonth> PaymentMonths { get; set; }
+
+    public virtual DbSet<Profession> Professions { get; set; }
+
+    public virtual DbSet<Property> Properties { get; set; }
+
+    public virtual DbSet<PropertyAddress> PropertyAddresses { get; set; }
+
+    public virtual DbSet<PropertyType> PropertyTypes { get; set; }
+
+    public virtual DbSet<State> States { get; set; }
+
+    public virtual DbSet<Tenant> Tenants { get; set; }
+
+    public virtual DbSet<TenantAddress> TenantAddresses { get; set; }
+
+    public virtual DbSet<TenantAgreement> TenantAgreements { get; set; }
+
+    public virtual DbSet<TenantPreviousAddress> TenantPreviousAddresses { get; set; }
+
+    public virtual DbSet<TenantProfession> TenantProfessions { get; set; }
+
+    public virtual DbSet<TenantRent> TenantRents { get; set; }
+
+    public virtual DbSet<TenantType> TenantTypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -71,8 +113,10 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.InterestAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.InterestFirstCutOffDate).HasColumnType("datetime");
             entity.Property(e => e.InterestPaidDate).HasColumnType("datetime");
             entity.Property(e => e.InterestPaidMonth).HasMaxLength(100);
+            entity.Property(e => e.InterestSecondCutOffDate).HasColumnType("datetime");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });
 
@@ -98,6 +142,144 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.CountryName).HasMaxLength(150);
         });
 
+        modelBuilder.Entity<District>(entity =>
+        {
+            entity.ToTable("District");
+
+            entity.Property(e => e.DistrictName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Investor>(entity =>
+        {
+            entity.Property(e => e.CompensatedAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Compensated_Amount");
+            entity.Property(e => e.CompensatedBy)
+                .HasMaxLength(150)
+                .HasColumnName("Compensated_By");
+            entity.Property(e => e.CompensationDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_Date");
+            entity.Property(e => e.DeletedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Deleted_Date");
+            entity.Property(e => e.EmailId)
+                .HasMaxLength(250)
+                .HasColumnName("Email_Id");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(150)
+                .HasColumnName("First_Name");
+            entity.Property(e => e.HaveYouCompensated).HasColumnName("HaveYou_Compensated");
+            entity.Property(e => e.InvestAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Invest_Amount");
+            entity.Property(e => e.InvestedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Invested_Date");
+            entity.Property(e => e.IsDeleted).HasColumnName("Is_Deleted");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(150)
+                .HasColumnName("Last_Name");
+            entity.Property(e => e.MobileNumber)
+                .HasMaxLength(15)
+                .HasColumnName("Mobile_Number");
+            entity.Property(e => e.ModifiedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Modified_Date");
+        });
+
+        modelBuilder.Entity<Lender>(entity =>
+        {
+            entity.HasKey(e => e.LenderId).HasName("PK_Lenders");
+
+            entity.ToTable("Lender");
+
+            entity.Property(e => e.EmailId)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+            entity.Property(e => e.MobileNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<LenderAddress>(entity =>
+        {
+            entity.ToTable("LenderAddress");
+
+            entity.Property(e => e.AddressLine1).HasMaxLength(150);
+            entity.Property(e => e.AddressLine2).HasMaxLength(150);
+            entity.Property(e => e.Postcode).HasMaxLength(10);
+
+            entity.HasOne(d => d.Country).WithMany(p => p.LenderAddresses)
+                .HasForeignKey(d => d.CountryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LenderAddress_Country");
+        });
+
+        modelBuilder.Entity<LendingAmountDetail>(entity =>
+        {
+            entity.HasKey(e => e.LendingInterestId).HasName("PK_LendingInterest");
+
+            entity.ToTable("LendingAmountDetail");
+
+            entity.Property(e => e.ActualInterestAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.ExpectedInterestAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.LendingAmount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.LendingInterestRate).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.LendingInterestRateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_LendingInterestRates");
+
+            entity.HasOne(d => d.PaymentMode).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.PaymentModeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_PaymentMode");
+
+            entity.HasOne(d => d.User).WithMany(p => p.LendingAmountDetails)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingInterest_User");
+        });
+
+        modelBuilder.Entity<LendingDocument>(entity =>
+        {
+            entity.ToTable("LendingDocument");
+
+            entity.Property(e => e.DocumentExtension)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.DocumentName)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.User).WithMany(p => p.LendingDocuments)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LendingDocument_User");
+        });
+
+        modelBuilder.Entity<LendingDueDateDescription>(entity =>
+        {
+            entity.HasKey(e => e.LendingDueDateId);
+
+            entity.ToTable("LendingDueDateDescription");
+
+            entity.Property(e => e.LendingDueDateDescritpion).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<LendingInterestRate>(entity =>
+        {
+            entity.Property(e => e.InterestRate).HasColumnType("decimal(18, 2)");
+        });
+
         modelBuilder.Entity<PaymentDueDate>(entity =>
         {
             entity.HasKey(e => e.DueId);
@@ -112,6 +294,15 @@ public partial class PTSContext : DbContext
             entity.Property(e => e.MonthStartDate).HasColumnType("datetime");
         });
 
+        modelBuilder.Entity<PaymentMode>(entity =>
+        {
+            entity.ToTable("PaymentMode");
+
+            entity.Property(e => e.PaymentModeDescription)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<PaymentMonth>(entity =>
         {
             entity.HasKey(e => e.MonthId);
@@ -120,6 +311,127 @@ public partial class PTSContext : DbContext
 
             entity.Property(e => e.MonthId).ValueGeneratedNever();
             entity.Property(e => e.MonthName).HasMaxLength(150);
+        });
+
+        modelBuilder.Entity<Profession>(entity =>
+        {
+            entity.HasKey(e => e.ProfessionId).HasName("PK_TesProfession");
+
+            entity.ToTable("Profession");
+
+            entity.Property(e => e.ProfessionDescription).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Property>(entity =>
+        {
+            entity.ToTable("Property");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeleteDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.OwnerMobileNumber).HasMaxLength(25);
+            entity.Property(e => e.PropertOwnerName).HasMaxLength(250);
+            entity.Property(e => e.PropertyName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<PropertyAddress>(entity =>
+        {
+            entity.ToTable("PropertyAddress");
+
+            entity.Property(e => e.AddressLine1).HasMaxLength(250);
+            entity.Property(e => e.AddressLine2).HasMaxLength(250);
+            entity.Property(e => e.Postcode).HasMaxLength(15);
+        });
+
+        modelBuilder.Entity<PropertyType>(entity =>
+        {
+            entity.ToTable("PropertyType");
+
+            entity.Property(e => e.PropertyTypeName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<State>(entity =>
+        {
+            entity.ToTable("State");
+
+            entity.Property(e => e.Statement).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Tenant>(entity =>
+        {
+            entity.ToTable("Tenant");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.EmailId).HasMaxLength(250);
+            entity.Property(e => e.FirstName).HasMaxLength(250);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.LastName).HasMaxLength(250);
+            entity.Property(e => e.MobileNumber).HasMaxLength(25);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TenantAddress>(entity =>
+        {
+            entity.HasKey(e => e.TenantCurrentAddressId);
+
+            entity.ToTable("TenantAddress");
+
+            entity.Property(e => e.AddressLine1).HasMaxLength(150);
+            entity.Property(e => e.AddressLine2).HasMaxLength(150);
+            entity.Property(e => e.AddressLine3).HasMaxLength(150);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Postcode).HasMaxLength(10);
+        });
+
+        modelBuilder.Entity<TenantAgreement>(entity =>
+        {
+            entity.ToTable("TenantAgreement");
+
+            entity.Property(e => e.AgreementFileType).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<TenantPreviousAddress>(entity =>
+        {
+            entity.ToTable("TenantPreviousAddress");
+
+            entity.Property(e => e.AddressLine1).HasMaxLength(150);
+            entity.Property(e => e.AddressLine2).HasMaxLength(150);
+            entity.Property(e => e.AddressLine3).HasMaxLength(150);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Postcode).HasMaxLength(10);
+        });
+
+        modelBuilder.Entity<TenantProfession>(entity =>
+        {
+            entity.ToTable("TenantProfession");
+
+            entity.Property(e => e.CompanyName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<TenantRent>(entity =>
+        {
+            entity.HasKey(e => e.RentId);
+
+            entity.ToTable("TenantRent");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDatet).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.TenantEndDate).HasColumnType("datetime");
+            entity.Property(e => e.TenantStartDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TenantType>(entity =>
+        {
+            entity.ToTable("TenantType");
+
+            entity.Property(e => e.TenantTypeDescription).HasMaxLength(250);
         });
 
         modelBuilder.Entity<User>(entity =>

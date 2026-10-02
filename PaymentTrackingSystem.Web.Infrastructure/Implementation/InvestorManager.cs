@@ -1,0 +1,154 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PaymentTrackingSystem.Core.Data.Models;
+using PaymentTrackingSystem.Shared;
+using PaymentTrackingSystem.Web.Infrastructure.Interface;
+using InvestorViewModel = PaymentTrackingSystem.Shared.InvestorViewModel;
+
+namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
+{
+    public class InvestorManager : IInvestorManager
+    {
+        private readonly ILogger<InvestorManager> logger;
+        private PTSContext DbContext { get; set; }
+
+        public InvestorManager(PTSContext _DbContext, ILogger<InvestorManager> _logger)
+        {
+            DbContext = _DbContext;
+            logger = _logger;
+        }
+
+        public async Task<List<InvestorViewModel>> GetAllInvestors()
+        {
+            try
+            {
+                var investors = new List<InvestorViewModel>();
+
+                // TODO: Map from Investor entity to InvestorViewModel
+                // For now, returning empty list. Add your mapping logic with AutoMapper or manual mapping
+                return investors;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while retrieving investors.");
+                return new List<InvestorViewModel>();
+            }
+        }
+
+        public async Task<InvestorViewModel> GetInvestorDetailsById(int investorId)
+        {
+            try
+            {
+                var investor = new InvestorViewModel();
+
+                // TODO: Add your query logic here
+                // var data = await DbContext.Investors
+                //     .Where(x => x.InvestorId == investorId && (x.IsDeleted == null || x.IsDeleted == false))
+                //     .FirstOrDefaultAsync();
+
+                return investor;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while retrieving investor details.");
+                return new InvestorViewModel();
+            }
+        }
+
+        public async Task<bool> Add(InvestorViewModel investor)
+        {
+            try
+            {
+                // TODO: Map from InvestorViewModel to Investor entity and save to database
+                // Example:
+                var investorEntity = new Investor
+                {
+                    UserId = investor.UserId,
+                    FirstName = investor.FirstName,
+                    LastName = investor.LastName,
+                    EmailId = investor.Email,
+                    MobileNumber = investor.PhoneNumber,
+                    InvestAmount = Convert.ToDecimal(investor.InvestmentAmount),
+                    InvestedDate = investor.InvestmentDate.Date,
+                    HaveYouCompensated = investor.HaveYouCompensated,
+                    CompensatedAmount = investor.CompensatedAmount,
+                    CompensationDate = (investor.CompensationDate == null ? null : DateTime.Parse(investor.CompensationDate)),
+                    CompensatedBy = investor.CompensatedBy,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false
+                };
+                DbContext.Investors.Add(investorEntity);
+                var result = await DbContext.SaveChangesAsync();
+
+                return true; // Change to: return result > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while adding investor.");
+                return false;
+            }
+        }
+
+        public async Task<bool> Update(InvestorViewModel investorViewModel)
+        {
+            try
+            {
+                // TODO: Map from InvestorViewModel to existing Investor entity and update database
+                // Example:
+                // var investor = await DbContext.Investors
+                //     .FirstOrDefaultAsync(x => x.InvestorId == investorViewModel.InvestorId && 
+                //                               (x.IsDeleted == null || x.IsDeleted == false));
+                // if (investor == null)
+                //     return false;
+                //
+                // investor.FirstName = investorViewModel.FirstName;
+                // investor.LastName = investorViewModel.LastName;
+                // investor.Email = investorViewModel.Email;
+                // investor.PhoneNumber = investorViewModel.PhoneNumber;
+                // investor.InvestmentAmount = investorViewModel.InvestmentAmount;
+                // investor.InvestmentDate = investorViewModel.InvestmentDate;
+                // investor.HaveYouCompensated = investorViewModel.HaveYouCompensated;
+                // investor.CompensatedAmount = investorViewModel.CompensatedAmount;
+                // investor.CompensationDate = investorViewModel.CompensationDate;
+                // investor.CompensatedBy = investorViewModel.CompensatedBy;
+                // investor.ModifiedDate = DateTime.Now;
+                //
+                // DbContext.Investors.Update(investor);
+                // var result = await DbContext.SaveChangesAsync();
+
+                return true; // Change to: return result > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while updating investor.");
+                return false;
+            }
+        }
+
+        public async Task<bool> Delete(int investorId)
+        {
+            try
+            {
+                // TODO: Soft delete or hard delete from database
+                // Example (soft delete):
+                // var investor = await DbContext.Investors
+                //     .FirstOrDefaultAsync(x => x.InvestorId == investorId && 
+                //                               (x.IsDeleted == null || x.IsDeleted == false));
+                // if (investor == null)
+                //     return false;
+                //
+                // investor.IsDeleted = true;
+                // investor.ModifiedDate = DateTime.Now;
+                // DbContext.Investors.Update(investor);
+                // var result = await DbContext.SaveChangesAsync();
+
+                return true; // Change to: return result > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, "An error occurred while deleting investor.");
+                return false;
+            }
+        }
+    }
+}

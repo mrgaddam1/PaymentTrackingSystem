@@ -1,0 +1,12 @@
+@if (errorMessages.Count > 0)
+{
+    <div class="alert alert-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <h2 class="h6 alert-heading">Please correct the following errors:</h2>
+        <ul class="mb-0">
+            @foreach (var message in errorMessages)
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
