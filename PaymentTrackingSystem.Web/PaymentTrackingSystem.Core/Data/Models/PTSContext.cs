@@ -25,6 +25,8 @@ public partial class PTSContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<District> Districts { get; set; }
+
     public virtual DbSet<Investor> Investors { get; set; }
 
     public virtual DbSet<Lender> Lenders { get; set; }
@@ -52,6 +54,8 @@ public partial class PTSContext : DbContext
     public virtual DbSet<PropertyAddress> PropertyAddresses { get; set; }
 
     public virtual DbSet<PropertyType> PropertyTypes { get; set; }
+
+    public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<Tenant> Tenants { get; set; }
 
@@ -136,6 +140,13 @@ public partial class PTSContext : DbContext
             entity.ToTable("Country");
 
             entity.Property(e => e.CountryName).HasMaxLength(150);
+        });
+
+        modelBuilder.Entity<District>(entity =>
+        {
+            entity.ToTable("District");
+
+            entity.Property(e => e.DistrictName).HasMaxLength(250);
         });
 
         modelBuilder.Entity<Investor>(entity =>
@@ -337,6 +348,13 @@ public partial class PTSContext : DbContext
             entity.ToTable("PropertyType");
 
             entity.Property(e => e.PropertyTypeName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<State>(entity =>
+        {
+            entity.ToTable("State");
+
+            entity.Property(e => e.Statement).HasMaxLength(250);
         });
 
         modelBuilder.Entity<Tenant>(entity =>
