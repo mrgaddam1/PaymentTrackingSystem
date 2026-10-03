@@ -9,9 +9,9 @@ public partial class TenantPropertyAssigned
 
     public int UserId { get; set; }
 
-    public int PropertyId { get; set; }
-
     public int TenantId { get; set; }
+
+    public int PropertyId { get; set; }
 
     public decimal Amount { get; set; }
 
@@ -25,7 +25,7 @@ public partial class TenantPropertyAssigned
 
     public bool? IsTenantAgreedToIncreaseRentAfterYear { get; set; }
 
-    public DateTime? CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
 

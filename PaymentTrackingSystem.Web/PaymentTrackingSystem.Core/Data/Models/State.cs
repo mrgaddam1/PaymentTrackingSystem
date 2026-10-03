@@ -8,4 +8,6 @@ public partial class State
     public int Stateid { get; set; }
 
     public string Statement { get; set; } = null!;
+
+    public virtual ICollection<PropertyAddress> PropertyAddresses { get; set; } = new List<PropertyAddress>();
 }

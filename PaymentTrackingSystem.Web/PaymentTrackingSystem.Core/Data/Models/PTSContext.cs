@@ -15,6 +15,8 @@ public partial class PTSContext : DbContext
     {
     }
 
+    public virtual DbSet<BillType> BillTypes { get; set; }
+
     public virtual DbSet<City> Citys { get; set; }
 
     public virtual DbSet<Client> Clients { get; set; }
@@ -28,6 +30,10 @@ public partial class PTSContext : DbContext
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<District> Districts { get; set; }
+
+    public virtual DbSet<Furniture> Furnitures { get; set; }
+
+    public virtual DbSet<ImageCategory> ImageCategories { get; set; }
 
     public virtual DbSet<Investor> Investors { get; set; }
 
@@ -54,6 +60,22 @@ public partial class PTSContext : DbContext
     public virtual DbSet<Property> Properties { get; set; }
 
     public virtual DbSet<PropertyAddress> PropertyAddresses { get; set; }
+
+    public virtual DbSet<PropertyAmenity> PropertyAmenities { get; set; }
+
+    public virtual DbSet<PropertyAmenityCategory> PropertyAmenityCategories { get; set; }
+
+    public virtual DbSet<PropertyBillType> PropertyBillTypes { get; set; }
+
+    public virtual DbSet<PropertyDetail> PropertyDetails { get; set; }
+
+    public virtual DbSet<PropertyFinance> PropertyFinances { get; set; }
+
+    public virtual DbSet<PropertyFurniture> PropertyFurnitures { get; set; }
+
+    public virtual DbSet<PropertyImage> PropertyImages { get; set; }
+
+    public virtual DbSet<PropertyStatus> PropertyStatuses { get; set; }
 
     public virtual DbSet<PropertyType> PropertyTypes { get; set; }
 
@@ -83,6 +105,17 @@ public partial class PTSContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BillType>(entity =>
+        {
+            entity.ToTable("Bill_Type");
+
+            entity.Property(e => e.BillTypeId).HasColumnName("Bill_Type_Id");
+            entity.Property(e => e.BillTypeDescription)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("Bill_Type_Description");
+        });
+
         modelBuilder.Entity<City>(entity =>
         {
             entity.Property(e => e.CityName)
@@ -158,6 +191,24 @@ public partial class PTSContext : DbContext
             entity.ToTable("District");
 
             entity.Property(e => e.DistrictName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Furniture>(entity =>
+        {
+            entity.ToTable("Furniture");
+
+            entity.Property(e => e.FurnnitureName).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<ImageCategory>(entity =>
+        {
+            entity.ToTable("Image_Category");
+
+            entity.Property(e => e.ImageCategoryId).HasColumnName("Image_Category_Id");
+            entity.Property(e => e.ImageCategoryDescription)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("Image_Category_Description");
         });
 
         modelBuilder.Entity<Investor>(entity =>
@@ -337,21 +388,216 @@ public partial class PTSContext : DbContext
         {
             entity.ToTable("Property");
 
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.DeleteDate).HasColumnType("datetime");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.OwnerMobileNumber).HasMaxLength(25);
-            entity.Property(e => e.PropertOwnerName).HasMaxLength(250);
-            entity.Property(e => e.PropertyName).HasMaxLength(250);
+            entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_Date");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Delete_Date");
+            entity.Property(e => e.HasElectricityBill).HasColumnName("Has_Electricity_Bill");
+            entity.Property(e => e.HasFurniture).HasColumnName("Has_Furniture");
+            entity.Property(e => e.HasParking).HasColumnName("Has_Parking");
+            entity.Property(e => e.HasWaterBill).HasColumnName("Has_Water_Bill");
+            entity.Property(e => e.ModifiedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Modified_Date");
+            entity.Property(e => e.OwnerMobileNumber)
+                .HasMaxLength(25)
+                .HasColumnName("Owner_Mobile_Number");
+            entity.Property(e => e.PropertOwnerName)
+                .HasMaxLength(250)
+                .HasColumnName("Propert_Owner_Name");
+            entity.Property(e => e.PropertyName)
+                .HasMaxLength(250)
+                .HasColumnName("Property_Name");
+            entity.Property(e => e.PropertyReference)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("Property_Reference");
+            entity.Property(e => e.PropertyStatusId).HasColumnName("Property_Status_Id");
+            entity.Property(e => e.PropertyTypeId).HasColumnName("Property_Type_Id");
+            entity.Property(e => e.UserId).HasColumnName("User_Id");
         });
 
         modelBuilder.Entity<PropertyAddress>(entity =>
         {
-            entity.ToTable("PropertyAddress");
+            entity.ToTable("Property_Address");
 
-            entity.Property(e => e.AddressLine1).HasMaxLength(250);
-            entity.Property(e => e.AddressLine2).HasMaxLength(250);
+            entity.Property(e => e.PropertyAddressId).HasColumnName("Property_Address_Id");
+            entity.Property(e => e.AddressLine1)
+                .HasMaxLength(250)
+                .HasColumnName("Address_Line1");
+            entity.Property(e => e.AddressLine2)
+                .HasMaxLength(250)
+                .HasColumnName("Address_Line2");
+            entity.Property(e => e.CountryId).HasColumnName("Country_Id");
+            entity.Property(e => e.DistrictId).HasColumnName("District_Id");
             entity.Property(e => e.Postcode).HasMaxLength(15);
+            entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+            entity.Property(e => e.StateId).HasColumnName("State_Id");
+
+            entity.HasOne(d => d.Country).WithMany(p => p.PropertyAddresses)
+                .HasForeignKey(d => d.CountryId)
+                .HasConstraintName("FK_Property_Address_Country");
+
+            entity.HasOne(d => d.District).WithMany(p => p.PropertyAddresses)
+                .HasForeignKey(d => d.DistrictId)
+                .HasConstraintName("FK_Property_Address_District");
+
+            entity.HasOne(d => d.State).WithMany(p => p.PropertyAddresses)
+                .HasForeignKey(d => d.StateId)
+                .HasConstraintName("FK_Property_Address_State");
+        });
+
+        modelBuilder.Entity<PropertyAmenity>(entity =>
+        {
+            entity.HasKey(e => e.PropertyAmenityId).HasName("PK_Amenity");
+
+            entity.ToTable("Property_Amenity");
+
+            entity.HasIndex(e => e.AmenityName, "UQ__Property__8A4FC32E705C616C").IsUnique();
+
+            entity.Property(e => e.PropertyAmenityId).HasColumnName("Property_Amenity_Id");
+            entity.Property(e => e.AmenityDescription)
+                .HasMaxLength(500)
+                .HasColumnName("Amenity_Description");
+            entity.Property(e => e.AmenityName)
+                .HasMaxLength(100)
+                .HasColumnName("Amenity_Name");
+            entity.Property(e => e.CreatedDate)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.PropertyAmenityCategoryId).HasColumnName("Property_Amenity_Category_Id");
+        });
+
+        modelBuilder.Entity<PropertyAmenityCategory>(entity =>
+        {
+            entity.ToTable("Property_Amenity_Category");
+
+            entity.Property(e => e.PropertyAmenityCategoryId).HasColumnName("Property_Amenity_Category_Id");
+            entity.Property(e => e.CategoryDescription)
+                .HasMaxLength(250)
+                .HasColumnName("Category_Description");
+        });
+
+        modelBuilder.Entity<PropertyBillType>(entity =>
+        {
+            entity.ToTable("Property_Bill_Type");
+
+            entity.Property(e => e.PropertyBillTypeId).HasColumnName("Property_Bill_Type_Id");
+            entity.Property(e => e.BillTypeId).HasColumnName("Bill_Type_Id");
+        });
+
+        modelBuilder.Entity<PropertyDetail>(entity =>
+        {
+            entity.ToTable("Property_Detail");
+
+            entity.Property(e => e.PropertyDetailId).HasColumnName("Property_Detail_Id");
+            entity.Property(e => e.AreaInSquareFeet)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("Area_In_Square_Feet");
+            entity.Property(e => e.FloorNumber).HasColumnName("Floor_Number");
+            entity.Property(e => e.IsItFurnished).HasColumnName("Is_It_Furnished");
+            entity.Property(e => e.NoOfBathRooms).HasColumnName("No_Of_Bath_Rooms");
+            entity.Property(e => e.NoOfBedRooms).HasColumnName("No_Of_Bed_Rooms");
+            entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+            entity.Property(e => e.PropertyTypeId).HasColumnName("Property_Type_Id");
+            entity.Property(e => e.TotalFloors).HasColumnName("Total_Floors");
+            entity.Property(e => e.YearBuilt).HasColumnName("Year_Built");
+
+            entity.HasOne(d => d.Property).WithMany(p => p.PropertyDetails)
+                .HasForeignKey(d => d.PropertyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Property_Detail_Property");
+
+            entity.HasOne(d => d.PropertyType).WithMany(p => p.PropertyDetails)
+                .HasForeignKey(d => d.PropertyTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Property_Detail_PropertyType");
+        });
+
+        modelBuilder.Entity<PropertyFinance>(entity =>
+        {
+            entity.HasKey(e => e.PropertyFinancialId);
+
+            entity.ToTable("Property_Finance");
+
+            entity.Property(e => e.PropertyFinancialId).HasColumnName("PropertyFinancial_Id");
+            entity.Property(e => e.DepositAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Deposit_Amount");
+            entity.Property(e => e.HasMaintananceBill).HasColumnName("Has_Maintanance_Bill");
+            entity.Property(e => e.IsThereAnyDeposit).HasColumnName("Is_There_Any_Deposit");
+            entity.Property(e => e.MaintananceBillDescription)
+                .HasMaxLength(1000)
+                .HasColumnName("Maintanance_Bill_Description");
+            entity.Property(e => e.NumberOfMonthsForDeposit).HasColumnName("Number_Of_Months_For_Deposit");
+            entity.Property(e => e.PropertyAmenityId).HasColumnName("Property_Amenity_Id");
+            entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+            entity.Property(e => e.RentAmount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Rent_Amount");
+
+            entity.HasOne(d => d.PropertyAmenity).WithMany(p => p.PropertyFinances)
+                .HasForeignKey(d => d.PropertyAmenityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Property_Finance_Property_Amenity");
+
+            entity.HasOne(d => d.Property).WithMany(p => p.PropertyFinances)
+                .HasForeignKey(d => d.PropertyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Property_Finance_Property");
+        });
+
+        modelBuilder.Entity<PropertyImage>(entity =>
+        {
+            entity.HasKey(e => e.PropertyImageId).HasName("PK_PropertyImage");
+
+            entity.ToTable("Property_Image");
+
+            entity.HasIndex(e => e.BlobStorageUrl, "UC_PropertyImage_BlobUrl").IsUnique();
+
+            entity.Property(e => e.BlobContainerName).HasMaxLength(100);
+            entity.Property(e => e.BlobStoragePath).HasMaxLength(300);
+            entity.Property(e => e.BlobStorageUrl).HasMaxLength(500);
+            entity.Property(e => e.DeleteDate).HasPrecision(0);
+            entity.Property(e => e.ImageCategoryId).HasColumnName("Image_Category_Id");
+            entity.Property(e => e.ImageData).HasColumnName("Image_Data");
+            entity.Property(e => e.ImageDescription)
+                .HasMaxLength(500)
+                .HasColumnName("Image_Description");
+            entity.Property(e => e.ImageName)
+                .HasMaxLength(250)
+                .HasColumnName("Image_Name");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsPublic).HasDefaultValue(true);
+            entity.Property(e => e.MimeType).HasMaxLength(50);
+            entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+            entity.Property(e => e.RowVersion)
+                .IsRowVersion()
+                .IsConcurrencyToken();
+            entity.Property(e => e.UploadedDate)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Property).WithMany(p => p.PropertyImages)
+                .HasForeignKey(d => d.PropertyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PropertyImage_Property");
+        });
+
+        modelBuilder.Entity<PropertyStatus>(entity =>
+        {
+            entity.ToTable("Property_Status");
+
+            entity.Property(e => e.PropertyStatusId).HasColumnName("Property_Status_Id");
+            entity.Property(e => e.PropertyStatusDescription)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("Property_Status_Description");
         });
 
         modelBuilder.Entity<PropertyType>(entity =>
@@ -401,6 +647,7 @@ public partial class PTSContext : DbContext
         {
             entity.ToTable("TenantAgreement");
 
+            entity.Property(e => e.AgreementFileName).HasMaxLength(250);
             entity.Property(e => e.AgreementFileType).HasMaxLength(100);
         });
 
