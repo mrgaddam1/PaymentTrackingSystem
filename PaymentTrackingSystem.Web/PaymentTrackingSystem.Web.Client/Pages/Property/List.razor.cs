@@ -69,5 +69,9 @@ namespace PaymentTrackingSystem.Web.Client.Pages.Property
         {
             NavigationManager.NavigateTo("/property/add");
         }
+        private void AssignPropertyToTenant()
+        {
+            NavigationManager.NavigateTo("/assign-property-to-tenant/add");
+        }
     }
 }
