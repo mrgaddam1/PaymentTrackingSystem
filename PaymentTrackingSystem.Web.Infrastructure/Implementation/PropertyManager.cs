@@ -30,6 +30,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                     PropertyTypeId = propertyViewModel.PropertyTypeId,
                     PropertOwnerName = propertyViewModel.PropertOwnerName,
                     OwnerMobileNumber = propertyViewModel.OwnerMobileNumber,
+                    DoesPropertyHasParking = propertyViewModel.DoesPropertyHasParking,
+                    DoesPropertyHasFurniture = propertyViewModel.DoesPropertyHasFurniture,
+                    DoesPropertyHasAnyMaintananceBill = propertyViewModel.DoesPropertyHasAnyMaintananceBill,
+                    DoesPropertyHasAnyWaterBill = propertyViewModel.DoesPropertyHasAnyWaterBill,
+                    DoesPropertyHasAnyElectricityBill = propertyViewModel.DoesPropertyHasAnyElectricityBill,
+                    DoesThisPropertyOccupied = propertyViewModel.DoesThisPropertyOccupied,
                     UserId = 1,
                     CreatedDate = DateTime.Now,
                 };
@@ -105,6 +111,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                           PropertyTypeId = p.PropertyTypeId,
                                           PropertOwnerName = p.PropertOwnerName,
                                           OwnerMobileNumber = p.OwnerMobileNumber,
+                                          DoesPropertyHasParking = p.DoesPropertyHasParking,
+                                          DoesPropertyHasFurniture = p.DoesPropertyHasFurniture,
+                                          DoesPropertyHasAnyMaintananceBill = p.DoesPropertyHasAnyMaintananceBill,
+                                          DoesPropertyHasAnyWaterBill = p.DoesPropertyHasAnyWaterBill,
+                                          DoesPropertyHasAnyElectricityBill = p.DoesPropertyHasAnyElectricityBill,
+                                          DoesThisPropertyOccupied = p.DoesThisPropertyOccupied,
                                           AddressLine1 = pa != null ? pa.AddressLine1 : null,
                                           AddressLine2 = pa != null ? pa.AddressLine2 : null,
                                           Postcode = pa != null ? pa.Postcode : null,
@@ -137,6 +149,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                                           PropertyTypeId = p.PropertyTypeId,
                                           PropertOwnerName = p.PropertOwnerName,
                                           OwnerMobileNumber = p.OwnerMobileNumber,
+                                          DoesPropertyHasParking = p.DoesPropertyHasParking,
+                                          DoesPropertyHasFurniture = p.DoesPropertyHasFurniture,
+                                          DoesPropertyHasAnyMaintananceBill = p.DoesPropertyHasAnyMaintananceBill,
+                                          DoesPropertyHasAnyWaterBill = p.DoesPropertyHasAnyWaterBill,
+                                          DoesPropertyHasAnyElectricityBill = p.DoesPropertyHasAnyElectricityBill,
+                                          DoesThisPropertyOccupied = p.DoesThisPropertyOccupied,
                                           AddressLine1 = pa != null ? pa.AddressLine1 : null,
                                           AddressLine2 = pa != null ? pa.AddressLine2 : null,
                                           Postcode = pa != null ? pa.Postcode : null,
@@ -169,6 +187,12 @@ namespace PaymentTrackingSystem.Web.Infrastructure.Implementation
                 property.PropertyTypeId = propertyViewModel.PropertyTypeId;
                 property.PropertOwnerName = propertyViewModel.PropertOwnerName;
                 property.OwnerMobileNumber = propertyViewModel.OwnerMobileNumber;
+                property.DoesPropertyHasParking = propertyViewModel.DoesPropertyHasParking;
+                property.DoesPropertyHasFurniture = propertyViewModel.DoesPropertyHasFurniture;
+                property.DoesPropertyHasAnyMaintananceBill = propertyViewModel.DoesPropertyHasAnyMaintananceBill;
+                property.DoesPropertyHasAnyWaterBill = propertyViewModel.DoesPropertyHasAnyWaterBill;
+                property.DoesPropertyHasAnyElectricityBill = propertyViewModel.DoesPropertyHasAnyElectricityBill;
+                property.DoesThisPropertyOccupied = propertyViewModel.DoesThisPropertyOccupied;
                 property.ModifiedDate = DateTime.Now;
 
                 DbContext.Properties.Update(property);

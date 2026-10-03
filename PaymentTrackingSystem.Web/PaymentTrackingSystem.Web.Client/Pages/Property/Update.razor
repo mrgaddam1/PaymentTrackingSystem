@@ -210,6 +210,59 @@
                             </div>
                         </div>
 
+                        <div class="form-card mt-4">
+                            <div class="form-card-header">
+                                <div class="section-icon green">
+                                    <i class="bi bi-list-check"></i>
+                                </div>
+                                <div>
+                                    <h2>Property features and bills</h2>
+                                    <p>Update parking, furnishings, utility bills, and occupancy.</p>
+                                </div>
+                            </div>
+
+                            <div class="form-card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="hasParking" class="form-label">Parking</label>
+                                        <InputSelect TValue="bool?" id="hasParking" @bind-Value="property.DoesPropertyHasParking" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="hasFurniture" class="form-label">Furniture</label>
+                                        <InputSelect TValue="bool?" id="hasFurniture" @bind-Value="property.DoesPropertyHasFurniture" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="hasMaintenanceBill" class="form-label">Maintenance bill</label>
+                                        <InputSelect TValue="bool?" id="hasMaintenanceBill" @bind-Value="property.DoesPropertyHasAnyMaintananceBill" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="hasWaterBill" class="form-label">Water bill</label>
+                                        <InputSelect TValue="bool?" id="hasWaterBill" @bind-Value="property.DoesPropertyHasAnyWaterBill" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="hasElectricityBill" class="form-label">Electricity bill</label>
+                                        <InputSelect TValue="bool?" id="hasElectricityBill" @bind-Value="property.DoesPropertyHasAnyElectricityBill" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="isOccupied" class="form-label">Occupied</label>
+                                        <InputSelect TValue="bool?" id="isOccupied" @bind-Value="property.DoesThisPropertyOccupied" class="form-select">
+                                            <option value="">Not specified</option><option value="true">Yes</option><option value="false">No</option>
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-actions mt-4">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="bi bi-check2-circle me-2"></i>

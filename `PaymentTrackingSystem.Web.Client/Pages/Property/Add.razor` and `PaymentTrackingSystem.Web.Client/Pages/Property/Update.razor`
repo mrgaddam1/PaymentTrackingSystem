@@ -1,0 +1,70 @@
+<style>
+    .property-page {
+        padding-block: 1rem;
+    }
+
+    .property-shell {
+        gap: 1rem;
+    }
+
+    .page-heading {
+        margin-bottom: 1rem;
+    }
+
+    .heading-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .heading-description {
+        margin-bottom: 0;
+    }
+
+    .property-card .form-content {
+        padding: 1.25rem;
+    }
+
+    .form-section {
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .section-heading {
+        margin-bottom: 1rem;
+    }
+
+    .section-heading p {
+        margin-bottom: 0;
+    }
+
+    .form-grid {
+        gap: 0.85rem 1rem;
+    }
+
+    .field-group {
+        gap: 0.3rem;
+    }
+
+    .field-group .form-control {
+        min-height: 2.25rem;
+        padding: 0.4rem 0.65rem;
+    }
+
+    .field-group textarea.form-control {
+        min-height: 4rem;
+    }
+
+    @media (max-width: 576px) {
+        .property-page {
+            padding-block: 0.5rem;
+        }
+
+        .property-card .form-content {
+            padding: 1rem;
+        }
+
+        .form-grid {
+            gap: 0.75rem;
+        }
+    }
+</style>
